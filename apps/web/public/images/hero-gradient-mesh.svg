@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 700" fill="none">
+  <defs>
+    <radialGradient id="mesh1" cx="20%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mesh2" cx="80%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#5A729F" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#5A729F" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mesh3" cx="60%" cy="20%" r="35%">
+      <stop offset="0%" stop-color="#E8D595" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#E8D595" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mesh4" cx="40%" cy="80%" r="30%">
+      <stop offset="0%" stop-color="#3D578D" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#3D578D" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accent-line" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#C9A84C" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="700" fill="#0D1B3E"/>
+  <ellipse cx="288" cy="210" rx="360" ry="250" fill="url(#mesh1)"/>
+  <ellipse cx="1152" cy="420" rx="288" ry="200" fill="url(#mesh2)"/>
+  <ellipse cx="864" cy="140" rx="252" ry="175" fill="url(#mesh3)"/>
+  <ellipse cx="576" cy="560" rx="216" ry="150" fill="url(#mesh4)"/>
+  <line x1="0" y1="350" x2="1440" y2="350" stroke="url(#accent-line)" stroke-width="0.5"/>
+  <g opacity="0.04" stroke="white" stroke-width="0.5">
+    <circle cx="150" cy="150" r="80"/>
+    <circle cx="1300" cy="200" r="60"/>
+    <circle cx="700" cy="600" r="100"/>
+    <circle cx="400" cy="500" r="40"/>
+    <circle cx="1100" cy="550" r="50"/>
+  </g>
+</svg>

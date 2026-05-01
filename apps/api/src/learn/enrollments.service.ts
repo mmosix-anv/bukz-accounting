@@ -5,7 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { DrizzleService } from '../common/services/drizzle.service';
-import { enrollments, courses, lessonProgress, courseLessons, courseSections } from '@bukz/db';
+import { EmailService } from '../common/services/email.service';
+import { enrollments, courses, lessonProgress, courseLessons, courseSections, users } from '@bukz/db';
 import { eq, and, sql } from 'drizzle-orm';
 import Stripe from 'stripe';
 
@@ -13,7 +14,10 @@ import Stripe from 'stripe';
 export class EnrollmentsService {
   private readonly stripe = new Stripe(process.env['STRIPE_SECRET_KEY'] ?? '');
 
-  constructor(private readonly drizzle: DrizzleService) {}
+  constructor(
+    private readonly drizzle: DrizzleService,
+    private readonly email: EmailService,
+  ) {}
 
   async enrol(userId: string, courseId: string, stripePaymentIntentId?: string) {
     const [course] = await this.drizzle.db
@@ -59,6 +63,13 @@ export class EnrollmentsService {
       .update(courses)
       .set({ enrollmentsCount: sql`${courses.enrollmentsCount} + 1`, updatedAt: new Date() })
       .where(eq(courses.id, courseId));
+
+    const [userRow] = await this.drizzle.db.select({ email: users.email, name: users.name }).from(users).where(eq(users.id, userId)).limit(1);
+    if (userRow) {
+      this.email.sendCourseEnrolment(
+        userRow.email, userRow.name, course.title, course.slug, String(course.cpdHours),
+      ).catch(() => undefined);
+    }
 
     return enrollment!;
   }

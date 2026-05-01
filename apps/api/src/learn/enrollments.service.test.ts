@@ -1,11 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('@bukz/db', () => ({
-  courses: { id: 'id', status: 'status', priceGbp: 'price_gbp', enrollmentsCount: 'enrollments_count', updatedAt: 'updated_at' },
+  courses: { id: 'id', status: 'status', priceGbp: 'price_gbp', enrollmentsCount: 'enrollments_count', updatedAt: 'updated_at', title: 'title', slug: 'slug', cpdHours: 'cpd_hours' },
   enrollments: { id: 'id', courseId: 'course_id', userId: 'user_id', completedAt: 'completed_at' },
   lessonProgress: { userId: 'user_id', lessonId: 'lesson_id', completed: 'completed' },
   courseLessons: { sectionId: 'section_id', id: 'id' },
   courseSections: { courseId: 'course_id', id: 'id' },
+  users: { id: 'id', email: 'email', name: 'name' },
 }));
 
 vi.mock('drizzle-orm', () => ({
@@ -53,7 +54,8 @@ describe('EnrollmentsService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    service = new EnrollmentsService(mockDrizzle as never);
+    const mockEmail = { sendCourseEnrolment: vi.fn().mockResolvedValue(undefined) };
+    service = new EnrollmentsService(mockDrizzle as never, mockEmail as never);
   });
 
   describe('enrol', () => {

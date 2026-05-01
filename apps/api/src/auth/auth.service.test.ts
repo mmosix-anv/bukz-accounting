@@ -33,7 +33,8 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    service = new AuthService(mockDrizzle as never);
+    const mockEmail = { sendWelcome: vi.fn().mockResolvedValue(undefined) };
+    service = new AuthService(mockDrizzle as never, mockEmail as never);
   });
 
   describe('getMe', () => {

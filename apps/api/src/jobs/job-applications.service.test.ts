@@ -11,6 +11,7 @@ vi.mock('@bukz/db', () => ({
   },
   candidates: { id: 'id', userId: 'user_id', cvUrl: 'cv_url' },
   jobListings: { id: 'id', employerId: 'employer_id', title: 'title' },
+  users: { id: 'id', email: 'email', name: 'name' },
 }));
 
 vi.mock('drizzle-orm', () => ({
@@ -46,7 +47,8 @@ describe('JobApplicationsService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    service = new JobApplicationsService(mockDrizzle as never, mockListingsService as never);
+    const mockEmail = { sendApplicationStatusUpdate: vi.fn().mockResolvedValue(undefined) };
+    service = new JobApplicationsService(mockDrizzle as never, mockListingsService as never, mockEmail as never);
   });
 
   describe('apply', () => {

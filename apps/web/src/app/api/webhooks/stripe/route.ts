@@ -4,9 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 function getStripeClient() {
   const key = process.env['STRIPE_SECRET_KEY'];
-  if (!key) {
-    throw new Error('STRIPE_SECRET_KEY is not set');
-  }
+  if (!key) throw new Error('STRIPE_SECRET_KEY is not set');
   return new Stripe(key);
 }
 
@@ -15,6 +13,56 @@ function getSupabaseClient() {
     process.env['NEXT_PUBLIC_SUPABASE_URL'] ?? '',
     process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '',
   );
+}
+
+const TIER_LIMITS: Record<string, number> = {
+  starter: 3,
+  pro: 10,
+  enterprise: 999,
+};
+
+async function getUserByCustomerId(supabase: ReturnType<typeof getSupabaseClient>, customerId: string) {
+  const { data } = await supabase.from('users').select('id').eq('stripe_customer_id', customerId).limit(1);
+  return data?.[0] ?? null;
+}
+
+async function upsertEmployerSubscription(
+  supabase: ReturnType<typeof getSupabaseClient>,
+  userId: string,
+  tier: string,
+  subscriptionId: string,
+  currentPeriodEnd: Date,
+  status: string,
+) {
+  const limit = TIER_LIMITS[tier] ?? 1;
+  const { data: existing } = await supabase
+    .from('employer_subscriptions')
+    .select('id')
+    .eq('user_id', userId)
+    .limit(1);
+
+  if (existing?.[0]) {
+    await supabase
+      .from('employer_subscriptions')
+      .update({
+        tier,
+        stripe_subscription_id: subscriptionId,
+        current_period_end: currentPeriodEnd.toISOString(),
+        status,
+        active_listings_limit: limit,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', userId);
+  } else {
+    await supabase.from('employer_subscriptions').insert({
+      user_id: userId,
+      tier,
+      stripe_subscription_id: subscriptionId,
+      current_period_end: currentPeriodEnd.toISOString(),
+      status,
+      active_listings_limit: limit,
+    });
+  }
 }
 
 export async function POST(request: Request) {
@@ -47,7 +95,7 @@ export async function POST(request: Request) {
 
         const { data: courseData } = await supabase
           .from('courses')
-          .select('id, title, price_gbp, cpd_hours, instructor_id')
+          .select('id, title, price_gbp, cpd_hours')
           .eq('id', courseId)
           .single();
 
@@ -58,17 +106,41 @@ export async function POST(request: Request) {
             stripe_payment_intent_id: paymentIntentId,
             progress_percent: 0,
           });
-
           await supabase.rpc('increment_course_enrollments', { course_id: courseId });
-
           await supabase.from('payments').insert({
             user_id: userId,
             stripe_payment_intent_id: paymentIntentId,
             amount_pence: session.amount_total ?? 0,
             currency: session.currency ?? 'gbp',
             status: 'completed',
-            description: `Course enrollment: ${courseData.title}`,
+            description: `Course enrolment: ${courseData.title}`,
             metadata: { courseId, sessionId: session.id },
+          });
+        }
+      }
+
+      if (metadata?.['productType'] === 'employer_subscription') {
+        const userId = metadata['userId'] ?? '';
+        const tier = metadata['tier'] ?? 'starter';
+        const subscriptionId = session.subscription as string;
+
+        if (subscriptionId && userId) {
+          const sub = await stripe.subscriptions.retrieve(subscriptionId);
+          await upsertEmployerSubscription(
+            supabase,
+            userId,
+            tier,
+            subscriptionId,
+            new Date(sub.current_period_end * 1000),
+            'active',
+          );
+          await supabase.from('notifications').insert({
+            user_id: userId,
+            type: 'subscription_activated',
+            title: 'Subscription activated',
+            body: `Your ${tier.charAt(0).toUpperCase() + tier.slice(1)} plan is now active. You can post jobs immediately.`,
+            read: false,
+            link: '/employers/dashboard',
           });
         }
       }
@@ -77,7 +149,6 @@ export async function POST(request: Request) {
         const employerId = metadata['employerId'];
         const packageType = metadata['packageType'];
         const paymentIntentId = session.payment_intent as string;
-
         const listingCount = packageType === 'triple' ? 3 : 1;
 
         await supabase.from('payments').insert({
@@ -93,28 +164,52 @@ export async function POST(request: Request) {
       break;
     }
 
+    case 'customer.subscription.created':
+    case 'customer.subscription.updated': {
+      const subscription = event.data.object as Stripe.Subscription;
+      const customerId = subscription.customer as string;
+      const user = await getUserByCustomerId(supabase, customerId);
+
+      if (user) {
+        const tier = (subscription.metadata?.['tier'] as string) ?? 'starter';
+        await upsertEmployerSubscription(
+          supabase,
+          user.id,
+          tier,
+          subscription.id,
+          new Date(subscription.current_period_end * 1000),
+          subscription.status,
+        );
+      }
+      break;
+    }
+
     case 'invoice.payment_succeeded': {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
         const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-        const customerId = subscription.customer as string;
+        const user = await getUserByCustomerId(supabase, subscription.customer as string);
 
-        const { data: users } = await supabase
-          .from('users')
-          .select('id')
-          .eq('stripe_customer_id', customerId)
-          .limit(1);
-
-        if (users?.[0]) {
+        if (user) {
           await supabase.from('payments').insert({
-            user_id: users[0].id,
+            user_id: user.id,
             stripe_payment_intent_id: invoice.id,
             amount_pence: invoice.amount_paid,
             currency: invoice.currency,
             status: 'completed',
-            description: `Subscription renewal`,
+            description: 'Subscription renewal',
             metadata: { subscriptionId: invoice.subscription },
           });
+
+          const tier = (subscription.metadata?.['tier'] as string) ?? 'starter';
+          await upsertEmployerSubscription(
+            supabase,
+            user.id,
+            tier,
+            subscription.id,
+            new Date(subscription.current_period_end * 1000),
+            'active',
+          );
         }
       }
       break;
@@ -124,21 +219,16 @@ export async function POST(request: Request) {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
         const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-        const customerId = subscription.customer as string;
+        const user = await getUserByCustomerId(supabase, subscription.customer as string);
 
-        const { data: users } = await supabase
-          .from('users')
-          .select('id')
-          .eq('stripe_customer_id', customerId)
-          .limit(1);
-
-        if (users?.[0]) {
+        if (user) {
           await supabase.from('notifications').insert({
-            user_id: users[0].id,
+            user_id: user.id,
             type: 'payment_failed',
-            title: 'Payment Failed',
-            body: 'Your subscription payment failed. Please update your payment method.',
+            title: 'Payment failed',
+            body: 'Your subscription payment failed. Please update your payment method to avoid losing access.',
             read: false,
+            link: '/employers/dashboard',
           });
         }
       }
@@ -147,21 +237,21 @@ export async function POST(request: Request) {
 
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
-      const customerId = subscription.customer as string;
+      const user = await getUserByCustomerId(supabase, subscription.customer as string);
 
-      const { data: users } = await supabase
-        .from('users')
-        .select('id')
-        .eq('stripe_customer_id', customerId)
-        .limit(1);
+      if (user) {
+        await supabase
+          .from('employer_subscriptions')
+          .update({ tier: 'free', status: 'cancelled', active_listings_limit: 1, updated_at: new Date().toISOString() })
+          .eq('user_id', user.id);
 
-      if (users?.[0]) {
         await supabase.from('notifications').insert({
-          user_id: users[0].id,
+          user_id: user.id,
           type: 'subscription_cancelled',
-          title: 'Subscription Cancelled',
-          body: 'Your subscription has been cancelled. You have been moved to the free tier.',
+          title: 'Subscription cancelled',
+          body: 'Your subscription has been cancelled. You have been moved to the free tier (1 active listing).',
           read: false,
+          link: '/employers/pricing',
         });
       }
       break;

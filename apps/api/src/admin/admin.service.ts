@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DrizzleService } from '../common/services/drizzle.service';
 import { users, jobListings, enrollments, payments, articles, courses, experts } from '@bukz/db';
 import { eq, desc, sql, and } from 'drizzle-orm';
@@ -42,16 +42,16 @@ export class AdminService {
   }
 
   async getUsers(role?: string, limit = 20, offset = 0) {
+    const base = this.drizzle.db
+      .select({ id: users.id, email: users.email, name: users.name, role: users.role, avatarUrl: users.avatarUrl, createdAt: users.createdAt })
+      .from(users)
+      .orderBy(desc(users.createdAt))
+      .limit(limit)
+      .offset(offset);
+
     if (role) {
       return this.drizzle.db
-        .select({
-          id: users.id,
-          email: users.email,
-          name: users.name,
-          role: users.role,
-          avatarUrl: users.avatarUrl,
-          createdAt: users.createdAt,
-        })
+        .select({ id: users.id, email: users.email, name: users.name, role: users.role, avatarUrl: users.avatarUrl, createdAt: users.createdAt })
         .from(users)
         .where(eq(users.role, role as 'candidate' | 'employer' | 'instructor' | 'admin'))
         .orderBy(desc(users.createdAt))
@@ -59,19 +59,7 @@ export class AdminService {
         .offset(offset);
     }
 
-    return this.drizzle.db
-      .select({
-        id: users.id,
-        email: users.email,
-        name: users.name,
-        role: users.role,
-        avatarUrl: users.avatarUrl,
-        createdAt: users.createdAt,
-      })
-      .from(users)
-      .orderBy(desc(users.createdAt))
-      .limit(limit)
-      .offset(offset);
+    return base;
   }
 
   async updateUserRole(userId: string, role: string) {
@@ -90,5 +78,83 @@ export class AdminService {
       .orderBy(desc(payments.createdAt))
       .limit(limit)
       .offset(offset);
+  }
+
+  // ── Articles ──────────────────────────────────────────────────────────────
+
+  async getArticles(status?: string, limit = 20, offset = 0) {
+    if (status && (status === 'draft' || status === 'published')) {
+      return this.drizzle.db
+        .select()
+        .from(articles)
+        .where(eq(articles.status, status))
+        .orderBy(desc(articles.createdAt))
+        .limit(limit)
+        .offset(offset);
+    }
+    return this.drizzle.db.select().from(articles).orderBy(desc(articles.createdAt)).limit(limit).offset(offset);
+  }
+
+  async updateArticle(id: string, data: Partial<typeof articles.$inferInsert>) {
+    const [article] = await this.drizzle.db.update(articles).set(data).where(eq(articles.id, id)).returning();
+    if (!article) throw new NotFoundException('Article not found');
+    return article;
+  }
+
+  async deleteArticle(id: string) {
+    const [article] = await this.drizzle.db.delete(articles).where(eq(articles.id, id)).returning();
+    if (!article) throw new NotFoundException('Article not found');
+    return { deleted: true };
+  }
+
+  // ── Experts ───────────────────────────────────────────────────────────────
+
+  async getExperts(limit = 20, offset = 0) {
+    return this.drizzle.db.select().from(experts).orderBy(desc(experts.name)).limit(limit).offset(offset);
+  }
+
+  async updateExpert(id: string, data: Partial<typeof experts.$inferInsert>) {
+    const [expert] = await this.drizzle.db.update(experts).set(data).where(eq(experts.id, id)).returning();
+    if (!expert) throw new NotFoundException('Expert not found');
+    return expert;
+  }
+
+  async verifyExpert(id: string) {
+    const [expert] = await this.drizzle.db.update(experts).set({ isVerified: true }).where(eq(experts.id, id)).returning();
+    if (!expert) throw new NotFoundException('Expert not found');
+    return expert;
+  }
+
+  // ── Jobs ──────────────────────────────────────────────────────────────────
+
+  async getJobListings(status?: string, limit = 20, offset = 0) {
+    const validStatuses = ['draft', 'active', 'expired', 'filled'] as const;
+    const s = validStatuses.find((v) => v === status);
+    if (s) {
+      return this.drizzle.db
+        .select()
+        .from(jobListings)
+        .where(eq(jobListings.status, s))
+        .orderBy(desc(jobListings.createdAt))
+        .limit(limit)
+        .offset(offset);
+    }
+    return this.drizzle.db.select().from(jobListings).orderBy(desc(jobListings.createdAt)).limit(limit).offset(offset);
+  }
+
+  async updateJobListing(id: string, data: Partial<typeof jobListings.$inferInsert>) {
+    const [listing] = await this.drizzle.db.update(jobListings).set(data).where(eq(jobListings.id, id)).returning();
+    if (!listing) throw new NotFoundException('Job listing not found');
+    return listing;
+  }
+
+  async deleteJobListing(id: string) {
+    const [listing] = await this.drizzle.db
+      .update(jobListings)
+      .set({ status: 'expired' })
+      .where(eq(jobListings.id, id))
+      .returning();
+    if (!listing) throw new NotFoundException('Job listing not found');
+    return { removed: true };
   }
 }

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { ActionIcon, Badge, Button, Card, Group, Stack, Text } from '@mantine/core';
-import { Heart } from 'lucide-react';
+import { Heart, MapPin, Clock, ArrowRight } from 'lucide-react';
 
 export interface JobHit {
   objectID: string;
@@ -56,6 +56,7 @@ export function JobCard({ hit }: { hit: JobHit }) {
       withBorder
       radius="lg"
       padding="lg"
+      className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
       style={{
         borderColor: hit.featured ? 'var(--mantine-color-accent-2)' : undefined,
         background: hit.featured ? 'var(--mantine-color-accent-0)' : undefined,
@@ -65,54 +66,69 @@ export function JobCard({ hit }: { hit: JobHit }) {
         <Stack gap={6} style={{ minWidth: 0 }}>
           <Group gap="xs">
             {hit.featured && (
-              <Badge color="accent" variant="filled">
+              <Badge color="accent" variant="filled" size="sm" className="shadow-sm">
                 Featured
               </Badge>
             )}
           </Group>
-          <Text component={Link} href={`/jobs/${hit.slug}`} fw={700} c="primary" lineClamp={2}>
+          <Text component={Link} href={`/jobs/${hit.slug}`} fw={700} c="primary" lineClamp={2} className="group-hover:text-[#C9A84C] transition-colors duration-200">
             {hit.title}
           </Text>
-          <Text size="sm" c="dimmed">
-            {hit.location}
-          </Text>
+          <Group gap="xs">
+            <MapPin size={12} className="text-slate-400" />
+            <Text size="sm" c="dimmed">
+              {hit.location}
+            </Text>
+          </Group>
         </Stack>
 
         <Stack gap={8} align="flex-end">
-          <Text fw={700} c="accent">
+          <Text fw={700} c="accent" size="lg">
             {formatSalary(hit.salaryMin, hit.salaryMax, hit.salaryCurrency)}
           </Text>
           <ActionIcon
-            variant="subtle"
+            variant={saved ? 'filled' : 'subtle'}
             color={saved ? 'red' : 'primary'}
             radius="xl"
+            size="md"
             onClick={() => setSaved((s) => !s)}
             aria-label={saved ? 'Unsave job' : 'Save job'}
+            className="transition-transform hover:scale-110"
           >
-            <Heart size={18} />
+            <Heart size={16} fill={saved ? 'currentColor' : 'none'} />
           </ActionIcon>
         </Stack>
       </Group>
 
       <Group gap="xs" mt="md">
-        <Badge variant="light" color="primary">
+        <Badge variant="light" color="primary" size="sm">
           {formatJobType(hit.jobType)}
         </Badge>
         {hit.remotePolicy !== 'office' && (
-          <Badge variant="light" color="green">
+          <Badge variant="light" color="green" size="sm">
             {hit.remotePolicy === 'remote' ? 'Remote' : 'Hybrid'}
           </Badge>
         )}
-        <Badge variant="light" color="gray">
+        <Badge variant="light" color="gray" size="sm">
           {hit.experienceLevel?.replace(/_/g, ' ')}
         </Badge>
       </Group>
 
-      <Group justify="space-between" mt="md">
-        <Text size="xs" c="dimmed">
-          {timeAgo(hit.createdAt)}
-        </Text>
-        <Button component={Link} href={`/jobs/${hit.slug}`} size="xs" color="primary">
+      <Group justify="space-between" mt="md" className="pt-3 border-t border-slate-100">
+        <Group gap="xs">
+          <Clock size={12} className="text-slate-400" />
+          <Text size="xs" c="dimmed">
+            {timeAgo(hit.createdAt)}
+          </Text>
+        </Group>
+        <Button
+          component={Link}
+          href={`/jobs/${hit.slug}`}
+          size="xs"
+          color="primary"
+          rightSection={<ArrowRight size={12} />}
+          className="hover:shadow-sm transition-shadow"
+        >
           View job
         </Button>
       </Group>

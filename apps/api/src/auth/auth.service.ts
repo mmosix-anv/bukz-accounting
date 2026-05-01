@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DrizzleService } from '../common/services/drizzle.service';
+import { EmailService } from '../common/services/email.service';
 import { users, profiles } from '@bukz/db';
 import { eq } from 'drizzle-orm';
 
@@ -11,7 +12,10 @@ export type SupabaseUser = {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly drizzle: DrizzleService) {}
+  constructor(
+    private readonly drizzle: DrizzleService,
+    private readonly email: EmailService,
+  ) {}
 
   async syncUser(supabaseUser: SupabaseUser) {
     const existing = await this.drizzle.db
@@ -38,6 +42,12 @@ export class AuthService {
       await this.drizzle.db.insert(profiles).values({
         userId: supabaseUser.id,
       });
+
+      this.email.sendWelcome(
+        supabaseUser.email,
+        (supabaseUser.user_metadata['name'] as string) ?? 'there',
+        (supabaseUser.user_metadata['role'] as string) ?? 'candidate',
+      ).catch(() => undefined);
     }
 
     return this.getMe(supabaseUser.id);

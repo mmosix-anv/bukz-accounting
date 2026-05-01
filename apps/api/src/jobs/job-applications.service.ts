@@ -1,6 +1,7 @@
 import { Injectable, ConflictException, BadRequestException } from '@nestjs/common';
 import { DrizzleService } from '../common/services/drizzle.service';
-import { jobApplications, candidates, jobListings } from '@bukz/db';
+import { EmailService } from '../common/services/email.service';
+import { jobApplications, candidates, jobListings, users } from '@bukz/db';
 import { eq, and, desc } from 'drizzle-orm';
 import { JobListingsService } from './job-listings.service';
 
@@ -9,6 +10,7 @@ export class JobApplicationsService {
   constructor(
     private readonly drizzle: DrizzleService,
     private readonly listingsService: JobListingsService,
+    private readonly email: EmailService,
   ) {}
 
   async apply(userId: string, jobId: string, coverLetter?: string) {
@@ -124,6 +126,34 @@ export class JobApplicationsService {
       .set({ status })
       .where(eq(jobApplications.id, id))
       .returning();
+
+    if (application && ['shortlisted', 'rejected', 'offered'].includes(status)) {
+      const [candidate] = await this.drizzle.db
+        .select({ userId: candidates.userId })
+        .from(candidates)
+        .where(eq(candidates.id, application.candidateId))
+        .limit(1);
+
+      if (candidate) {
+        const [userRow] = await this.drizzle.db
+          .select({ email: users.email, name: users.name })
+          .from(users)
+          .where(eq(users.id, candidate.userId))
+          .limit(1);
+
+        const [listing] = await this.drizzle.db
+          .select({ title: jobListings.title })
+          .from(jobListings)
+          .where(eq(jobListings.id, application.jobId))
+          .limit(1);
+
+        if (userRow && listing) {
+          this.email.sendApplicationStatusUpdate(userRow.email, userRow.name, listing.title, status)
+            .catch(() => undefined);
+        }
+      }
+    }
+
     return application!;
   }
 }
