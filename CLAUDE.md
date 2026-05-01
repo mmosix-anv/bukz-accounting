@@ -3,11 +3,15 @@
 ## Project
 Multi-pillar accounting & finance platform. Three pillars: BUKZ Jobs (job board),
 BUKZ Learn (LMS/courses), BUKZ Insight (editorial + tools). Stack: Next.js 14,
-NestJS, PostgreSQL (Supabase), Algolia, Stripe, Auth0, AWS S3.
+PostgreSQL (Supabase), Algolia, Stripe, AWS S3.
 
 ## Architecture rules
-- Monorepo: apps/web (Next.js), apps/api (NestJS), packages/ui, packages/db, packages/config
-- Each pillar is a NestJS module: JobsModule, LearnModule, InsightModule, AuthModule, PaymentsModule
+- Single Next.js app at root. Shared packages at packages/ui, packages/db, packages/config
+- src/app — Next.js App Router pages and layouts
+- src/app/api/v1 — Route Handlers (replace NestJS; one file per route group)
+- src/lib/services — Pure TypeScript service functions (DB access, business logic)
+- src/lib/db.ts — Drizzle singleton (postgres.js connection)
+- src/lib/route-handler.ts — Auth helpers: getAuthUser(), ok(), err(), unauthorized()
 - Shared DB schema in packages/db using Drizzle ORM
 - All API routes prefixed: /api/v1/{pillar}/{resource}
 - TypeScript strict mode throughout — no `any` types
@@ -31,8 +35,7 @@ NestJS, PostgreSQL (Supabase), Algolia, Stripe, Auth0, AWS S3.
 
 ## Testing rules
 - Every service method needs a unit test
-- Every API endpoint needs an integration test
-- Use Vitest for unit tests, Supertest for API integration tests
+- Use Vitest for all tests
 - Run `pnpm test` before marking any task complete
 
 ## Git rules

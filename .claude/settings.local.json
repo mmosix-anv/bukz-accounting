@@ -6,7 +6,16 @@
       "Bash(pnpm typecheck *)",
       "Bash(pnpm lint *)",
       "Bash(pnpm test *)",
-      "Bash(pnpm --filter @bukz/web typecheck)"
+      "Bash(pnpm --filter @bukz/web typecheck)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm db:migrate)",
+      "Bash(pnpm db:generate)",
+      "Bash(claude mcp *)",
+      "Bash(npx skills *)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "supabase"
+  ],
+  "enableAllProjectMcpServers": true
 }

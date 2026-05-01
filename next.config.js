@@ -1,0 +1,36 @@
+const { withSentryConfig } = require('@sentry/nextjs');
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  images: {
+    domains: [
+      'avatars.githubusercontent.com',
+      'lh3.googleusercontent.com',
+      process.env.CLOUDFRONT_DOMAIN ?? '',
+      `${process.env.AWS_S3_BUCKET ?? ''}.s3.amazonaws.com`,
+    ].filter(Boolean),
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+    ];
+  },
+};
+
+module.exports = withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+  automaticVercelMonitors: false,
+});

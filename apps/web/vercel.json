@@ -1,6 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "pnpm --filter @bukz/web build",
-  "devCommand": "pnpm --filter @bukz/web dev",
-  "installCommand": "corepack enable && pnpm install"
-}

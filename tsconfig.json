@@ -1,0 +1,23 @@
+{
+  "extends": "@bukz/config/typescript/nextjs",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@bukz/ui": ["./packages/ui/src/index.ts"],
+      "@bukz/db": ["./packages/db/src/index.ts"]
+    },
+    "noEmit": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "apps",
+    "packages"
+  ]
+}
