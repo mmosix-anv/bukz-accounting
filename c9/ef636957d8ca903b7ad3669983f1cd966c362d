@@ -1,0 +1,333 @@
+src/app/admin/courses/page.tsx
+  1a60477d8d413c3c 4-5,7,9-12,15-18,21-23,26,30-31,36-38,41-42,44-45,47-56,59-116,119
+src/app/(learn)/learn/page.tsx
+  1a60477d8d413c3c 2-21
+src/app/(jobs)/jobs/filter-panel.tsx
+  1a60477d8d413c3c 3-4,9-10,20-25,30-38,40-57,59-75,77-88,90-100,106-108,112-113
+.agents/skills/supabase-postgres-best-practices/references/schema-primary-keys.md
+  1a60477d8d413c3c 1-61
+src/app/api/v1/admin/articles/route.ts
+  1a60477d8d413c3c 1-11
+.agents/skills/supabase-postgres-best-practices/references/data-n-plus-one.md
+  1a60477d8d413c3c 1-53
+.agents/skills/supabase-postgres-best-practices/references/query-index-types.md
+  1a60477d8d413c3c 1-48
+src/app/api/v1/ai/recommendations/route.ts
+  1a60477d8d413c3c 1-13
+src/lib/services/enrollments.service.ts
+  1a60477d8d413c3c 1-75
+src/lib/services/cpd.service.ts
+  1a60477d8d413c3c 1-62
+src/lib/services/salary.service.ts
+  1a60477d8d413c3c 1-29
+src/lib/email.ts
+  1a60477d8d413c3c 1-55
+src/app/api/v1/insight/tools/salary-benchmark/route.ts
+  1a60477d8d413c3c 1-10
+.claude/settings.local.json
+  1a60477d8d413c3c 9,11-14
+.agents/skills/supabase-postgres-best-practices/references/schema-constraints.md
+  1a60477d8d413c3c 1-80
+src/app/api/v1/jobs/employer-applications/route.ts
+  1a60477d8d413c3c 1-10
+src/lib/services/experts.service.ts
+  1a60477d8d413c3c 1-33
+.agents/skills/supabase-postgres-best-practices/references/security-rls-basics.md
+  1a60477d8d413c3c 1-50
+.agents/skills/supabase-postgres-best-practices/references/query-partial-indexes.md
+  1a60477d8d413c3c 1-45
+.agents/skills/supabase-postgres-best-practices/references/monitor-vacuum-analyze.md
+  1a60477d8d413c3c 1-55
+.eslintrc.json
+  1a60477d8d413c3c 1-6
+src/lib/services/candidates.service.ts
+  1a60477d8d413c3c 1-31
+src/lib/api.ts
+  1a60477d8d413c3c 1-5,18
+src/lib/services/articles.service.ts
+  1a60477d8d413c3c 1-45
+.agents/skills/supabase-postgres-best-practices/references/_contributing.md
+  1a60477d8d413c3c 1-170
+src/app/(marketing)/page.tsx
+  1a60477d8d413c3c 108-489
+.agents/skills/supabase-postgres-best-practices/references/conn-idle-timeout.md
+  1a60477d8d413c3c 1-46
+.agents/skills/supabase-postgres-best-practices/references/schema-partitioning.md
+  1a60477d8d413c3c 1-55
+src/lib/services/payments.service.ts
+  1a60477d8d413c3c 1-102
+src/app/api/v1/settings/route.ts
+  1a60477d8d413c3c 1-21
+src/app/(jobs)/jobs/page.tsx
+  1a60477d8d413c3c 2-21
+src/app/api/v1/learn/certificates/route.ts
+  1a60477d8d413c3c 1-9
+.agents/skills/supabase-postgres-best-practices/references/schema-lowercase-identifiers.md
+  1a60477d8d413c3c 1-55
+src/lib/services/certificates.service.ts
+  1a60477d8d413c3c 1-103
+sentry.edge.config.ts
+  1a60477d8d413c3c 1-8
+src/app/api/v1/learn/courses/[id]/publish/route.ts
+  1a60477d8d413c3c 1-10
+packages/db/seed.ts
+  1a60477d8d413c3c 1-412
+src/lib/services/ai.service.ts
+  1a60477d8d413c3c 1-89
+postcss.config.js
+  1a60477d8d413c3c 1-16
+src/app/api/v1/jobs/candidates/me/cv-confirm/route.ts
+  1a60477d8d413c3c 1-12
+src/lib/services/auth.service.ts
+  1a60477d8d413c3c 1-74
+src/app/api/v1/jobs/candidates/me/cv-upload-url/route.ts
+  1a60477d8d413c3c 1-13
+vercel.json
+  1a60477d8d413c3c 1-6
+src/app/api/v1/settings/public/pricing/route.ts
+  1a60477d8d413c3c 1-6
+src/app/(jobs)/employers/pricing/page.tsx
+  1a60477d8d413c3c 2-7,17,25-29,32,34,40,45,56,61-63,69-70,74,80-84,87,89,106,108
+src/app/api/v1/payments/job-posting-checkout/route.ts
+  1a60477d8d413c3c 1-14
+src/lib/db.ts
+  1a60477d8d413c3c 1-7,9-13
+src/app/api/v1/learn/courses/route.ts
+  1a60477d8d413c3c 1-25
+src/lib/storage.ts
+  1a60477d8d413c3c 1-24
+src/lib/services/notifications.service.ts
+  1a60477d8d413c3c 1-21
+.agents/skills/supabase-postgres-best-practices/references/lock-short-transactions.md
+  1a60477d8d413c3c 1-50
+src/lib/services/progress.service.ts
+  1a60477d8d413c3c 1-79
+src/lib/services/settings.service.ts
+  1a60477d8d413c3c 1-89
+.agents/skills/supabase-postgres-best-practices/references/lock-skip-locked.md
+  1a60477d8d413c3c 1-54
+src/app/api/v1/learn/progress/[id]/route.ts
+  1a60477d8d413c3c 1-9
+src/app/api/v1/learn/cpd/my/summary/route.ts
+  1a60477d8d413c3c 1-9
+src/lib/services/courses.service.ts
+  1a60477d8d413c3c 1-153
+.agents/skills/supabase-postgres-best-practices/references/security-privileges.md
+  1a60477d8d413c3c 1-54
+.agents/skills/supabase-postgres-best-practices/references/data-upsert.md
+  1a60477d8d413c3c 1-50
+packages/db/algolia-sync.ts
+  1a60477d8d413c3c 1-229
+src/app/api/v1/jobs/applications/[id]/route.ts
+  1a60477d8d413c3c 1-12
+src/app/api/v1/payments/employer-subscription/route.ts
+  1a60477d8d413c3c 1-9
+.agents/skills/supabase-postgres-best-practices/references/monitor-pg-stat-statements.md
+  1a60477d8d413c3c 1-55
+.agents/skills/supabase-postgres-best-practices/references/query-covering-indexes.md
+  1a60477d8d413c3c 1-40
+src/app/admin/admin-table.tsx
+  1a60477d8d413c3c 1-117
+sentry.server.config.ts
+  1a60477d8d413c3c 1-8
+src/app/admin/layout.tsx
+  1a60477d8d413c3c 4,14-25,32
+src/app/api/v1/insight/experts/[username]/route.ts
+  1a60477d8d413c3c 1-19
+src/lib/services/tools.service.ts
+  1a60477d8d413c3c 1-65
+src/app/api/v1/admin/jobs/[id]/route.ts
+  1a60477d8d413c3c 1-19
+src/app/admin/users/page.tsx
+  1a60477d8d413c3c 5,7,9-19,22,26-27,30-32,34-40,43-44,46-47,49-53,56-83,85-104,106-110,113
+.agents/skills/supabase-postgres-best-practices/references/lock-deadlock-prevention.md
+  1a60477d8d413c3c 1-68
+src/app/api/v1/learn/reviews/route.ts
+  1a60477d8d413c3c 1-20
+next.config.js
+  1a60477d8d413c3c 1-36
+.agents/skills/supabase-postgres-best-practices/references/conn-limits.md
+  1a60477d8d413c3c 1-44
+src/app/api/v1/auth/sync/route.ts
+  1a60477d8d413c3c 1-15
+src/app/api/v1/admin/jobs/route.ts
+  1a60477d8d413c3c 1-11
+src/app/api/v1/admin/users/[id]/route.ts
+  1a60477d8d413c3c 1-13
+src/app/api/v1/learn/certificates/[id]/verify/route.ts
+  1a60477d8d413c3c 1-8
+src/app/globals.css
+  1a60477d8d413c3c 21-26,44-49,59,86-109
+.agents/skills/supabase-postgres-best-practices/references/data-batch-inserts.md
+  1a60477d8d413c3c 1-54
+packages/db/migrations/0000_smiling_epoch.sql
+  1a60477d8d413c3c 1-495
+src/app/api/v1/ai/skills-gap/route.ts
+  1a60477d8d413c3c 1-9
+src/app/(learn)/learn/course-card.tsx
+  1a60477d8d413c3c 5,23-25,28-35,37-38,44-47,54-56,59-61,67,71-72,76-80,84-87,93,95-98,103,107,114,116-117,124
+src/app/api/v1/jobs/salary-benchmark/route.ts
+  1a60477d8d413c3c 1-12
+.agents/skills/supabase-postgres-best-practices/references/data-pagination.md
+  1a60477d8d413c3c 1-50
+src/app/api/v1/admin/articles/[id]/route.ts
+  1a60477d8d413c3c 1-19
+src/app/api/v1/jobs/employers/me/route.ts
+  1a60477d8d413c3c 1-22
+src/app/api/v1/learn/enrollments/route.ts
+  1a60477d8d413c3c 1-18
+src/lib/analytics.ts
+  1a60477d8d413c3c 1-20
+sentry.client.config.ts
+  1a60477d8d413c3c 1-16
+.agents/skills/supabase/references/skill-feedback.md
+  1a60477d8d413c3c 1-17
+.agents/skills/supabase-postgres-best-practices/references/query-missing-indexes.md
+  1a60477d8d413c3c 1-43
+src/app/api/v1/insight/experts/route.ts
+  1a60477d8d413c3c 1-17
+.mcp.json
+  1a60477d8d413c3c 1-8
+src/app/api/v1/auth/me/route.ts
+  1a60477d8d413c3c 1-31
+src/app/api/v1/admin/users/route.ts
+  1a60477d8d413c3c 1-15
+src/app/api/v1/jobs/listings/route.ts
+  1a60477d8d413c3c 1-23
+src/app/(jobs)/employers/post-job/page.tsx
+  1a60477d8d413c3c 3-4,9-13,20
+packages/db/migrations/meta/_journal.json
+  1a60477d8d413c3c 1-13
+skills-lock.json
+  1a60477d8d413c3c 1-17
+src/app/api/v1/learn/cpd/my/route.ts
+  1a60477d8d413c3c 1-18
+src/app/api/v1/health/route.ts
+  1a60477d8d413c3c 1-5
+src/app/api/v1/jobs/applications/route.ts
+  1a60477d8d413c3c 1-18
+.agents/skills/supabase-postgres-best-practices/references/advanced-full-text-search.md
+  1a60477d8d413c3c 1-55
+src/app/api/v1/jobs/listings/[id]/route.ts
+  1a60477d8d413c3c 1-30
+src/app/providers.tsx
+  1a60477d8d413c3c 56-80
+src/app/api/v1/admin/experts/[id]/route.ts
+  1a60477d8d413c3c 1-21
+.agents/skills/supabase/assets/feedback-issue-template.md
+  1a60477d8d413c3c 1-17
+src/app/api/v1/insight/tools/ir35/route.ts
+  1a60477d8d413c3c 1-10
+.agents/skills/supabase-postgres-best-practices/references/schema-data-types.md
+  1a60477d8d413c3c 1-46
+src/app/api/v1/learn/courses/[id]/route.ts
+  1a60477d8d413c3c 1-21
+.agents/skills/supabase-postgres-best-practices/references/monitor-explain-analyze.md
+  1a60477d8d413c3c 1-45
+packages/db/drizzle.config.ts
+  1a60477d8d413c3c 1-2,5-27
+.agents/skills/supabase-postgres-best-practices/references/advanced-jsonb-indexing.md
+  1a60477d8d413c3c 1-49
+src/app/api/v1/admin/stats/route.ts
+  1a60477d8d413c3c 1-10
+src/app/admin/admin-nav.tsx
+  1a60477d8d413c3c 1-42
+src/lib/services/job-applications.service.ts
+  1a60477d8d413c3c 1-106
+src/lib/route-handler.ts
+  1a60477d8d413c3c 1-28
+src/app/api/v1/learn/lessons/[id]/complete/route.ts
+  1a60477d8d413c3c 1-10
+src/app/api/v1/payments/course-checkout/route.ts
+  1a60477d8d413c3c 1-13
+src/lib/services/employers.service.ts
+  1a60477d8d413c3c 1-36
+src/app/admin/jobs/page.tsx
+  1a60477d8d413c3c 4-5,7,9-13,16-26,29,33-34,39-41,44-45,47-48,50-60,63-116,119
+.agents/skills/supabase-postgres-best-practices/references/_template.md
+  1a60477d8d413c3c 1-34
+src/app/(jobs)/jobs/jobs-search.tsx
+  1a60477d8d413c3c 12-13,28,31-32,36,38-39,41,53,56-86,88-97,101,104-120,122-125,127-128,130-141,143-155,157-167
+src/app/api/v1/learn/courses/[id]/sections/route.ts
+  1a60477d8d413c3c 1-12
+src/lib/services/job-listings.service.ts
+  1a60477d8d413c3c 1-89,91-94,96
+.agents/skills/supabase-postgres-best-practices/references/conn-pooling.md
+  1a60477d8d413c3c 1-41
+src/app/api/v1/insight/articles/[slug]/route.ts
+  1a60477d8d413c3c 1-19
+src/app/(learn)/learn/learn-search.tsx
+  1a60477d8d413c3c 14,25,28,31-34,40-45,48-76,81,84-114,116-125,129,132,134,136,138,140-142,146,155-156,161-169,171,175-185,192-193,201-219
+src/lib/services/admin.service.ts
+  1a60477d8d413c3c 1-101
+tsconfig.json
+  1a60477d8d413c3c 2,4-22
+src/app/api/v1/insight/tools/tax-calc/route.ts
+  1a60477d8d413c3c 1-10
+src/app/api/v1/admin/payments/route.ts
+  1a60477d8d413c3c 1-11
+src/app/api/v1/admin/experts/route.ts
+  1a60477d8d413c3c 1-11
+src/app/api/v1/insight/articles/route.ts
+  1a60477d8d413c3c 1-22
+src/app/api/v1/jobs/candidates/me/route.ts
+  1a60477d8d413c3c 1-18
+.agents/skills/supabase-postgres-best-practices/references/_sections.md
+  1a60477d8d413c3c 1-39
+src/app/api/v1/notifications/route.ts
+  1a60477d8d413c3c 1-17
+src/app/onboarding/layout.tsx
+  1a60477d8d413c3c 5-15
+packages/db/migrations/meta/0000_snapshot.json
+  1a60477d8d413c3c 1-2301
+.agents/skills/supabase-postgres-best-practices/references/lock-advisory.md
+  1a60477d8d413c3c 1-56
+CLAUDE.md
+  1a60477d8d413c3c 6,9-14,38
+package.json
+  1a60477d8d413c3c 3,6-60,63-74,76,78
+vitest.config.ts
+  1a60477d8d413c3c 1-10
+src/app/api/v1/learn/certificates/[id]/pdf/route.ts
+  1a60477d8d413c3c 1-9,11-17
+src/app/api/v1/payments/employer-subscription-checkout/route.ts
+  1a60477d8d413c3c 1-14
+src/lib/services/reviews.service.ts
+  1a60477d8d413c3c 1-47
+.agents/skills/supabase-postgres-best-practices/references/security-rls-performance.md
+  1a60477d8d413c3c 1-57
+packages/db/package.json
+  1a60477d8d413c3c 11-12,16-17,27
+.agents/skills/supabase-postgres-best-practices/references/query-composite-indexes.md
+  1a60477d8d413c3c 1-44
+tailwind.config.js
+  1a60477d8d413c3c 1-10
+src/app/(learn)/learn/[slug]/course-detail-client.tsx
+  1a60477d8d413c3c 155
+src/app/api/v1/notifications/[id]/route.ts
+  1a60477d8d413c3c 1-10
+.agents/skills/supabase-postgres-best-practices/references/conn-prepared-statements.md
+  1a60477d8d413c3c 1-46
+.agents/skills/supabase-postgres-best-practices/references/schema-foreign-key-indexes.md
+  1a60477d8d413c3c 1-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "c9ef636957d8ca903b7ad3669983f1cd966c362d",
+  "prompts": {
+    "1a60477d8d413c3c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "19432950-9f7a-4180-84b6-f63e14baef5b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole",
+      "messages": [],
+      "total_additions": 13551,
+      "total_deletions": 1196,
+      "accepted_lines": 10047,
+      "overriden_lines": 4
+    }
+  }
+}
