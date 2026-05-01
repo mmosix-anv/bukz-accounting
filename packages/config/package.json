@@ -1,0 +1,22 @@
+{
+  "name": "@bukz/config",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./typescript": "./typescript/index.json",
+    "./typescript/nextjs": "./typescript/nextjs.json",
+    "./typescript/nestjs": "./typescript/nestjs.json",
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/nextjs": "./eslint/nextjs.js",
+    "./eslint/nestjs": "./eslint/nestjs.js",
+    "./tailwind": "./tailwind/index.js"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.11.0",
+    "@typescript-eslint/parser": "^8.11.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.16",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
+  }
+}

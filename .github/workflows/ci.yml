@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [typecheck, lint, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: apps/web/.next
+          retention-days: 1
+
+  deploy-api:
+    name: Deploy API to Railway
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: corepack enable && pnpm install --frozen-lockfile
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: apps/web/.next
+      - name: Deploy to Railway
+        uses: railway-deployment/internal-deploy-action@v1
+        with:
+          service: api
+          token: ${{ secrets.RAILWAY_TOKEN }}
+
+  deploy-web:
+    name: Deploy Web to Vercel
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
