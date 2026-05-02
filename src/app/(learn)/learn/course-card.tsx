@@ -58,7 +58,7 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl dark:border-[#2a2d3e] dark:bg-[#1a1d2a] dark:hover:border-[#3a3d52] dark:hover:shadow-2xl dark:hover:shadow-black/40">
       {/* Thumbnail */}
-      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-[#0D1B3E]/5 to-[#0D1B3E]/10 dark:from-[#0D1B3E]/40 dark:to-[#0D1B3E]/60">
+      <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-[#0D1B3E]/50">
         {hit.thumbnailUrl ? (
           <Image
             src={hit.thumbnailUrl}
@@ -73,7 +73,6 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         {/* Level badge */}
         <div className="absolute left-3 top-3">

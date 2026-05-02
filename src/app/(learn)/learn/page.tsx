@@ -12,10 +12,7 @@ const LearnSearch = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div
-        className="flex min-h-[92vh] items-center justify-center"
-        style={{ background: 'linear-gradient(175deg, #07101f 0%, #0d1b3e 52%, #060c1b 100%)' }}
-      />
+      <div className="flex min-h-[92vh] items-center justify-center bg-[#0d1b3e]" />
     ),
   },
 );

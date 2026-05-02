@@ -1,45 +1,12 @@
+import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/server';
-import { apiFetch } from '@/lib/api';
+import { findCourseBySlug } from '@/lib/services/courses.service';
 import { CourseDetailClient } from './course-detail-client';
 
-interface Lesson {
-  id: string;
-  title: string;
-  durationMinutes: number | null;
-  isFree: boolean;
-  position: number;
-  content: string | null;
-  videoUrl: string | null;
-}
-
-interface Section {
-  id: string;
-  title: string;
-  position: number;
-  lessons: Lesson[];
-}
-
-interface Course {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  shortDescription: string;
-  thumbnailUrl: string | null;
-  level: string;
-  priceGbp: string;
-  cpdHours: string;
-  status: string;
-  enrollmentsCount: number;
-  ratingAvg: string | null;
-  ratingCount: number;
-  sections: Section[];
-  isEnrolled: boolean;
-  instructor: { name: string; avatarUrl: string | null } | null;
-}
+const getCourse = cache(findCourseBySlug);
 
 interface Props {
   params: { slug: string };
@@ -49,10 +16,10 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const course = await apiFetch<Course>(`/learn/courses/${params.slug}`);
+    const course = await getCourse(params.slug);
     return {
       title: `${course.title} | BUKZ Learn`,
-      description: course.shortDescription,
+      description: course.shortDescription ?? undefined,
     };
   } catch {
     return { title: 'Course not found | BUKZ' };
@@ -60,17 +27,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CourseDetailPage({ params }: Props) {
-  let course: Course;
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let raw: Awaited<ReturnType<typeof getCourse>>;
   try {
-    course = await apiFetch<Course>(`/learn/courses/${params.slug}`);
+    raw = await getCourse(params.slug, user?.id);
   } catch {
     notFound();
   }
 
-  if (course.status !== 'published') notFound();
+  if (raw.status !== 'published') notFound();
 
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const course = {
+    id: raw.id,
+    title: raw.title,
+    slug: raw.slug,
+    description: raw.description ?? '',
+    shortDescription: raw.shortDescription ?? '',
+    thumbnailUrl: raw.thumbnailUrl,
+    level: raw.level,
+    priceGbp: raw.priceGbp,
+    cpdHours: raw.cpdHours,
+    status: raw.status,
+    enrollmentsCount: raw.enrollmentsCount,
+    ratingAvg: raw.ratingAvg,
+    ratingCount: raw.ratingCount,
+    isEnrolled: raw.isEnrolled,
+    instructor: raw.instructor,
+    sections: raw.sections.map((s) => ({
+      id: s.id,
+      title: s.title,
+      position: s.position,
+      lessons: s.lessons.map((l) => ({
+        id: l.id,
+        title: l.title,
+        durationMinutes: l.durationMinutes,
+        isFree: l.isFree,
+        position: l.position,
+        content: l.content,
+        videoUrl: l.videoUrl,
+      })),
+    })),
+  };
 
   const price =
     Number(course.priceGbp) === 0

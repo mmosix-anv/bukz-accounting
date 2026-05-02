@@ -91,10 +91,11 @@ export function FilterPanel() {
           <RangeInput
             attribute="salaryMin"
             classNames={{
-              root: 'grid grid-cols-2 gap-1.5',
+              root: '',
+              form: 'grid grid-cols-2 gap-1.5',
               input: 'rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs focus:border-[#C9A84C]/50 focus:outline-none focus:ring-1 focus:ring-[#C9A84C]/30 dark:border-[#2a2d3e] dark:bg-[#181b28] dark:text-slate-100 placeholder:text-slate-400',
               separator: 'hidden',
-              submit: 'col-span-2 w-full rounded-lg bg-[#0D1B3E] py-2 text-xs font-semibold text-white hover:bg-[#162850] transition-colors dark:bg-[#C9A84C] dark:text-[#0D1B3E] dark:hover:bg-[#d4b75d]',
+              submit: 'col-span-2 w-full rounded-lg bg-[#0D1B3E] py-2 text-xs font-semibold text-white transition-colors hover:bg-[#162850] dark:bg-[#C9A84C] dark:text-[#0D1B3E] dark:hover:bg-[#d4b75d]',
             }}
           />
         </FilterSection>
@@ -103,9 +104,10 @@ export function FilterPanel() {
           attribute="remotePolicy"
           on="remote"
           classNames={{
-            root: 'flex items-center gap-2.5 rounded-lg border border-slate-200 px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:text-slate-400 dark:hover:bg-[#202433]',
-            checkbox: 'h-4 w-4 accent-[#C9A84C] cursor-pointer',
-            label: 'cursor-pointer text-sm',
+            root: 'flex items-center gap-2.5 rounded-lg border border-slate-200 px-3 py-2.5 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:hover:bg-[#202433]',
+            checkbox: 'h-4 w-4 accent-[#C9A84C] cursor-pointer shrink-0',
+            label: 'cursor-pointer text-sm text-slate-600 dark:text-slate-400',
+            labelText: 'select-none',
           }}
           label="Remote only"
         />

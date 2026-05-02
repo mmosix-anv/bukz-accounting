@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
+import { findApplicationsByCandidate } from '@/lib/services/job-applications.service';
 import { Anchor, Badge, Button, Card, Container, Group, Stack, Text, Title } from '@mantine/core';
 
 export const metadata: Metadata = { title: 'My Applications | BUKZ' };
@@ -42,8 +42,13 @@ export default async function ApplicationsPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login?redirectTo=/dashboard/applications');
 
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-  const applications = await apiFetch<Application[]>('/jobs/applications/my', { token }).catch(() => [] as Application[]);
+  const rawApps = await findApplicationsByCandidate(user.id).catch(() => []);
+  const applications: Application[] = rawApps.map((a) => ({
+    id: a.id, status: a.status, coverLetter: a.coverLetter,
+    createdAt: a.createdAt.toISOString(), jobTitle: a.jobTitle,
+    jobSlug: a.jobSlug, jobLocation: a.jobLocation,
+    salaryMin: a.salaryMin, salaryMax: a.salaryMax, salaryCurrency: a.salaryCurrency,
+  }));
 
   const grouped = {
     active: applications.filter((a) => !['rejected'].includes(a.status)),

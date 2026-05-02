@@ -10,7 +10,7 @@ import {
   SortBy,
   useInstantSearch,
 } from 'react-instantsearch';
-import { algoliasearch } from 'algoliasearch';
+import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { Award, BookOpen, GraduationCap, Search, SlidersHorizontal, X } from 'lucide-react';
 import { CourseCard, type CourseHit } from './course-card';
 
@@ -126,7 +126,6 @@ export function LearnSearch() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent dark:from-[#14151e]" />
       </div>
 
       {/* ── Search + Results ─────────────────────────────────────────── */}

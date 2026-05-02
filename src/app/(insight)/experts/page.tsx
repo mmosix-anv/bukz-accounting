@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { ExpertsDirectoryClient } from './experts-directory-client';
-import { apiFetch } from '@/lib/api';
+import { findAllExperts } from '@/lib/services/experts.service';
 
 export const metadata: Metadata = {
   title: 'Accounting Experts Directory | BUKZ Insight',
@@ -21,7 +21,7 @@ interface Expert {
 }
 
 export default async function ExpertsPage() {
-  const experts = await apiFetch<Expert[]>('/insight/experts').catch(() => [] as Expert[]);
+  const experts = await findAllExperts().catch(() => [] as Expert[]);
 
   const allSpecialisations = Array.from(
     new Set(experts.flatMap((e) => e.specialisations)),

@@ -43,6 +43,7 @@ export async function findApplicationsByCandidate(userId: string) {
       jobLocation: jobListings.location,
       salaryMin: jobListings.salaryMin,
       salaryMax: jobListings.salaryMax,
+      salaryCurrency: jobListings.salaryCurrency,
     })
     .from(jobApplications)
     .innerJoin(jobListings, eq(jobListings.id, jobApplications.jobId))

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { apiFetch } from '@/lib/api';
+import { findExpertByUsername } from '@/lib/services/experts.service';
 import { CalEmbed } from './cal-embed';
 
 interface Expert {
@@ -23,17 +23,24 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const expert = await apiFetch<Expert>(`/insight/experts/${params.username}`).catch(() => null);
-  if (!expert) return { title: 'Expert not found' };
-  return {
-    title: `${expert.name} — BUKZ Expert`,
-    description: expert.bio?.slice(0, 155),
-  };
+  try {
+    const expert = await findExpertByUsername(params.username);
+    return {
+      title: `${expert.name} — BUKZ Expert`,
+      description: expert.bio?.slice(0, 155) ?? undefined,
+    };
+  } catch {
+    return { title: 'Expert not found' };
+  }
 }
 
 export default async function ExpertProfilePage({ params }: Props) {
-  const expert = await apiFetch<Expert>(`/insight/experts/${params.username}`).catch(() => null);
-  if (!expert) notFound();
+  let expert: Awaited<ReturnType<typeof findExpertByUsername>>;
+  try {
+    expert = await findExpertByUsername(params.username);
+  } catch {
+    notFound();
+  }
 
   const hourly = expert.hourlyRateGbp
     ? new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP', maximumFractionDigits: 0 }).format(Number(expert.hourlyRateGbp))

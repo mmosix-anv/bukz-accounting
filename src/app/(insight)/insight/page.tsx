@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Lightbulb, Calculator, CheckSquare, BarChart3, ArrowRight } from 'lucide-react';
-import { apiFetch } from '@/lib/api';
+import { findAllArticles } from '@/lib/services/articles.service';
 import { InsightClient } from './insight-client';
 
 export const metadata: Metadata = {
@@ -14,16 +14,25 @@ interface Article {
   id: string;
   title: string;
   slug: string;
-  excerpt: string | null;
-  coverImageUrl: string | null;
+  excerpt: string;
+  featuredImageUrl: string | null;
   categoryId: string | null;
-  readTimeMinutes: number | null;
   publishedAt: string | null;
-  viewCount: number | null;
+  viewCount: number;
 }
 
 export default async function InsightPage() {
-  const articles = await apiFetch<Article[]>('/insight/articles?limit=21&featuredFirst=true').catch(() => [] as Article[]);
+  const rawArticles = await findAllArticles(21).catch(() => []);
+  const articles = rawArticles.map((a) => ({
+    id: a.id,
+    title: a.title,
+    slug: a.slug,
+    excerpt: a.excerpt,
+    featuredImageUrl: a.featuredImageUrl,
+    categoryId: a.categoryId,
+    publishedAt: a.publishedAt?.toISOString() ?? null,
+    viewCount: a.viewCount,
+  }));
 
   const featured = articles[0] ?? null;
   const rest = articles.slice(1);
@@ -36,7 +45,6 @@ export default async function InsightPage() {
       <div className="relative bg-[#0D1B3E] overflow-hidden">
         <div className="absolute inset-0">
           <Image src="/images/insight-hero.svg" alt="" fill className="object-cover" />
-          <div className="absolute inset-0 line-pattern" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="max-w-2xl">
@@ -46,23 +54,22 @@ export default async function InsightPage() {
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
               BUKZ{' '}
-              <span className="bg-gradient-to-r from-[#C9A84C] to-[#E8D595] bg-clip-text text-transparent">Insight</span>
+              <span className="text-[#C9A84C]">Insight</span>
             </h1>
             <p className="mt-4 text-lg text-slate-300/90 max-w-lg leading-relaxed">
               Expert analysis and guidance for UK accounting professionals
             </p>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-10">
         {featured ? (
           <Link href={`/insight/${featured.slug}`} className="group block overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="relative h-64 md:h-auto bg-gradient-to-br from-primary/5 to-primary/10">
-                {featured.coverImageUrl ? (
-                  <Image src={featured.coverImageUrl} alt={featured.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="relative h-64 md:h-auto bg-slate-100 dark:bg-[#1a1d2a]">
+                {featured.featuredImageUrl ? (
+                  <Image src={featured.featuredImageUrl} alt={featured.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
                   <div className="flex h-full items-center justify-center">
                     <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/80 shadow-sm">
@@ -70,7 +77,7 @@ export default async function InsightPage() {
                     </div>
                   </div>
                 )}
-                <span className="absolute left-4 top-4 rounded-full bg-gradient-to-r from-[#C9A84C] to-[#B8943A] px-3.5 py-1.5 text-xs font-semibold text-white shadow-lg shadow-[#C9A84C]/20">
+                <span className="absolute left-4 top-4 rounded-full bg-[#C9A84C] px-3.5 py-1.5 text-xs font-semibold text-[#0D1B3E] shadow-lg shadow-[#C9A84C]/20">
                   Featured
                 </span>
               </div>
@@ -88,8 +95,6 @@ export default async function InsightPage() {
                 )}
                 <div className="mt-6 flex items-center gap-4">
                   <p className="text-xs text-slate-400">
-                    {featured.readTimeMinutes ? `${featured.readTimeMinutes} min read` : ''}
-                    {featured.readTimeMinutes && featured.publishedAt ? ' · ' : ''}
                     {featured.publishedAt ? new Date(featured.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
                   </p>
                   <span className="flex items-center gap-1 text-xs font-semibold text-primary group-hover:text-[#C9A84C] transition-colors">
@@ -107,7 +112,7 @@ export default async function InsightPage() {
         {/* Tools Section */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 pt-4">
           <Link href="/tools/tax-calculator" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#C9A84C]/30 hover:shadow-lg hover:shadow-[#C9A84C]/5 hover:-translate-y-0.5 transition-all duration-300">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 border border-blue-100">
               <Calculator size={20} className="text-blue-600" />
             </div>
             <div>
@@ -116,7 +121,7 @@ export default async function InsightPage() {
             </div>
           </Link>
           <Link href="/tools/ir35-checker" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#C9A84C]/30 hover:shadow-lg hover:shadow-[#C9A84C]/5 hover:-translate-y-0.5 transition-all duration-300">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-100">
               <CheckSquare size={20} className="text-emerald-600" />
             </div>
             <div>
@@ -125,7 +130,7 @@ export default async function InsightPage() {
             </div>
           </Link>
           <Link href="/tools/salary-benchmarker" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#C9A84C]/30 hover:shadow-lg hover:shadow-[#C9A84C]/5 hover:-translate-y-0.5 transition-all duration-300">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-100">
               <BarChart3 size={20} className="text-amber-600" />
             </div>
             <div>
@@ -143,9 +148,7 @@ export default async function InsightPage() {
 
 function NewsletterSignup() {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0D1B3E] via-[#1F2E62] to-[#0D1B3E] px-8 py-12 text-center">
-      <div className="absolute inset-0 line-pattern opacity-40" />
-      <div className="absolute inset-0 gradient-mesh-dark opacity-60" />
+    <div className="relative overflow-hidden rounded-2xl bg-[#0D1B3E] px-8 py-12 text-center">
       <div className="relative">
         <h2 className="text-2xl font-bold text-white">Stay ahead of the curve</h2>
         <p className="mt-3 text-slate-300/90 text-sm max-w-md mx-auto leading-relaxed">
@@ -161,7 +164,7 @@ function NewsletterSignup() {
           />
           <button
             type="submit"
-            className="shrink-0 rounded-lg bg-gradient-to-r from-[#C9A84C] to-[#B8943A] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#C9A84C]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+            className="shrink-0 rounded-lg bg-[#C9A84C] px-6 py-3 text-sm font-semibold text-[#0D1B3E] shadow-lg shadow-[#C9A84C]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
           >
             Subscribe
           </button>

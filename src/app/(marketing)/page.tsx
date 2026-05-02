@@ -26,7 +26,6 @@ const pillars = [
     icon: '/images/icon-jobs.svg',
     stat: '2,500+',
     statLabel: 'Active roles',
-    gradient: 'from-blue-500/10 to-indigo-500/10',
     accentBorder: 'group-hover:border-blue-400/50',
   },
   {
@@ -39,7 +38,6 @@ const pillars = [
     icon: '/images/icon-learn.svg',
     stat: '150+',
     statLabel: 'CPD courses',
-    gradient: 'from-emerald-500/10 to-teal-500/10',
     accentBorder: 'group-hover:border-emerald-400/50',
   },
   {
@@ -52,7 +50,6 @@ const pillars = [
     icon: '/images/icon-insight.svg',
     stat: '50+',
     statLabel: 'Expert contributors',
-    gradient: 'from-amber-500/10 to-orange-500/10',
     accentBorder: 'group-hover:border-amber-400/50',
   },
 ];
@@ -213,7 +210,6 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent dark:from-[#14151e]" />
       </section>
 
       <section className="relative z-10 mx-auto -mt-16 max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -225,7 +221,6 @@ export default function HomePage() {
                 key={stat.label}
                 className={`group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 text-center shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-[#2a2d3e] dark:bg-[#181b28] sm:p-8 animate-fade-in-up stagger-${index + 1}`}
               >
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(201,168,76,0.06),transparent_42%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative">
                   <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#0D1B3E]/5 transition-all duration-300 group-hover:scale-110 group-hover:bg-[#C9A84C]/10 dark:bg-white/5">
                     <Icon
@@ -245,7 +240,6 @@ export default function HomePage() {
       </section>
 
       <section className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-        <div className="absolute inset-0 gradient-mesh opacity-50" />
         <div className="relative">
           <div className="mb-16 text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#C9A84C]/10 px-4 py-1.5">
@@ -268,10 +262,6 @@ export default function HomePage() {
                 href={pillar.href}
                 className={`group relative flex flex-col rounded-2xl border border-slate-200/80 bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:border-[#C9A84C]/30 hover:shadow-2xl hover:shadow-[#C9A84C]/[0.06] dark:border-[#2a2d3e] dark:bg-[#181b28] lg:p-10 ${pillar.accentBorder}`}
               >
-                <div className="absolute left-0 right-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-[#0D1B3E] to-[#C9A84C] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div
-                  className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${pillar.gradient} opacity-0 transition-opacity duration-500 group-hover:opacity-100`}
-                />
 
                 <div className="relative">
                   <div className="mb-8 flex items-start justify-between">
@@ -313,7 +303,6 @@ export default function HomePage() {
       </section>
 
       <section className="relative border-y border-slate-100 bg-slate-50/80 dark:border-[#202433] dark:bg-[#10131d]">
-        <div className="absolute inset-0 dot-pattern opacity-30" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm dark:border-[#2a2d3e] dark:bg-[#181b28]">
@@ -365,7 +354,6 @@ export default function HomePage() {
               key={item.name}
               className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-[#2a2d3e] dark:bg-[#181b28]"
             >
-              <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-[#C9A84C]/30 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="mb-5 flex gap-0.5">
                 {Array.from({ length: item.rating }).map((_, index) => (
                   <Star key={index} size={14} className="fill-[#C9A84C] text-[#C9A84C]" />
@@ -375,7 +363,7 @@ export default function HomePage() {
                 &ldquo;{item.quote}&rdquo;
               </p>
               <div className="mt-8 flex items-center gap-3 border-t border-slate-100 pt-6 dark:border-[#2a2d3e]">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-[#0D1B3E] to-[#5A729F] shadow-md ring-2 ring-white">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#0D1B3E] shadow-md ring-2 ring-white">
                   <span className="text-sm font-bold text-white">{item.name[0]}</span>
                 </div>
                 <div>
@@ -393,8 +381,6 @@ export default function HomePage() {
       </section>
 
       <section className="relative overflow-hidden bg-[#0D1B3E] dark:bg-[#0a0c14]">
-        <div className="absolute inset-0 gradient-mesh-dark" />
-        <div className="absolute inset-0 line-pattern" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-8">
             {[
@@ -463,7 +449,7 @@ export default function HomePage() {
             },
           ].map((item) => (
             <div key={item.step} className="relative text-center">
-              <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0D1B3E] to-[#1F2E62] shadow-lg shadow-[#0D1B3E]/20">
+              <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0D1B3E] shadow-lg shadow-[#0D1B3E]/20">
                 <span className="text-lg font-bold text-[#C9A84C]">{item.step}</span>
               </div>
               <h3 className="mb-2 text-lg font-semibold text-[#0D1B3E] dark:text-white">

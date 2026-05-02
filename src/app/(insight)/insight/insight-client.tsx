@@ -3,18 +3,17 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FileText, Clock, ArrowRight } from 'lucide-react';
+import { FileText, ArrowRight } from 'lucide-react';
 
 interface Article {
   id: string;
   title: string;
   slug: string;
-  excerpt: string | null;
-  coverImageUrl: string | null;
+  excerpt: string;
+  featuredImageUrl: string | null;
   categoryId: string | null;
-  readTimeMinutes: number | null;
   publishedAt: string | null;
-  viewCount: number | null;
+  viewCount: number;
 }
 
 interface Props {
@@ -75,15 +74,14 @@ function ArticleCard({ article }: { article: Article }) {
       href={`/insight/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
     >
-      <div className="relative h-48 bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center overflow-hidden">
-        {article.coverImageUrl ? (
-          <Image src={article.coverImageUrl} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+      <div className="relative h-48 bg-slate-100 dark:bg-[#1a1d2a] flex items-center justify-center overflow-hidden">
+        {article.featuredImageUrl ? (
+          <Image src={article.featuredImageUrl} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 shadow-sm">
             <FileText size={24} className="text-primary/60" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
       <div className="flex flex-col flex-1 p-6">
         {article.categoryId && (
@@ -99,12 +97,6 @@ function ArticleCard({ article }: { article: Article }) {
         )}
         <div className="mt-auto pt-4 flex items-center justify-between border-t border-slate-100">
           <div className="flex items-center gap-3 text-xs text-slate-400">
-            {article.readTimeMinutes && (
-              <span className="flex items-center gap-1">
-                <Clock size={11} />
-                {article.readTimeMinutes} min
-              </span>
-            )}
             {date && <span>{date}</span>}
           </div>
           <ArrowRight size={14} className="text-slate-300 group-hover:text-[#C9A84C] group-hover:translate-x-0.5 transition-all duration-200" />

@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
+import { findApplicationsByCandidate } from '@/lib/services/job-applications.service';
+import { findEnrollmentsByUser } from '@/lib/services/enrollments.service';
 import { SkillsGapButton } from './skills-gap-button';
 import { Anchor, Badge, Box, Card, Container, Group, Progress, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 
@@ -41,15 +42,29 @@ const STATUS_COLOURS: Record<string, string> = {
 
 export default async function DashboardPage() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/login');
-
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-
-  const [applications, enrollments] = await Promise.all([
-    apiFetch<Application[]>('/jobs/applications/my', { token }).catch(() => [] as Application[]),
-    apiFetch<Enrollment[]>('/learn/enrollments/my', { token }).catch(() => [] as Enrollment[]),
+  const [{ data: { user } }, { data: { session } }] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.auth.getSession(),
   ]);
+  if (!user) redirect('/auth/login');
+  const token = session?.access_token;
+
+  const [rawApps, rawEnrolls] = await Promise.all([
+    findApplicationsByCandidate(user.id).catch(() => []),
+    findEnrollmentsByUser(user.id).catch(() => []),
+  ]);
+
+  const applications: Application[] = rawApps.map((a) => ({
+    id: a.id, status: a.status, createdAt: a.createdAt.toISOString(),
+    jobTitle: a.jobTitle, jobSlug: a.jobSlug, jobLocation: a.jobLocation,
+    salaryMin: a.salaryMin, salaryMax: a.salaryMax, salaryCurrency: a.salaryCurrency,
+  }));
+
+  const enrollments: Enrollment[] = rawEnrolls.map((e) => ({
+    id: e.id, courseId: e.courseId, progressPercent: e.progressPercent,
+    completedAt: e.completedAt?.toISOString() ?? null, createdAt: e.createdAt.toISOString(),
+    courseTitle: e.courseTitle, courseSlug: e.courseSlug, thumbnailUrl: e.thumbnailUrl,
+  }));
 
   const displayName = user.user_metadata?.['full_name'] ?? user.email?.split('@')[0] ?? 'there';
   const inProgress = enrollments.filter((e) => !e.completedAt);

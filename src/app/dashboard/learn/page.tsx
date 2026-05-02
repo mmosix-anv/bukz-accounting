@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { apiFetch } from '@/lib/api';
+import { findEnrollmentsByUser } from '@/lib/services/enrollments.service';
+import { findCertificatesByUser } from '@/lib/services/certificates.service';
+import { getCpdSummary } from '@/lib/services/cpd.service';
 import { LearnDashboardClient } from './learn-dashboard-client';
 import { Button, Container, Group, Stack, Text, Title } from '@mantine/core';
 import Link from 'next/link';
@@ -48,16 +50,30 @@ interface CpdSummary {
 
 export default async function LearnDashboardPage() {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/auth/login?redirectTo=/dashboard/learn');
-
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-
-  const [enrollments, certificates, cpdSummary] = await Promise.all([
-    apiFetch<Enrollment[]>('/learn/enrollments/my', { token }).catch(() => []),
-    apiFetch<Certificate[]>('/learn/certificates/my', { token }).catch(() => []),
-    apiFetch<CpdSummary>('/learn/cpd/my/summary', { token }).catch(() => null),
+  const [{ data: { user } }, { data: { session } }] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.auth.getSession(),
   ]);
+  if (!user) redirect('/auth/login?redirectTo=/dashboard/learn');
+  const token = session?.access_token;
+
+  const [rawEnrolls, rawCerts, cpdSummary] = await Promise.all([
+    findEnrollmentsByUser(user.id).catch(() => []),
+    findCertificatesByUser(user.id).catch(() => []),
+    getCpdSummary(user.id).catch(() => null),
+  ]);
+
+  const enrollments: Enrollment[] = rawEnrolls.map((e) => ({
+    id: e.id, courseId: e.courseId, progressPercent: e.progressPercent,
+    completedAt: e.completedAt?.toISOString() ?? null, createdAt: e.createdAt.toISOString(),
+    courseTitle: e.courseTitle, courseSlug: e.courseSlug, thumbnailUrl: e.thumbnailUrl,
+    cpdHours: e.cpdHours, priceGbp: e.priceGbp, level: e.level, ratingAvg: e.ratingAvg,
+  }));
+
+  const certificates: Certificate[] = rawCerts.map((c) => ({
+    id: c.id, issuedAt: c.issuedAt.toISOString(), courseTitle: c.courseTitle,
+    courseSlug: c.courseSlug, cpdHours: c.cpdHours, certificateUrl: c.certificateUrl,
+  }));
 
   return (
     <Container size="xl" py="xl">

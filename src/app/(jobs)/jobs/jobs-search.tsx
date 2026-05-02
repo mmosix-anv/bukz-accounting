@@ -8,9 +8,8 @@ import {
   Configure,
   useInstantSearch,
 } from 'react-instantsearch';
-import { algoliasearch } from 'algoliasearch';
-import { Drawer, Text } from '@mantine/core';
-import { SlidersHorizontal, Briefcase, MapPin, TrendingUp, Search } from 'lucide-react';
+import { liteClient as algoliasearch } from 'algoliasearch/lite';
+import { SlidersHorizontal, Briefcase, MapPin, TrendingUp, Search, X } from 'lucide-react';
 import { JobCard, type JobHit } from './job-card';
 import { FilterPanel } from './filter-panel';
 
@@ -98,7 +97,6 @@ export function JobsSearch() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent dark:from-[#14151e]" />
       </div>
 
       {/* ── Search + Results ─────────────────────────────────────────── */}
@@ -130,7 +128,7 @@ export function JobsSearch() {
           {/* Results */}
           <div className="min-w-0 flex-1">
             <div className="mb-4 flex items-center justify-between">
-              <Text size="sm" c="dimmed">Accounting &amp; finance roles across the UK</Text>
+              <span className="text-sm text-slate-500 dark:text-slate-400">Accounting &amp; finance roles across the UK</span>
               <button
                 onClick={() => setMobileFiltersOpen(true)}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:bg-[#1a1d2a] dark:text-slate-300 lg:hidden"
@@ -154,19 +152,24 @@ export function JobsSearch() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      <Drawer
-        opened={mobileFiltersOpen}
-        onClose={() => setMobileFiltersOpen(false)}
-        title="Filters"
-        padding="md"
-        classNames={{
-          content: 'bg-white dark:bg-[#14151e]',
-          header: 'border-b border-slate-200 dark:border-[#2a2d3e]',
-        }}
-      >
-        <FilterPanel />
-      </Drawer>
+      {/* Mobile filter drawer */}
+      {mobileFiltersOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileFiltersOpen(false)} />
+          <div className="absolute right-0 top-0 flex h-full w-72 flex-col overflow-y-auto bg-white p-6 shadow-2xl dark:bg-[#14151e]">
+            <div className="mb-5 flex items-center justify-between">
+              <span className="font-semibold text-[#0D1B3E] dark:text-white">Filters</span>
+              <button
+                onClick={() => setMobileFiltersOpen(false)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-[#202433]"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <FilterPanel />
+          </div>
+        </div>
+      )}
     </InstantSearch>
   );
 }

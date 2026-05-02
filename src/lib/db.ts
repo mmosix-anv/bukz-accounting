@@ -7,7 +7,11 @@ declare global {
   var __dbClient: ReturnType<typeof postgres> | undefined;
 }
 
-const client = globalThis.__dbClient ?? postgres(process.env['DATABASE_URL']!);
-if (process.env['NODE_ENV'] !== 'production') globalThis.__dbClient = client;
+const client = globalThis.__dbClient ?? postgres(process.env['DATABASE_URL']!, {
+  max: 1,
+  idle_timeout: 20,
+  connect_timeout: 10,
+});
+globalThis.__dbClient = client;
 
 export const db = drizzle(client, { schema });

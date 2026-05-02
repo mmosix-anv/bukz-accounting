@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
+import { findCertificatesByUser } from '@/lib/services/certificates.service';
 import { Anchor, Button, Card, Container, Group, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { GraduationCap } from 'lucide-react';
 
@@ -24,8 +24,11 @@ export default async function CertificatesPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login?redirectTo=/dashboard/learn/certificates');
 
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-  const certificates = await apiFetch<Certificate[]>('/learn/certificates/my', { token }).catch(() => [] as Certificate[]);
+  const rawCerts = await findCertificatesByUser(user.id).catch(() => []);
+  const certificates: Certificate[] = rawCerts.map((c) => ({
+    id: c.id, issuedAt: c.issuedAt.toISOString(), courseTitle: c.courseTitle,
+    courseSlug: c.courseSlug, cpdHours: c.cpdHours, certificateUrl: c.certificateUrl,
+  }));
 
   return (
     <Container size="md" py="xl">
