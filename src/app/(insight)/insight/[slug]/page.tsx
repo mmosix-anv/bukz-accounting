@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation';
 import { findArticleBySlug } from '@/lib/services/articles.service';
 import { ArticleActions } from './article-actions';
 
-const getArticle = cache(findArticleBySlug);
+const getCachedArticleBySlug = cache(findArticleBySlug);
 
 interface Props {
   params: { slug: string };
@@ -14,7 +14,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
-    const article = await getArticle(params.slug);
+    const article = await getCachedArticleBySlug(params.slug);
     return {
       title: `${article.title} | BUKZ Insight`,
       description: article.excerpt ?? undefined,
@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ArticleDetailPage({ params }: Props) {
-  let raw: Awaited<ReturnType<typeof getArticle>>;
+  let raw: Awaited<ReturnType<typeof getCachedArticleBySlug>>;
   try {
-    raw = await getArticle(params.slug);
+    raw = await getCachedArticleBySlug(params.slug);
   } catch {
     notFound();
   }
