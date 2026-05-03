@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -273,7 +273,7 @@ export function InstructorDashboardClient({ courses, token }: Props) {
                         <XAxis dataKey="date" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} interval={6} />
                         <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} allowDecimals={false} />
                         <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }} />
-                        <Line type="monotone" dataKey="enrollments" stroke="#C9A84C" strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="enrollments" stroke="#2cd7f2" strokeWidth={2} dot={false} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>

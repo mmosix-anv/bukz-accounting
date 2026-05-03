@@ -1,29 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
   <defs>
     <linearGradient id="lh-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0D1B3E"/>
-      <stop offset="50%" stop-color="#1F2E62"/>
-      <stop offset="100%" stop-color="#0D1B3E"/>
+      <stop offset="0%" stop-color="#0f2a2e"/>
+      <stop offset="50%" stop-color="#0D3845"/>
+      <stop offset="100%" stop-color="#0f2a2e"/>
     </linearGradient>
     <radialGradient id="lh-glow1" cx="30%" cy="40%" r="40%">
-      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2cd7f2" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#2cd7f2" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="lh-glow2" cx="75%" cy="60%" r="35%">
-      <stop offset="0%" stop-color="#5A729F" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#5A729F" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2A7A84" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#2A7A84" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="800" height="400" fill="url(#lh-bg)"/>
   <ellipse cx="240" cy="160" rx="200" ry="140" fill="url(#lh-glow1)"/>
   <ellipse cx="600" cy="240" rx="180" ry="130" fill="url(#lh-glow2)"/>
-  <g stroke="#C9A84C" stroke-opacity="0.12" stroke-width="1" fill="none">
+  <g stroke="#2cd7f2" stroke-opacity="0.12" stroke-width="1" fill="none">
     <rect x="100" y="80" width="160" height="200" rx="12"/>
-    <rect x="120" y="100" width="120" height="60" rx="6" fill="#C9A84C" fill-opacity="0.05"/>
+    <rect x="120" y="100" width="120" height="60" rx="6" fill="#2cd7f2" fill-opacity="0.05"/>
     <rect x="120" y="175" width="100" height="8" rx="3"/>
     <rect x="120" y="190" width="70" height="8" rx="3"/>
-    <rect x="120" y="215" width="120" height="4" rx="2" fill="#C9A84C" fill-opacity="0.1"/>
-    <rect x="120" y="215" width="72" height="4" rx="2" fill="#C9A84C" fill-opacity="0.3"/>
+    <rect x="120" y="215" width="120" height="4" rx="2" fill="#2cd7f2" fill-opacity="0.1"/>
+    <rect x="120" y="215" width="72" height="4" rx="2" fill="#2cd7f2" fill-opacity="0.3"/>
     <rect x="120" y="240" width="50" height="16" rx="6"/>
   </g>
   <g stroke="#ffffff" stroke-opacity="0.08" stroke-width="1" fill="none">
@@ -32,16 +32,16 @@
     <rect x="340" y="215" width="100" height="8" rx="3"/>
     <rect x="340" y="230" width="70" height="8" rx="3"/>
     <rect x="340" y="255" width="120" height="4" rx="2" fill="#ffffff" fill-opacity="0.06"/>
-    <rect x="340" y="255" width="96" height="4" rx="2" fill="#C9A84C" fill-opacity="0.2"/>
+    <rect x="340" y="255" width="96" height="4" rx="2" fill="#2cd7f2" fill-opacity="0.2"/>
     <rect x="340" y="280" width="50" height="16" rx="6"/>
   </g>
-  <g stroke="#C9A84C" stroke-opacity="0.08" stroke-width="1" fill="none">
+  <g stroke="#2cd7f2" stroke-opacity="0.08" stroke-width="1" fill="none">
     <rect x="540" y="60" width="160" height="200" rx="12"/>
-    <rect x="560" y="80" width="120" height="60" rx="6" fill="#C9A84C" fill-opacity="0.04"/>
+    <rect x="560" y="80" width="120" height="60" rx="6" fill="#2cd7f2" fill-opacity="0.04"/>
     <rect x="560" y="155" width="100" height="8" rx="3"/>
     <rect x="560" y="170" width="70" height="8" rx="3"/>
-    <rect x="560" y="195" width="120" height="4" rx="2" fill="#C9A84C" fill-opacity="0.08"/>
-    <rect x="560" y="195" width="48" height="4" rx="2" fill="#C9A84C" fill-opacity="0.25"/>
+    <rect x="560" y="195" width="120" height="4" rx="2" fill="#2cd7f2" fill-opacity="0.08"/>
+    <rect x="560" y="195" width="48" height="4" rx="2" fill="#2cd7f2" fill-opacity="0.25"/>
     <rect x="560" y="220" width="50" height="16" rx="6"/>
   </g>
   <g opacity="0.04" stroke="white" stroke-width="0.5">

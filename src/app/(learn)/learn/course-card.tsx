@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -30,7 +30,7 @@ function StarRating({ avg, count }: { avg?: number; count?: number }) {
           <Star
             key={i}
             size={12}
-            className={i < full ? 'fill-[#C9A84C] text-[#C9A84C]' : i === full && half ? 'fill-[#C9A84C]/50 text-[#C9A84C]' : 'fill-slate-200 text-slate-200 dark:fill-slate-600 dark:text-slate-600'}
+            className={i < full ? 'fill-[#2cd7f2] text-[#2cd7f2]' : i === full && half ? 'fill-[#2cd7f2]/50 text-[#2cd7f2]' : 'fill-slate-200 text-slate-200 dark:fill-slate-600 dark:text-slate-600'}
           />
         ))}
       </div>
@@ -56,9 +56,9 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
   const levelCfg = LEVEL_CONFIG[hit.level] ?? { light: 'bg-slate-50 text-slate-600 border-slate-200', dark: 'dark:bg-slate-800/50 dark:text-slate-400 dark:border-slate-700' };
 
   return (
-    <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl dark:border-[#2a2d3e] dark:bg-[#1a1d2a] dark:hover:border-[#3a3d52] dark:hover:shadow-2xl dark:hover:shadow-black/40">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-xl dark:border-[#183038] dark:bg-[#0F2228] dark:hover:border-[#3a3d52] dark:hover:shadow-2xl dark:hover:shadow-black/40">
       {/* Thumbnail */}
-      <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-[#0D1B3E]/50">
+      <div className="relative h-48 overflow-hidden bg-slate-100 dark:bg-[#0f2a2e]/50">
         {hit.thumbnailUrl ? (
           <Image
             src={hit.thumbnailUrl}
@@ -68,8 +68,8 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
           />
         ) : (
           <div className="flex h-full items-center justify-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 shadow-sm dark:bg-[#1a1d2a]/80">
-              <BookOpen size={26} className="text-[#0D1B3E]/50 dark:text-slate-400" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/80 shadow-sm dark:bg-[#0F2228]/80">
+              <BookOpen size={26} className="text-[#0f2a2e]/50 dark:text-slate-400" />
             </div>
           </div>
         )}
@@ -83,7 +83,7 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
 
         {/* CPD badge */}
         <div className="absolute right-3 top-3">
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#0D1B3E]/90 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#0f2a2e]/90 px-2.5 py-0.5 text-xs font-semibold text-white backdrop-blur-sm">
             {hit.cpdHours} CPD hrs
           </span>
         </div>
@@ -93,7 +93,7 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
       <div className="flex flex-1 flex-col p-5">
         <Link
           href={`/learn/${hit.slug}`}
-          className="line-clamp-2 font-semibold leading-snug text-[#0D1B3E] transition-colors duration-200 hover:text-[#C9A84C] dark:text-slate-100 dark:hover:text-[#C9A84C]"
+          className="line-clamp-2 font-semibold leading-snug text-[#0f2a2e] transition-colors duration-200 hover:text-[#2cd7f2] dark:text-slate-100 dark:hover:text-[#2cd7f2]"
         >
           {hit.title}
         </Link>
@@ -110,9 +110,9 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
           <StarRating avg={hit.ratingAvg} count={hit.ratingCount} />
         </div>
 
-        <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 dark:border-[#2a2d3e]">
+        <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 dark:border-[#183038]">
           <div>
-            <p className="text-lg font-bold text-[#0D1B3E] dark:text-white">{price}</p>
+            <p className="text-lg font-bold text-[#0f2a2e] dark:text-white">{price}</p>
             <p className="flex items-center gap-1 text-xs text-slate-400 dark:text-slate-500">
               <Users size={10} />
               {hit.enrollmentsCount.toLocaleString()} enrolled
@@ -120,7 +120,7 @@ export function CourseCard({ hit }: { hit: CourseHit }) {
           </div>
           <Link
             href={`/learn/${hit.slug}`}
-            className="rounded-xl bg-[#0D1B3E] px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#0D1B3E]/90 hover:shadow-md dark:bg-[#C9A84C] dark:text-[#0D1B3E] dark:hover:bg-[#d4b75d]"
+            className="rounded-xl bg-[#0f2a2e] px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#0f2a2e]/90 hover:shadow-md dark:bg-[#2cd7f2] dark:text-[#0f2a2e] dark:hover:bg-[#1bc6e2]"
           >
             View course
           </Link>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { createTheme, MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
@@ -11,28 +11,28 @@ const theme = createTheme({
   defaultRadius: 'md',
   colors: {
     primary: [
-      '#E8EBF3',
-      '#C6CEDF',
-      '#9FAEC8',
-      '#788DB1',
-      '#5A729F',
-      '#3D578D',
-      '#2E4278',
-      '#1F2E62',
-      '#0D1B3E',
-      '#060D1F',
+      '#E8F3F4',
+      '#C5E0E3',
+      '#9CCDD1',
+      '#71B8BF',
+      '#48A4AE',
+      '#278E98',
+      '#1A7380',
+      '#0F5560',
+      '#0f2a2e',
+      '#030F12',
     ],
     accent: [
-      '#FAF4E5',
-      '#F2E5BF',
-      '#E8D595',
-      '#DEC46B',
-      '#D4B752',
-      '#C9A84C',
-      '#B8943A',
-      '#9A7A2C',
-      '#7C611E',
-      '#5E4710',
+      '#E6FAFB',
+      '#B3F0F5',
+      '#7AE5ED',
+      '#3DD9E5',
+      '#00CEDA',
+      '#2cd7f2',
+      '#00A8B8',
+      '#008A98',
+      '#006C78',
+      '#004E58',
     ],
     dark: [
       '#C1C2C5',
@@ -73,7 +73,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <MantineProvider theme={theme} defaultColorScheme="auto">
+    <MantineProvider theme={theme} defaultColorScheme="light">
       <Notifications position="top-right" limit={3} />
       <QueryClientProvider client={queryClient}>
         <PostHogSetup>{children}</PostHogSetup>

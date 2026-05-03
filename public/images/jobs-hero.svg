@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" fill="none">
   <defs>
     <linearGradient id="jh-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0D1B3E"/>
-      <stop offset="100%" stop-color="#1F2E62"/>
+      <stop offset="0%" stop-color="#0f2a2e"/>
+      <stop offset="100%" stop-color="#0D3845"/>
     </linearGradient>
     <radialGradient id="jh-glow1" cx="70%" cy="40%" r="40%">
-      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2cd7f2" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#2cd7f2" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="jh-glow2" cx="20%" cy="70%" r="35%">
-      <stop offset="0%" stop-color="#5A729F" stop-opacity="0.2"/>
-      <stop offset="100%" stop-color="#5A729F" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2A7A84" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#2A7A84" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="800" height="400" fill="url(#jh-bg)"/>
   <ellipse cx="560" cy="160" rx="200" ry="150" fill="url(#jh-glow1)"/>
   <ellipse cx="160" cy="280" rx="180" ry="130" fill="url(#jh-glow2)"/>
-  <g stroke="#C9A84C" stroke-opacity="0.12" stroke-width="1" fill="none">
+  <g stroke="#2cd7f2" stroke-opacity="0.12" stroke-width="1" fill="none">
     <rect x="520" y="60" width="220" height="140" rx="12"/>
     <rect x="540" y="80" width="120" height="12" rx="4"/>
     <rect x="540" y="100" width="80" height="8" rx="3"/>
@@ -33,7 +33,7 @@
     <rect x="100" y="185" width="50" height="18" rx="6"/>
     <rect x="160" y="185" width="50" height="18" rx="6"/>
   </g>
-  <g stroke="#C9A84C" stroke-opacity="0.08" stroke-width="1" fill="none">
+  <g stroke="#2cd7f2" stroke-opacity="0.08" stroke-width="1" fill="none">
     <rect x="350" y="240" width="190" height="120" rx="12"/>
     <rect x="370" y="260" width="110" height="12" rx="4"/>
     <rect x="370" y="280" width="70" height="8" rx="3"/>

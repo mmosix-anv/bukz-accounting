@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | BUKZ Accounting',
@@ -79,7 +79,7 @@ export default function TermsPage() {
           <h2 className="text-xl font-semibold text-primary">10. Contact</h2>
           <p className="mt-2 text-slate-600">
             For questions about these terms, contact us at{' '}
-            <a href="mailto:legal@bukz.co.uk" className="text-accent hover:underline">legal@bukz.co.uk</a>.
+            <a href="mailto:legal@bukzaccounting.co.uk" className="text-accent hover:underline">legal@bukzaccounting.co.uk</a>.
           </p>
         </section>
       </div>

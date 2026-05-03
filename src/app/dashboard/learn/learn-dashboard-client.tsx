@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import type { ReactNode } from 'react';
@@ -249,7 +249,7 @@ export function LearnDashboardClient({ enrollments, certificates, cpdSummary, to
                       <XAxis dataKey="month" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
                       <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} allowDecimals={false} />
                       <Tooltip />
-                      <Bar dataKey="hours" fill="#0D1B3E" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="hours" fill="#0f2a2e" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </Box>

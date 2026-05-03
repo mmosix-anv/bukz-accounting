@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -11,10 +11,10 @@ interface Props {
 }
 
 const NAV_LINKS = [
-  { label: 'Jobs', href: '/jobs' },
+  { label: 'Services', href: '/services' },
   { label: 'Learn', href: '/learn' },
-  { label: 'Insight', href: '/insight' },
-  { label: 'Experts', href: '/experts' },
+  { label: 'About', href: '/about' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export function MobileMenu({ role }: Props) {
@@ -30,7 +30,7 @@ export function MobileMenu({ role }: Props) {
         aria-label="Open menu"
         radius="md"
         size="lg"
-        className="border border-slate-200/70 bg-white dark:border-[#2a2d3e] dark:bg-[#171b28]"
+        className="border border-slate-200/70 bg-white dark:border-[#183038] dark:bg-[#171b28]"
       >
         <MenuIcon size={18} />
       </ActionIcon>
@@ -47,8 +47,8 @@ export function MobileMenu({ role }: Props) {
           </Text>
         }
         classNames={{
-          content: 'bg-white dark:bg-[#14151e]',
-          header: 'border-b border-slate-200 dark:border-[#2a2d3e]',
+          content: 'bg-white dark:bg-[#0A1A20]',
+          header: 'border-b border-slate-200 dark:border-[#183038]',
         }}
       >
         <Stack gap="xs">
@@ -66,8 +66,8 @@ export function MobileMenu({ role }: Props) {
               <Button component={Link} href="/auth/login" variant="default" fullWidth onClick={() => setOpen(false)}>
                 Log in
               </Button>
-              <Button component={Link} href="/auth/register" color="primary" fullWidth onClick={() => setOpen(false)}>
-                Get started
+              <Button component={Link} href="/contact" color="primary" fullWidth onClick={() => setOpen(false)}>
+                Book a Call
               </Button>
             </>
           ) : (

@@ -1,10 +1,10 @@
-import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
+﻿import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
 
 export default function LoadingPage() {
   return (
     <div>
       {/* Header skeleton */}
-      <div className="border-b border-slate-100 dark:border-[#2a2d3e]">
+      <div className="border-b border-slate-100 dark:border-[#183038]">
         <Container size="xl">
           <Group h={68} justify="space-between">
             <Group gap="lg">
@@ -23,7 +23,7 @@ export default function LoadingPage() {
       </div>
 
       {/* Hero skeleton */}
-      <div className="bg-[#0D1B3E] dark:bg-[#0a0c14]">
+      <div className="bg-[#0f2a2e] dark:bg-[#0a0c14]">
         <Container size="xl" py={80}>
           <Stack align="center" gap="lg">
             <Skeleton height={28} width={180} radius="xl" />
@@ -38,7 +38,7 @@ export default function LoadingPage() {
       <Container size="lg" mt={-48}>
         <SimpleGrid cols={{ base: 2, md: 4 }} spacing="md">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-2xl border border-slate-100 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-6 text-center shadow-lg">
+            <div key={i} className="rounded-2xl border border-slate-100 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-6 text-center shadow-lg">
               <Stack align="center" gap="sm">
                 <Skeleton height={40} width={40} circle />
                 <Skeleton height={28} width={80} radius="sm" />
@@ -58,7 +58,7 @@ export default function LoadingPage() {
         </Stack>
         <SimpleGrid cols={{ base: 1, lg: 3 }} spacing="lg">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-2xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-8">
+            <div key={i} className="rounded-2xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-8">
               <Group justify="space-between" mb="lg">
                 <Skeleton height={64} width={64} radius="lg" />
                 <Stack align="flex-end" gap={4}>

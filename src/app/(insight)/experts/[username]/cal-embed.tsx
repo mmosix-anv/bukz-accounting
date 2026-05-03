@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect } from 'react';
 
@@ -31,7 +31,7 @@ export function CalEmbed({ calUsername, expertName, variant = 'sidebar' }: Props
     document.head.appendChild(s);
 
     window.Cal('init', namespace, { origin: 'https://app.cal.com' });
-    window.Cal(namespace, 'ui', { styles: { branding: { brandColor: '#0D1B3E' } } });
+    window.Cal(namespace, 'ui', { styles: { branding: { brandColor: '#0f2a2e' } } });
   }, [namespace]);
 
   if (variant === 'cta') {

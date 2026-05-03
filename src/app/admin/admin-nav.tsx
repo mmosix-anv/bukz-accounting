@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -28,7 +28,7 @@ export function AdminNav() {
             href={href}
             className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 ${
               active
-                ? 'bg-white text-[#0D1B3E] shadow-sm'
+                ? 'bg-white text-[#0f2a2e] shadow-sm'
                 : 'text-slate-300 hover:bg-white/10 hover:text-white'
             }`}
           >

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { MapPin, Eye, Users } from 'lucide-react';
@@ -44,7 +44,7 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#0D1B3E] dark:text-white">Job listings</h1>
+          <h1 className="text-2xl font-bold text-[#0f2a2e] dark:text-white">Job listings</h1>
           <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{count ?? 0} total listings</p>
         </div>
         <FilterTabs
@@ -81,7 +81,7 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
           <AdminTr key={job.id}>
             <AdminTd>
               <div>
-                <p className="font-medium text-[#0D1B3E] dark:text-slate-100">{job.title}</p>
+                <p className="font-medium text-[#0f2a2e] dark:text-slate-100">{job.title}</p>
                 <p className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
                   <MapPin size={10} />
                   {job.location ?? 'Remote'}
@@ -107,8 +107,8 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
             </AdminTd>
             <AdminTd align="right">
               <div className="flex items-center justify-end gap-3">
-                <a href={`/jobs/${job.id}`} className="text-xs text-slate-500 hover:text-[#0D1B3E] dark:hover:text-slate-200">View</a>
-                <a href={`/admin/jobs/${job.id}/edit`} className="text-xs font-medium text-[#C9A84C] hover:text-[#B8943A]">Edit</a>
+                <a href={`/jobs/${job.id}`} className="text-xs text-slate-500 hover:text-[#0f2a2e] dark:hover:text-slate-200">View</a>
+                <a href={`/admin/jobs/${job.id}/edit`} className="text-xs font-medium text-[#2cd7f2] hover:text-[#B8943A]">Edit</a>
               </div>
             </AdminTd>
           </AdminTr>

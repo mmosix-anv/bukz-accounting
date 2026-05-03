@@ -1,10 +1,10 @@
-import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
+﻿import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
 
 export default function MarketingLoadingPage() {
   return (
     <div>
       {/* Header skeleton */}
-      <div className="border-b border-slate-100 dark:border-[#2a2d3e]">
+      <div className="border-b border-slate-100 dark:border-[#183038]">
         <Container size="xl">
           <Group h={68} justify="space-between">
             <Group gap="lg">
@@ -17,7 +17,7 @@ export default function MarketingLoadingPage() {
       </div>
 
       {/* Hero skeleton */}
-      <div className="bg-[#0D1B3E] dark:bg-[#0a0c14]" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
+      <div className="bg-[#0f2a2e] dark:bg-[#0a0c14]" style={{ minHeight: '90vh', display: 'flex', alignItems: 'center' }}>
         <Container size="xl" py={80} w="100%">
           <Stack align="center" gap="lg">
             <Skeleton height={32} width={180} radius="xl" />

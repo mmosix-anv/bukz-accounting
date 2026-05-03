@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
   <defs>
     <linearGradient id="glow1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2cd7f2" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#2cd7f2" stop-opacity="0"/>
     </linearGradient>
     <linearGradient id="glow2" x1="100%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#5A729F" stop-opacity="0.2"/>
-      <stop offset="100%" stop-color="#5A729F" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2A7A84" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#2A7A84" stop-opacity="0"/>
     </linearGradient>
   </defs>
   <circle cx="900" cy="150" r="300" fill="url(#glow1)"/>
@@ -27,7 +27,7 @@
     <rect x="970" y="490" width="80" height="24" rx="6"/>
     <rect x="1060" y="490" width="80" height="24" rx="6"/>
   </g>
-  <g stroke="#C9A84C" stroke-opacity="0.12" stroke-width="1" fill="none">
+  <g stroke="#2cd7f2" stroke-opacity="0.12" stroke-width="1" fill="none">
     <path d="M400 500 L450 480 L500 490 L550 460 L600 470 L650 440 L700 420 L750 430 L800 390"/>
     <rect x="400" y="380" width="420" height="140" rx="8"/>
     <line x1="400" y1="420" x2="820" y2="420" stroke-dasharray="4,4"/>

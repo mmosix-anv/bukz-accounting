@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import {
@@ -24,10 +24,10 @@ function EmptyState() {
 
   return (
     <div className="flex flex-col items-center py-16 text-center">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-[#202433]">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 dark:bg-[#0B2430]">
         <Briefcase size={24} className="text-slate-400" />
       </div>
-      <h3 className="mt-3 text-lg font-semibold text-[#0D1B3E] dark:text-white">No jobs found</h3>
+      <h3 className="mt-3 text-lg font-semibold text-[#0f2a2e] dark:text-white">No jobs found</h3>
       <p className="mt-2 max-w-sm text-sm text-slate-500 dark:text-slate-400">
         Try adjusting your search or filters to discover more opportunities
       </p>
@@ -35,7 +35,7 @@ function EmptyState() {
         {['Management Accountant', 'Tax Advisor', 'Finance Director', 'Payroll Manager'].map((item) => (
           <button
             key={item}
-            className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-600 transition-all hover:border-[#0D1B3E] hover:text-[#0D1B3E] dark:border-[#2a2d3e] dark:bg-[#181b28] dark:text-slate-300"
+            className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-sm text-slate-600 transition-all hover:border-[#0f2a2e] hover:text-[#0f2a2e] dark:border-[#183038] dark:bg-[#0D1E24] dark:text-slate-300"
           >
             {item}
           </button>
@@ -66,7 +66,7 @@ export function JobsSearch() {
           <div className="grid gap-10 lg:grid-cols-[1fr_22rem] lg:items-end">
             <div className="max-w-2xl">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-1.5 backdrop-blur-sm">
-                <Briefcase size={12} className="text-[#C9A84C]" />
+                <Briefcase size={12} className="text-[#2cd7f2]" />
                 <span className="text-xs font-medium text-slate-300">2,500+ specialist roles</span>
               </div>
               <h1 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
@@ -77,10 +77,10 @@ export function JobsSearch() {
               </p>
               <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-400">
                 <span className="flex items-center gap-1.5">
-                  <MapPin size={13} className="text-[#C9A84C]" /> UK-wide
+                  <MapPin size={13} className="text-[#2cd7f2]" /> UK-wide
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <TrendingUp size={13} className="text-[#C9A84C]" /> £45k – £150k+
+                  <TrendingUp size={13} className="text-[#2cd7f2]" /> £45k – £150k+
                 </span>
               </div>
             </div>
@@ -107,8 +107,8 @@ export function JobsSearch() {
             classNames={{
               root: 'relative',
               form: 'flex gap-2',
-              input: 'flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-[#0D1B3E] focus:outline-none focus:ring-2 focus:ring-[#0D1B3E]/10 dark:border-[#2a2d3e] dark:bg-[#1a1d2a] dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#C9A84C]/60',
-              submit: 'rounded-xl bg-[#0D1B3E] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#162850] dark:bg-[#C9A84C] dark:text-[#0D1B3E] dark:hover:bg-[#d4b75d] flex items-center gap-2',
+              input: 'flex-1 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-[#0f2a2e] focus:outline-none focus:ring-2 focus:ring-[#0f2a2e]/10 dark:border-[#183038] dark:bg-[#0F2228] dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-[#2cd7f2]/60',
+              submit: 'rounded-xl bg-[#0f2a2e] px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#122e33] dark:bg-[#2cd7f2] dark:text-[#0f2a2e] dark:hover:bg-[#1bc6e2] flex items-center gap-2',
               submitIcon: 'hidden',
               reset: 'hidden',
               loadingIndicator: 'hidden',
@@ -131,7 +131,7 @@ export function JobsSearch() {
               <span className="text-sm text-slate-500 dark:text-slate-400">Accounting &amp; finance roles across the UK</span>
               <button
                 onClick={() => setMobileFiltersOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:bg-[#1a1d2a] dark:text-slate-300 lg:hidden"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#183038] dark:bg-[#0F2228] dark:text-slate-300 lg:hidden"
               >
                 <SlidersHorizontal size={14} />
                 Filters
@@ -143,7 +143,7 @@ export function JobsSearch() {
               classNames={{
                 root: 'space-y-3',
                 list: 'space-y-3',
-                loadMore: 'mt-6 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:bg-[#1a1d2a] dark:text-slate-300 dark:hover:bg-[#1e2130]',
+                loadMore: 'mt-6 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-[#183038] dark:bg-[#0F2228] dark:text-slate-300 dark:hover:bg-[#102830]',
                 disabledLoadMore: 'hidden',
               }}
             />
@@ -156,12 +156,12 @@ export function JobsSearch() {
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="fixed inset-0 bg-black/50" onClick={() => setMobileFiltersOpen(false)} />
-          <div className="absolute right-0 top-0 flex h-full w-72 flex-col overflow-y-auto bg-white p-6 shadow-2xl dark:bg-[#14151e]">
+          <div className="absolute right-0 top-0 flex h-full w-72 flex-col overflow-y-auto bg-white p-6 shadow-2xl dark:bg-[#0A1A20]">
             <div className="mb-5 flex items-center justify-between">
-              <span className="font-semibold text-[#0D1B3E] dark:text-white">Filters</span>
+              <span className="font-semibold text-[#0f2a2e] dark:text-white">Filters</span>
               <button
                 onClick={() => setMobileFiltersOpen(false)}
-                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-[#202433]"
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-[#0B2430]"
               >
                 <X size={16} />
               </button>

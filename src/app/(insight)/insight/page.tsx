@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Lightbulb, Calculator, CheckSquare, BarChart3, ArrowRight } from 'lucide-react';
@@ -42,19 +42,19 @@ export default async function InsightPage() {
   return (
     <div className="space-y-0">
       {/* Hero Banner */}
-      <div className="relative bg-[#0D1B3E] overflow-hidden">
+      <div className="relative bg-[#0f2a2e] overflow-hidden">
         <div className="absolute inset-0">
           <Image src="/images/insight-hero.svg" alt="" fill className="object-cover" />
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 mb-5 backdrop-blur-sm">
-              <Lightbulb size={12} className="text-[#C9A84C]" />
+              <Lightbulb size={12} className="text-[#2cd7f2]" />
               <span className="text-xs font-medium text-slate-300">Expert analysis &amp; tools</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
               BUKZ{' '}
-              <span className="text-[#C9A84C]">Insight</span>
+              <span className="text-[#2cd7f2]">Insight</span>
             </h1>
             <p className="mt-4 text-lg text-slate-300/90 max-w-lg leading-relaxed">
               Expert analysis and guidance for UK accounting professionals
@@ -67,7 +67,7 @@ export default async function InsightPage() {
         {featured ? (
           <Link href={`/insight/${featured.slug}`} className="group block overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="relative h-64 md:h-auto bg-slate-100 dark:bg-[#1a1d2a]">
+              <div className="relative h-64 md:h-auto bg-slate-100 dark:bg-[#0F2228]">
                 {featured.featuredImageUrl ? (
                   <Image src={featured.featuredImageUrl} alt={featured.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
@@ -77,17 +77,17 @@ export default async function InsightPage() {
                     </div>
                   </div>
                 )}
-                <span className="absolute left-4 top-4 rounded-full bg-[#C9A84C] px-3.5 py-1.5 text-xs font-semibold text-[#0D1B3E] shadow-lg shadow-[#C9A84C]/20">
+                <span className="absolute left-4 top-4 rounded-full bg-[#2cd7f2] px-3.5 py-1.5 text-xs font-semibold text-[#0f2a2e] shadow-lg shadow-[#2cd7f2]/20">
                   Featured
                 </span>
               </div>
               <div className="flex flex-col justify-center p-8 lg:p-10">
                 {featured.categoryId && (
-                  <span className="mb-3 inline-block self-start rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/20 px-3 py-1 text-xs font-semibold text-[#C9A84C]">
+                  <span className="mb-3 inline-block self-start rounded-full bg-[#2cd7f2]/10 border border-[#2cd7f2]/20 px-3 py-1 text-xs font-semibold text-[#2cd7f2]">
                     {featured.categoryId}
                   </span>
                 )}
-                <h2 className="text-2xl lg:text-3xl font-bold text-primary group-hover:text-[#C9A84C] transition-colors duration-300 leading-snug">
+                <h2 className="text-2xl lg:text-3xl font-bold text-primary group-hover:text-[#2cd7f2] transition-colors duration-300 leading-snug">
                   {featured.title}
                 </h2>
                 {featured.excerpt && (
@@ -97,7 +97,7 @@ export default async function InsightPage() {
                   <p className="text-xs text-slate-400">
                     {featured.publishedAt ? new Date(featured.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
                   </p>
-                  <span className="flex items-center gap-1 text-xs font-semibold text-primary group-hover:text-[#C9A84C] transition-colors">
+                  <span className="flex items-center gap-1 text-xs font-semibold text-primary group-hover:text-[#2cd7f2] transition-colors">
                     Read article
                     <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
                   </span>
@@ -111,30 +111,30 @@ export default async function InsightPage() {
 
         {/* Tools Section */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3 pt-4">
-          <Link href="/tools/tax-calculator" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#C9A84C]/30 hover:shadow-lg hover:shadow-[#C9A84C]/5 hover:-translate-y-0.5 transition-all duration-300">
+          <Link href="/tools/tax-calculator" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#2cd7f2]/30 hover:shadow-lg hover:shadow-[#2cd7f2]/5 hover:-translate-y-0.5 transition-all duration-300">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 border border-blue-100">
               <Calculator size={20} className="text-blue-600" />
             </div>
             <div>
-              <p className="font-semibold text-primary group-hover:text-[#C9A84C] transition-colors">Tax Calculator</p>
+              <p className="font-semibold text-primary group-hover:text-[#2cd7f2] transition-colors">Tax Calculator</p>
               <p className="text-sm text-slate-500">2025/26 UK tax bands (GBP)</p>
             </div>
           </Link>
-          <Link href="/tools/ir35-checker" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#C9A84C]/30 hover:shadow-lg hover:shadow-[#C9A84C]/5 hover:-translate-y-0.5 transition-all duration-300">
+          <Link href="/tools/ir35-checker" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#2cd7f2]/30 hover:shadow-lg hover:shadow-[#2cd7f2]/5 hover:-translate-y-0.5 transition-all duration-300">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-100">
               <CheckSquare size={20} className="text-emerald-600" />
             </div>
             <div>
-              <p className="font-semibold text-primary group-hover:text-[#C9A84C] transition-colors">IR35 Checker</p>
+              <p className="font-semibold text-primary group-hover:text-[#2cd7f2] transition-colors">IR35 Checker</p>
               <p className="text-sm text-slate-500">15-question assessment</p>
             </div>
           </Link>
-          <Link href="/tools/salary-benchmarker" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#C9A84C]/30 hover:shadow-lg hover:shadow-[#C9A84C]/5 hover:-translate-y-0.5 transition-all duration-300">
+          <Link href="/tools/salary-benchmarker" className="group flex items-center gap-4 rounded-2xl border border-slate-200/80 bg-white p-6 hover:border-[#2cd7f2]/30 hover:shadow-lg hover:shadow-[#2cd7f2]/5 hover:-translate-y-0.5 transition-all duration-300">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-100">
               <BarChart3 size={20} className="text-amber-600" />
             </div>
             <div>
-              <p className="font-semibold text-primary group-hover:text-[#C9A84C] transition-colors">Salary Benchmarker</p>
+              <p className="font-semibold text-primary group-hover:text-[#2cd7f2] transition-colors">Salary Benchmarker</p>
               <p className="text-sm text-slate-500">Compare your salary in GBP</p>
             </div>
           </Link>
@@ -148,7 +148,7 @@ export default async function InsightPage() {
 
 function NewsletterSignup() {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#0D1B3E] px-8 py-12 text-center">
+    <div className="relative overflow-hidden rounded-2xl bg-[#0f2a2e] px-8 py-12 text-center">
       <div className="relative">
         <h2 className="text-2xl font-bold text-white">Stay ahead of the curve</h2>
         <p className="mt-3 text-slate-300/90 text-sm max-w-md mx-auto leading-relaxed">
@@ -160,11 +160,11 @@ function NewsletterSignup() {
             name="email"
             placeholder="your@email.com"
             required
-            className="flex-1 rounded-lg border-0 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/50 shadow-sm"
+            className="flex-1 rounded-lg border-0 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2cd7f2]/50 shadow-sm"
           />
           <button
             type="submit"
-            className="shrink-0 rounded-lg bg-[#C9A84C] px-6 py-3 text-sm font-semibold text-[#0D1B3E] shadow-lg shadow-[#C9A84C]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
+            className="shrink-0 rounded-lg bg-[#2cd7f2] px-6 py-3 text-sm font-semibold text-[#0f2a2e] shadow-lg shadow-[#2cd7f2]/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200"
           >
             Subscribe
           </button>

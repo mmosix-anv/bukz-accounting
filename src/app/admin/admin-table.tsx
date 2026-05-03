@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 interface Column {
   key: string;
@@ -14,11 +14,11 @@ interface Props {
 
 export function AdminTable({ columns, children, footer }: Props) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white dark:border-[#2a2d3e] dark:bg-[#1a1d2a]">
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white dark:border-[#183038] dark:bg-[#0F2228]">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50 dark:border-[#2a2d3e] dark:bg-[#141621]">
+            <tr className="border-b border-slate-100 bg-slate-50 dark:border-[#183038] dark:bg-[#141621]">
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -31,13 +31,13 @@ export function AdminTable({ columns, children, footer }: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-[#2a2d3e]">
+          <tbody className="divide-y divide-slate-100 dark:divide-[#183038]">
             {children}
           </tbody>
         </table>
       </div>
       {footer && (
-        <div className="border-t border-slate-100 dark:border-[#2a2d3e]">
+        <div className="border-t border-slate-100 dark:border-[#183038]">
           {footer}
         </div>
       )}
@@ -47,7 +47,7 @@ export function AdminTable({ columns, children, footer }: Props) {
 
 export function AdminTr({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <tr className={`transition-colors hover:bg-slate-50 dark:hover:bg-[#1e2130] ${className}`}>
+    <tr className={`transition-colors hover:bg-slate-50 dark:hover:bg-[#102830] ${className}`}>
       {children}
     </tr>
   );
@@ -76,8 +76,8 @@ export function FilterTabs({ options, current, buildHref }: FilterTabsProps) {
           href={buildHref(opt.value)}
           className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
             current === opt.value
-              ? 'bg-[#0D1B3E] text-white dark:bg-[#C9A84C] dark:text-[#0D1B3E]'
-              : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-[#202433] dark:text-slate-400 dark:hover:bg-[#282b3c] dark:hover:text-slate-200'
+              ? 'bg-[#0f2a2e] text-white dark:bg-[#2cd7f2] dark:text-[#0f2a2e]'
+              : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-[#0B2430] dark:text-slate-400 dark:hover:bg-[#282b3c] dark:hover:text-slate-200'
           }`}
         >
           {opt.label}
@@ -102,12 +102,12 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
       </p>
       <div className="flex gap-2">
         {page > 1 && (
-          <a href={buildHref(page - 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:text-slate-400 dark:hover:bg-[#202433]">
+          <a href={buildHref(page - 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#183038] dark:text-slate-400 dark:hover:bg-[#0B2430]">
             ← Previous
           </a>
         )}
         {page < totalPages && (
-          <a href={buildHref(page + 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#2a2d3e] dark:text-slate-400 dark:hover:bg-[#202433]">
+          <a href={buildHref(page + 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#183038] dark:text-slate-400 dark:hover:bg-[#0B2430]">
             Next →
           </a>
         )}

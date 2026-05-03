@@ -1,10 +1,10 @@
-import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
+﻿import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
 
 export default function InsightLoadingPage() {
   return (
     <div>
       {/* Hero banner skeleton */}
-      <div className="bg-[#0D1B3E] dark:bg-[#0a0c14]">
+      <div className="bg-[#0f2a2e] dark:bg-[#0a0c14]">
         <Container size="xl" py={64}>
           <Stack gap="md" maw={500}>
             <Skeleton height={24} width={180} radius="xl" />
@@ -17,7 +17,7 @@ export default function InsightLoadingPage() {
       <Container size="xl" py="xl">
         <Stack gap="xl">
           {/* Featured article skeleton */}
-          <div className="rounded-2xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] overflow-hidden">
+          <div className="rounded-2xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] overflow-hidden">
             <SimpleGrid cols={{ base: 1, md: 2 }} spacing={0}>
               <Skeleton height={280} radius={0} />
               <Stack p="xl" gap="md" justify="center">
@@ -46,7 +46,7 @@ export default function InsightLoadingPage() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] overflow-hidden"
+                className="rounded-2xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] overflow-hidden"
               >
                 <Skeleton height={192} radius={0} />
                 <Stack p="md" gap="sm">
@@ -55,7 +55,7 @@ export default function InsightLoadingPage() {
                   <Skeleton height={16} width="70%" radius="sm" />
                   <Skeleton height={12} width="100%" radius="sm" />
                   <Skeleton height={12} width="80%" radius="sm" />
-                  <Group justify="space-between" mt="sm" pt="sm" className="border-t border-slate-100 dark:border-[#2a2d3e]">
+                  <Group justify="space-between" mt="sm" pt="sm" className="border-t border-slate-100 dark:border-[#183038]">
                     <Skeleton height={12} width={100} radius="sm" />
                     <Skeleton height={12} width={14} circle />
                   </Group>
@@ -67,7 +67,7 @@ export default function InsightLoadingPage() {
           {/* Tools section skeleton */}
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing="md">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-2xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-6">
+              <div key={i} className="rounded-2xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-6">
                 <Group gap="md">
                   <Skeleton height={48} width={48} radius="lg" />
                   <Stack gap={6} flex={1}>

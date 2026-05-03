@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -37,8 +37,8 @@ export function InsightClient({ articles, categories }: Props) {
             onClick={() => setActiveCategory(cat)}
             className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
               activeCategory === cat
-                ? 'bg-[#0D1B3E] text-white shadow-sm'
-                : 'border border-slate-200 text-slate-600 hover:border-[#C9A84C]/40 hover:text-[#C9A84C] hover:bg-[#C9A84C]/5'
+                ? 'bg-[#0f2a2e] text-white shadow-sm'
+                : 'border border-slate-200 text-slate-600 hover:border-[#2cd7f2]/40 hover:text-[#2cd7f2] hover:bg-[#2cd7f2]/5'
             }`}
           >
             {cat}
@@ -74,7 +74,7 @@ function ArticleCard({ article }: { article: Article }) {
       href={`/insight/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
     >
-      <div className="relative h-48 bg-slate-100 dark:bg-[#1a1d2a] flex items-center justify-center overflow-hidden">
+      <div className="relative h-48 bg-slate-100 dark:bg-[#0F2228] flex items-center justify-center overflow-hidden">
         {article.featuredImageUrl ? (
           <Image src={article.featuredImageUrl} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
@@ -85,11 +85,11 @@ function ArticleCard({ article }: { article: Article }) {
       </div>
       <div className="flex flex-col flex-1 p-6">
         {article.categoryId && (
-          <span className="mb-3 inline-block self-start rounded-full bg-[#C9A84C]/10 border border-[#C9A84C]/15 px-2.5 py-0.5 text-xs font-semibold text-[#C9A84C]">
+          <span className="mb-3 inline-block self-start rounded-full bg-[#2cd7f2]/10 border border-[#2cd7f2]/15 px-2.5 py-0.5 text-xs font-semibold text-[#2cd7f2]">
             {article.categoryId}
           </span>
         )}
-        <h3 className="font-semibold text-primary leading-snug group-hover:text-[#C9A84C] transition-colors duration-200 line-clamp-2">
+        <h3 className="font-semibold text-primary leading-snug group-hover:text-[#2cd7f2] transition-colors duration-200 line-clamp-2">
           {article.title}
         </h3>
         {article.excerpt && (
@@ -99,7 +99,7 @@ function ArticleCard({ article }: { article: Article }) {
           <div className="flex items-center gap-3 text-xs text-slate-400">
             {date && <span>{date}</span>}
           </div>
-          <ArrowRight size={14} className="text-slate-300 group-hover:text-[#C9A84C] group-hover:translate-x-0.5 transition-all duration-200" />
+          <ArrowRight size={14} className="text-slate-300 group-hover:text-[#2cd7f2] group-hover:translate-x-0.5 transition-all duration-200" />
         </div>
       </div>
     </Link>

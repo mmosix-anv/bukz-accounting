@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -90,9 +90,9 @@ export function SalaryBenchmarkerClient() {
   const chartData = result
     ? [
         { label: '25th percentile', value: result.percentile25, fill: '#94a3b8' },
-        { label: 'Median', value: result.median, fill: '#0D1B3E' },
+        { label: 'Median', value: result.median, fill: '#0f2a2e' },
         { label: '75th percentile', value: result.percentile75, fill: '#94a3b8' },
-        ...(submittedSalary ? [{ label: 'Your salary', value: submittedSalary, fill: '#C9A84C' }] : []),
+        ...(submittedSalary ? [{ label: 'Your salary', value: submittedSalary, fill: '#2cd7f2' }] : []),
       ]
     : [];
 
@@ -198,7 +198,7 @@ export function SalaryBenchmarkerClient() {
                       contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0' }}
                     />
                     {submittedSalary && result.median && (
-                      <ReferenceLine y={submittedSalary} stroke="#C9A84C" strokeDasharray="4 4" label={{ value: 'You', fill: '#C9A84C', fontSize: 11 }} />
+                      <ReferenceLine y={submittedSalary} stroke="#2cd7f2" strokeDasharray="4 4" label={{ value: 'You', fill: '#2cd7f2', fontSize: 11 }} />
                     )}
                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                       {chartData.map((entry, index) => (

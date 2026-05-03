@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Star, Users } from 'lucide-react';
@@ -41,7 +41,7 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#0D1B3E] dark:text-white">Courses</h1>
+          <h1 className="text-2xl font-bold text-[#0f2a2e] dark:text-white">Courses</h1>
           <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{count ?? 0} total courses</p>
         </div>
         <FilterTabs
@@ -76,7 +76,7 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
         {courses?.map((course) => (
           <AdminTr key={course.id}>
             <AdminTd>
-              <p className="font-medium text-[#0D1B3E] dark:text-slate-100">{course.title}</p>
+              <p className="font-medium text-[#0f2a2e] dark:text-slate-100">{course.title}</p>
               <div className="mt-0.5 flex items-center gap-2">
                 <span className="text-xs text-slate-500 dark:text-slate-400">{course.cpd_hours} CPD hrs</span>
                 {course.rating_avg && (
@@ -107,8 +107,8 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
             </AdminTd>
             <AdminTd align="right">
               <div className="flex items-center justify-end gap-3">
-                <a href={`/learn/${course.slug}`} className="text-xs text-slate-500 hover:text-[#0D1B3E] dark:hover:text-slate-200">View</a>
-                <a href={`/instructors/courses/${course.id}/edit`} className="text-xs font-medium text-[#C9A84C] hover:text-[#B8943A]">Edit</a>
+                <a href={`/learn/${course.slug}`} className="text-xs text-slate-500 hover:text-[#0f2a2e] dark:hover:text-slate-200">View</a>
+                <a href={`/instructors/courses/${course.id}/edit`} className="text-xs font-medium text-[#2cd7f2] hover:text-[#B8943A]">Edit</a>
               </div>
             </AdminTd>
           </AdminTr>

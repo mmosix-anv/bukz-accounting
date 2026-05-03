@@ -1,10 +1,10 @@
-import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
+﻿import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
 
 export default function LearnLoadingPage() {
   return (
     <div>
       {/* Hero banner skeleton */}
-      <div className="bg-[#0D1B3E] dark:bg-[#0a0c14]">
+      <div className="bg-[#0f2a2e] dark:bg-[#0a0c14]">
         <Container size="xl" py={64}>
           <Stack gap="md" maw={500}>
             <Skeleton height={24} width={200} radius="xl" />
@@ -28,7 +28,7 @@ export default function LearnLoadingPage() {
         <Group align="flex-start" gap="xl" wrap="nowrap">
           {/* Filter sidebar skeleton */}
           <Stack w={240} visibleFrom="lg" gap="md">
-            <div className="rounded-2xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-5">
+            <div className="rounded-2xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-5">
               <Stack gap="lg">
                 {Array.from({ length: 3 }).map((_, i) => (
                   <Stack key={i} gap="xs">
@@ -50,7 +50,7 @@ export default function LearnLoadingPage() {
               {Array.from({ length: 6 }).map((_, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] overflow-hidden"
+                  className="rounded-2xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] overflow-hidden"
                 >
                   {/* Thumbnail skeleton */}
                   <Skeleton height={192} radius={0} />
@@ -66,7 +66,7 @@ export default function LearnLoadingPage() {
                       <Skeleton height={14} width={50} radius="sm" />
                     </Group>
                     {/* Footer */}
-                    <Group justify="space-between" mt="sm" pt="sm" className="border-t border-slate-100 dark:border-[#2a2d3e]">
+                    <Group justify="space-between" mt="sm" pt="sm" className="border-t border-slate-100 dark:border-[#183038]">
                       <Stack gap={4}>
                         <Skeleton height={20} width={50} radius="sm" />
                         <Skeleton height={10} width={70} radius="sm" />

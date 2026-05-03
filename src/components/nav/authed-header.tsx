@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
@@ -40,7 +40,7 @@ export function AuthedHeader({ user }: Props) {
           <UnstyledButton
             type="button"
             aria-label="Open user menu"
-            className="rounded-2xl border border-slate-200/70 bg-white/78 px-2.5 py-1.5 transition-all duration-200 hover:border-slate-300 hover:bg-white dark:border-[#2a2d3e] dark:bg-[#171b28] dark:hover:border-[#3a4056] dark:hover:bg-[#202433]"
+            className="rounded-2xl border border-slate-200/70 bg-white/78 px-2.5 py-1.5 transition-all duration-200 hover:border-slate-300 hover:bg-white dark:border-[#183038] dark:bg-[#171b28] dark:hover:border-[#3a4056] dark:hover:bg-[#0B2430]"
           >
             <Group gap={4}>
               <Avatar color="primary" radius="xl" size={34}>
@@ -50,7 +50,7 @@ export function AuthedHeader({ user }: Props) {
             </Group>
           </UnstyledButton>
         </Menu.Target>
-        <Menu.Dropdown className="rounded-2xl border border-slate-200/80 bg-white shadow-[0_18px_40px_-26px_rgba(15,23,42,0.35)] dark:border-[#2a2d3e] dark:bg-[#181b28]">
+        <Menu.Dropdown className="rounded-2xl border border-slate-200/80 bg-white shadow-[0_18px_40px_-26px_rgba(15,23,42,0.35)] dark:border-[#183038] dark:bg-[#0D1E24]">
           <Group gap="sm" px="sm" py="xs" wrap="nowrap">
             <Avatar color="primary" radius="xl">
               {initials}

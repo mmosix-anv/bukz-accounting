@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -76,7 +76,7 @@ export function SettingsForm({ user }: Props) {
       <Card withBorder radius="md" p="lg" bg="red.0">
         <Title order={2} fz="lg" c="red.7">Danger zone</Title>
         <Text size="sm" c="red.7" mt={4} mb="md">Deleting your account is permanent and cannot be undone.</Text>
-        <Anchor href="mailto:support@bukz.co.uk?subject=Account deletion request" c="red.7" fw={600}>
+        <Anchor href="mailto:support@bukzaccounting.co.uk?subject=Account deletion request" c="red.7" fw={600}>
           Request account deletion
         </Anchor>
       </Card>

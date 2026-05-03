@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -142,7 +142,7 @@ export function EmployerDashboardClient({ stats, listings, token }: Props) {
             <XAxis dataKey="date" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} interval={6} />
             <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} allowDecimals={false} />
             <Tooltip />
-            <Line type="monotone" dataKey="applications" stroke="#0D1B3E" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="applications" stroke="#0f2a2e" strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </Card>

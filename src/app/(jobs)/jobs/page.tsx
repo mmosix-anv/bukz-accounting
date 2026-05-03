@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ const JobsSearch = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="flex min-h-[92vh] items-center justify-center bg-[#0d1b3e]" />
+      <div className="flex min-h-[92vh] items-center justify-center bg-[#0f2a2e]" />
     ),
   },
 );

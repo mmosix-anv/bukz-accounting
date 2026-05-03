@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
     <Container size="xl" py="xl">
       <Stack gap="xl">
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[1.9rem] border border-slate-200/80 bg-white p-8 shadow-soft dark:border-[#2a2d3e] dark:bg-[#181b28]">
+          <div className="rounded-[1.9rem] border border-slate-200/80 bg-white p-8 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
             <Stack gap={4}>
               <Title order={1} fz="h2" c="primary.7" className="font-display dark:!text-white">
                 Welcome back, {displayName}
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
               <Text c="dimmed">Here&apos;s your BUKZ activity at a glance.</Text>
             </Stack>
           </div>
-          <div className="rounded-[1.9rem] border border-slate-200/80 bg-[#0D1B3E] p-8 shadow-soft dark:border-[#2a2d3e] dark:bg-[#10131d]">
+          <div className="rounded-[1.9rem] border border-slate-200/80 bg-[#0f2a2e] p-8 shadow-soft dark:border-[#183038] dark:bg-[#091820]">
             <Text size="xs" fw={700} c="accent.3" tt="uppercase">
               Momentum
             </Text>
@@ -173,7 +173,7 @@ export default async function DashboardPage() {
           </Card>
         </SimpleGrid>
 
-        <Card withBorder radius="xl" p="lg" className="border border-[#C9A84C]/20 bg-[#fffaf0] shadow-soft dark:border-[#6e5c22] dark:bg-[#1d1a12]">
+        <Card withBorder radius="xl" p="lg" className="border border-[#2cd7f2]/20 bg-[#edf9fd] shadow-soft dark:border-[#0A4858] dark:bg-[#071E24]">
           <Group justify="space-between" align="center" gap="md">
             <Stack gap={4} flex={1}>
               <Title order={2} fz="lg" c="primary.7">

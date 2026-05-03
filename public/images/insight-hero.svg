@@ -1,22 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" fill="none">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" fill="none">
   <defs>
     <linearGradient id="ih-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0D1B3E"/>
-      <stop offset="100%" stop-color="#1F2E62"/>
+      <stop offset="0%" stop-color="#0f2a2e"/>
+      <stop offset="100%" stop-color="#0D3845"/>
     </linearGradient>
     <radialGradient id="ih-glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.1"/>
-      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#2cd7f2" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#2cd7f2" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="800" height="300" fill="url(#ih-bg)"/>
   <ellipse cx="400" cy="150" rx="300" ry="120" fill="url(#ih-glow)"/>
-  <g stroke="#C9A84C" stroke-opacity="0.1" stroke-width="1" fill="none">
+  <g stroke="#2cd7f2" stroke-opacity="0.1" stroke-width="1" fill="none">
     <path d="M100 200 L180 180 L260 190 L340 160 L420 170 L500 140 L580 150 L660 120 L740 130"/>
-    <circle cx="100" cy="200" r="3" fill="#C9A84C" fill-opacity="0.3"/>
-    <circle cx="340" cy="160" r="3" fill="#C9A84C" fill-opacity="0.3"/>
-    <circle cx="580" cy="150" r="3" fill="#C9A84C" fill-opacity="0.3"/>
-    <circle cx="740" cy="130" r="3" fill="#C9A84C" fill-opacity="0.3"/>
+    <circle cx="100" cy="200" r="3" fill="#2cd7f2" fill-opacity="0.3"/>
+    <circle cx="340" cy="160" r="3" fill="#2cd7f2" fill-opacity="0.3"/>
+    <circle cx="580" cy="150" r="3" fill="#2cd7f2" fill-opacity="0.3"/>
+    <circle cx="740" cy="130" r="3" fill="#2cd7f2" fill-opacity="0.3"/>
   </g>
   <g stroke="#ffffff" stroke-opacity="0.04" stroke-width="0.5">
     <line x1="0" y1="75" x2="800" y2="75"/>

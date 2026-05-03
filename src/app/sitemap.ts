@@ -1,7 +1,7 @@
-import type { MetadataRoute } from 'next';
+﻿import type { MetadataRoute } from 'next';
 import { apiFetch } from '@/lib/api';
 
-const BASE = process.env['NEXT_PUBLIC_SITE_URL'] ?? 'https://bukz.co.uk';
+const BASE = process.env['NEXT_PUBLIC_SITE_URL'] ?? 'https://bukzaccounting.co.uk';
 
 interface Article { slug: string; publishedAt: string | null }
 interface Course { slug: string; updatedAt: string }

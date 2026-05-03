@@ -1,4 +1,4 @@
-import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
+﻿import { Container, Skeleton, Group, Stack, SimpleGrid } from '@mantine/core';
 
 export default function DashboardLoadingPage() {
   return (
@@ -13,7 +13,7 @@ export default function DashboardLoadingPage() {
         {/* Stat cards skeleton */}
         <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="rounded-xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-5">
+            <div key={i} className="rounded-xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-5">
               <Skeleton height={36} width={50} radius="sm" mb="xs" />
               <Skeleton height={14} width={100} radius="sm" />
             </div>
@@ -23,7 +23,7 @@ export default function DashboardLoadingPage() {
         {/* Two-column cards skeleton */}
         <SimpleGrid cols={{ base: 1, lg: 2 }} spacing="lg">
           {/* Applications card */}
-          <div className="rounded-xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-6">
+          <div className="rounded-xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-6">
             <Group justify="space-between" mb="lg">
               <Skeleton height={18} width={160} radius="sm" />
               <Skeleton height={14} width={100} radius="sm" />
@@ -42,7 +42,7 @@ export default function DashboardLoadingPage() {
           </div>
 
           {/* Courses card */}
-          <div className="rounded-xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-6">
+          <div className="rounded-xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-6">
             <Group justify="space-between" mb="lg">
               <Skeleton height={18} width={160} radius="sm" />
               <Skeleton height={14} width={80} radius="sm" />
@@ -62,7 +62,7 @@ export default function DashboardLoadingPage() {
         </SimpleGrid>
 
         {/* Skills gap card skeleton */}
-        <div className="rounded-xl border border-slate-200 dark:border-[#2a2d3e] bg-white dark:bg-[#1e2030] p-6">
+        <div className="rounded-xl border border-slate-200 dark:border-[#183038] bg-white dark:bg-[#1e2030] p-6">
           <Group justify="space-between" align="center">
             <Stack gap={6} flex={1}>
               <Skeleton height={20} width={200} radius="sm" />

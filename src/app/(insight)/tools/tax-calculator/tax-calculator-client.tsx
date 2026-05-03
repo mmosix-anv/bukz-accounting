@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -33,7 +33,7 @@ function fmt(n: number, period: 'annual' | 'monthly' | 'weekly'): string {
   );
 }
 
-const CHART_COLOURS = ['#0D1B3E', '#C9A84C', '#64748b'];
+const CHART_COLOURS = ['#0f2a2e', '#2cd7f2', '#64748b'];
 
 export function TaxCalculatorClient() {
   const [result, setResult] = useState<TaxResult | null>(null);

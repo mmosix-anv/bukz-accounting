@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { User, Shield, Briefcase, GraduationCap } from 'lucide-react';
@@ -43,7 +43,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#0D1B3E] dark:text-white">Users</h1>
+          <h1 className="text-2xl font-bold text-[#0f2a2e] dark:text-white">Users</h1>
           <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{count ?? 0} total accounts</p>
         </div>
         <FilterTabs
@@ -74,7 +74,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
             <AdminTr key={u.id}>
               <AdminTd>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 dark:bg-[#202433]">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 dark:bg-[#0B2430]">
                     {u.avatar_url ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={u.avatar_url} alt="" className="h-8 w-8 object-cover" />
@@ -85,7 +85,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate font-medium text-[#0D1B3E] dark:text-slate-100">{u.name ?? 'Unnamed'}</p>
+                    <p className="truncate font-medium text-[#0f2a2e] dark:text-slate-100">{u.name ?? 'Unnamed'}</p>
                     <p className="truncate text-xs text-slate-500 dark:text-slate-400">{u.email}</p>
                   </div>
                 </div>
@@ -100,7 +100,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                 {new Date(u.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
               </AdminTd>
               <AdminTd align="right">
-                <a href={`/admin/users/${u.id}`} className="text-sm font-medium text-[#C9A84C] hover:text-[#B8943A]">
+                <a href={`/admin/users/${u.id}`} className="text-sm font-medium text-[#2cd7f2] hover:text-[#B8943A]">
                   Edit
                 </a>
               </AdminTd>

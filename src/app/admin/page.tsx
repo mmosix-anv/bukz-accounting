@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
@@ -72,9 +72,9 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-8 shadow-soft dark:border-[#2a2d3e] dark:bg-[#181b28]">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#C9A84C]">Overview</p>
-          <h2 className="font-display mt-3 text-3xl font-semibold text-[#0D1B3E] dark:text-white">
+        <Card className="overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-8 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2cd7f2]">Overview</p>
+          <h2 className="font-display mt-3 text-3xl font-semibold text-[#0f2a2e] dark:text-white">
             Admin Dashboard
           </h2>
           <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 dark:text-slate-400">
@@ -82,9 +82,9 @@ export default async function AdminDashboardPage() {
             learning, and payments.
           </p>
         </Card>
-        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-[#0D1B3E] p-8 text-white shadow-soft dark:border-[#2a2d3e] dark:bg-[#10131d]">
+        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-[#0f2a2e] p-8 text-white shadow-soft dark:border-[#183038] dark:bg-[#091820]">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#C9A84C]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#2cd7f2]">
               <Activity className="h-5 w-5" />
             </div>
             <div>
@@ -112,14 +112,14 @@ export default async function AdminDashboardPage() {
         {statCards.map(({ label, value, icon: Icon, color }) => (
           <Card
             key={label}
-            className="rounded-[1.5rem] border border-slate-200/80 bg-white p-6 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 dark:border-[#2a2d3e] dark:bg-[#181b28]"
+            className="rounded-[1.5rem] border border-slate-200/80 bg-white p-6 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 dark:border-[#183038] dark:bg-[#0D1E24]"
           >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{label}</p>
                 <p className="mt-1 text-2xl font-semibold text-primary dark:text-white">{value}</p>
               </div>
-              <div className={`rounded-2xl bg-slate-100 p-3 dark:bg-[#202433] ${color}`}>
+              <div className={`rounded-2xl bg-slate-100 p-3 dark:bg-[#0B2430] ${color}`}>
                 <Icon className="h-5 w-5" />
               </div>
             </div>
@@ -128,12 +128,12 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft dark:border-[#2a2d3e] dark:bg-[#181b28]">
+        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
           <h2 className="text-lg font-semibold text-primary dark:text-white">Quick Actions</h2>
           <div className="mt-4 space-y-3">
             <Link
               href="/admin/users"
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C9A84C]/30 hover:bg-[#fffaf2] dark:border-[#2a2d3e] dark:hover:bg-[#202433]"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2] dark:border-[#183038] dark:hover:bg-[#0B2430]"
             >
               <Users className="h-5 w-5 text-slate-400" />
               <div>
@@ -146,7 +146,7 @@ export default async function AdminDashboardPage() {
             </Link>
             <Link
               href="/admin/jobs"
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C9A84C]/30 hover:bg-[#fffaf2] dark:border-[#2a2d3e] dark:hover:bg-[#202433]"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2] dark:border-[#183038] dark:hover:bg-[#0B2430]"
             >
               <Briefcase className="h-5 w-5 text-slate-400" />
               <div>
@@ -159,7 +159,7 @@ export default async function AdminDashboardPage() {
             </Link>
             <Link
               href="/admin/payments"
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C9A84C]/30 hover:bg-[#fffaf2] dark:border-[#2a2d3e] dark:hover:bg-[#202433]"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2] dark:border-[#183038] dark:hover:bg-[#0B2430]"
             >
               <CreditCard className="h-5 w-5 text-slate-400" />
               <div>
@@ -173,7 +173,7 @@ export default async function AdminDashboardPage() {
           </div>
         </Card>
 
-        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft dark:border-[#2a2d3e] dark:bg-[#181b28]">
+        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
           <h2 className="text-lg font-semibold text-primary dark:text-white">Platform Health</h2>
           <div className="mt-4 space-y-4">
             {[

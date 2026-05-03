@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+﻿import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | BUKZ Accounting',
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-xl font-semibold text-primary">1. Who we are</h2>
           <p className="mt-2 text-slate-600">
-            BUKZ Accounting Ltd (&quot;BUKZ&quot;, &quot;we&quot;, &quot;us&quot;) is the data controller for personal data processed through the BUKZ platform. We are registered in England and Wales. Contact: <a href="mailto:privacy@bukz.co.uk" className="text-accent hover:underline">privacy@bukz.co.uk</a>.
+            BUKZ Accounting Ltd (&quot;BUKZ&quot;, &quot;we&quot;, &quot;us&quot;) is the data controller for personal data processed through the BUKZ platform. We are registered in England and Wales. Contact: <a href="mailto:privacy@bukzaccounting.co.uk" className="text-accent hover:underline">privacy@bukzaccounting.co.uk</a>.
           </p>
         </section>
 
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
             <li>Right to withdraw consent at any time.</li>
           </ul>
           <p className="mt-2 text-slate-600">
-            To exercise any right, email <a href="mailto:privacy@bukz.co.uk" className="text-accent hover:underline">privacy@bukz.co.uk</a>. You may also lodge a complaint with the ICO at <a href="https://ico.org.uk" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">ico.org.uk</a>.
+            To exercise any right, email <a href="mailto:privacy@bukzaccounting.co.uk" className="text-accent hover:underline">privacy@bukzaccounting.co.uk</a>. You may also lodge a complaint with the ICO at <a href="https://ico.org.uk" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">ico.org.uk</a>.
           </p>
         </section>
 
