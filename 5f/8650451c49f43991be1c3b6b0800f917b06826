@@ -1,0 +1,139 @@
+src/app/admin/admin-nav.tsx
+  1a60477d8d413c3c 1,31
+src/app/(jobs)/jobs/loading.tsx
+  1a60477d8d413c3c 1,7,24,34,55,73
+src/app/loading.tsx
+  1a60477d8d413c3c 1,7,26,41,61
+src/components/nav/color-scheme-toggle.tsx
+  1a60477d8d413c3c 1,17
+src/app/dashboard/loading.tsx
+  1a60477d8d413c3c 1,16,26,45,65
+src/app/(marketing)/page.tsx
+  1a60477d8d413c3c 1,4,7-8,10,12-16,21-22,24-29,32-33,35-40,43-44,46-51,55,57-59,62-64,67-69,73-80,84-85,94,96,99-100,103-104,108,111-121,129-132,134,146-158,160-161,165,167-170,172-178,180-189,191-195,197-204,206-211,215-217,219-221,223-225,228-229,231-232,234-238,245-263,266,268-295,297-318,320-321,323-324,328-338,340-346,348-351,356,358-368,371-374,376-392,396,406,409,411-412,415-416,420-427,429,437
+src/app/(insight)/insight/loading.tsx
+  1a60477d8d413c3c 1,7,20,49,58,70
+src/app/(jobs)/jobs/page.tsx
+  1a60477d8d413c3c 1,15
+src/app/admin/layout.tsx
+  1a60477d8d413c3c 1,14,18,25
+src/app/(learn)/learn/course-card.tsx
+  1a60477d8d413c3c 1,33,59,61,71-72,86,96,113,115,123
+src/app/admin/users/page.tsx
+  1a60477d8d413c3c 1,46,77,88,103
+src/app/providers.tsx
+  1a60477d8d413c3c 1,14-23,26-35,76
+public/images/logo-full.svg
+  1a60477d8d413c3c 1-55
+src/components/nav/site-footer.tsx
+  1a60477d8d413c3c 1,7,9-11,15,17-20,24,26-29,36,41,43-47,51,58,67,78,102
+src/app/(marketing)/privacy/page.tsx
+  1a60477d8d413c3c 1,18,80
+src/app/(insight)/insight/page.tsx
+  1a60477d8d413c3c 1,45,52,57,70,80,86,90,100,114,119,123,128,132,137,151,163,167
+src/components/nav/site-header.tsx
+  1a60477d8d413c3c 1,8,10-11,21,24,26-39,48
+src/components/nav/guest-header.tsx
+  1a60477d8d413c3c 1,11,16-17,19
+src/app/(marketing)/about/page.tsx
+  1a60477d8d413c3c 1-105
+tsconfig.tsbuildinfo
+  1a60477d8d413c3c 1
+src/app/admin/page.tsx
+  1a60477d8d413c3c 1,75-77,85,87,115,122,131,136,149,162,176
+src/app/globals.css
+  1a60477d8d413c3c 1,65,69,73,83,118,122,126,132,136,144,148,152,164,172,180,192,212,241
+src/components/nav/mobile-menu.tsx
+  1a60477d8d413c3c 1,14,16-17,33,50-51,69-70
+src/app/dashboard/learn/learn-dashboard-client.tsx
+  1a60477d8d413c3c 1,252
+public/images/hero-pattern.svg
+  1a60477d8d413c3c 1,4-5,8-9,30
+public/images/hero-gradient-mesh.svg
+  1a60477d8d413c3c 1,4-5,8-9,12-13,20-22,25
+src/app/(jobs)/employers/dashboard/employer-dashboard-client.tsx
+  1a60477d8d413c3c 1,145
+public/images/insight-hero.svg
+  1a60477d8d413c3c 1,4-5,8-9,14,16-19
+src/app/(marketing)/terms/page.tsx
+  1a60477d8d413c3c 1,82
+src/components/nav/authed-header.tsx
+  1a60477d8d413c3c 1,43,53
+public/images/icon-insight.svg
+  1a60477d8d413c3c 1-7
+src/app/(insight)/tools/tax-calculator/tax-calculator-client.tsx
+  1a60477d8d413c3c 1,36
+src/app/(jobs)/jobs/filter-panel.tsx
+  1a60477d8d413c3c 1,21-23,25,30-31,33-34,36,96,98,107-108
+src/app/sitemap.ts
+  1a60477d8d413c3c 1,4
+src/app/(insight)/insight/insight-client.tsx
+  1a60477d8d413c3c 1,40-41,77,88,92,102
+public/images/icon-jobs.svg
+  1a60477d8d413c3c 1-6
+src/app/(jobs)/jobs/job-card.tsx
+  1a60477d8d413c3c 1,50,54,60,71,78,86,94,99,106
+src/app/(marketing)/services/page.tsx
+  1a60477d8d413c3c 1-125
+public/images/icon-learn.svg
+  1a60477d8d413c3c 1-6
+src/app/(jobs)/jobs/jobs-search.tsx
+  1a60477d8d413c3c 1,27,30,38,69,80,83,110-111,134,146,159,161,164
+src/app/(insight)/experts/[username]/cal-embed.tsx
+  1a60477d8d413c3c 1,34
+src/lib/email.ts
+  1a60477d8d413c3c 1,4
+src/app/icon.svg
+  1a60477d8d413c3c 1-6
+src/app/admin/admin-table.tsx
+  1a60477d8d413c3c 1,17,21,34,40,50,79-80,105,110
+src/app/(marketing)/loading.tsx
+  1a60477d8d413c3c 1,7,20
+src/app/admin/courses/page.tsx
+  1a60477d8d413c3c 1,44,79,110-111
+src/app/(learn)/learn/loading.tsx
+  1a60477d8d413c3c 1,7,31,53,69
+public/images/learn-hero.svg
+  1a60477d8d413c3c 1,4-6,9-10,13-14,20,22,25-26,35,38,40,43-44
+src/app/robots.ts
+  1a60477d8d413c3c 1,3
+src/app/(marketing)/contact/page.tsx
+  1a60477d8d413c3c 1-170
+public/images/logo-mark.svg
+  1a60477d8d413c3c 1-5
+public/images/jobs-hero.svg
+  1a60477d8d413c3c 1,4-5,8-9,12-13,19,36
+src/app/(learn)/learn/page.tsx
+  1a60477d8d413c3c 1,15
+src/app/(insight)/tools/salary-benchmarker/salary-benchmarker-client.tsx
+  1a60477d8d413c3c 1,93,95,201
+src/app/admin/jobs/page.tsx
+  1a60477d8d413c3c 1,47,84,110-111
+src/app/dashboard/settings/settings-form.tsx
+  1a60477d8d413c3c 1,79
+src/app/(learn)/instructors/dashboard/instructor-dashboard-client.tsx
+  1a60477d8d413c3c 1,276
+src/app/dashboard/page.tsx
+  1a60477d8d413c3c 1,77,85,176
+src/app/(learn)/learn/learn-search.tsx
+  1a60477d8d413c3c 1,28,31,41-43,45,98,109,112,139-140,155,163-166,168,180,192,205,207,210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "5f8650451c49f43991be1c3b6b0800f917b06826",
+  "prompts": {
+    "1a60477d8d413c3c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "19432950-9f7a-4180-84b6-f63e14baef5b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole",
+      "messages": [],
+      "total_additions": 1596,
+      "total_deletions": 1208,
+      "accepted_lines": 3670,
+      "overriden_lines": 0
+    }
+  }
+}
