@@ -33,7 +33,7 @@ const sections = [
 
 export function SiteFooter() {
   return (
-    <footer className="relative bg-[#0f2a2e] dark:bg-[#0a0c14] overflow-hidden">
+    <footer className="relative bg-[#0f2a2e] overflow-hidden">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-10">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}

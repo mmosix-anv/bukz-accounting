@@ -26,28 +26,6 @@
     --shadow-soft: 15 23 42;
   }
 
-  [data-mantine-color-scheme="dark"] {
-    --background: 220 14% 8%;
-    --foreground: 210 40% 96%;
-    --card: 220 13% 10%;
-    --card-foreground: 210 40% 96%;
-    --muted: 220 13% 14%;
-    --muted-foreground: 215 20% 65%;
-    --border: 220 13% 18%;
-    --input: 220 13% 18%;
-    --ring: 40 45% 55%;
-    --surface: 20 21 30;
-    --surface-elevated: 30 32 42;
-    --text-primary: 226 232 240;
-    --text-secondary: 148 163 184;
-    --accent-gold: 201 168 76;
-    --hero: 10 13 24;
-    --hero-foreground: 241 245 249;
-    --hero-muted: 148 163 184;
-    --shell: 15 23 42;
-    --shell-elevated: 20 21 30;
-    --shadow-soft: 2 6 23;
-  }
 
   * {
     @apply border-[hsl(var(--border))];
@@ -61,17 +39,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  [data-mantine-color-scheme="dark"] body {
-    @apply bg-[#0A1A20] text-slate-200;
-  }
 
   ::selection {
     @apply bg-[#2cd7f2]/20 text-[#0f2a2e];
   }
 
-  [data-mantine-color-scheme="dark"] ::selection {
-    @apply bg-[#2cd7f2]/30 text-white;
-  }
 }
 
 @layer utilities {
@@ -119,21 +91,21 @@
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-[#0f2a2e] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2] hover:bg-[#edf9fd] hover:shadow-md dark:border-[#2A4048] dark:bg-[#0D1E24] dark:text-slate-100 dark:shadow-none dark:hover:border-[#2cd7f2]/60 dark:hover:bg-[#0B2430];
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-[#0f2a2e] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2] hover:bg-[#edf9fd] hover:shadow-md;
   }
 
   .input-shell {
-    @apply rounded-2xl border border-slate-200/80 bg-white text-slate-900 shadow-[0_16px_36px_-26px_rgba(15,23,42,0.42)] transition-all duration-200 focus-within:border-[#2cd7f2]/45 focus-within:shadow-[0_18px_36px_-24px_rgba(201,168,76,0.24)] dark:border-[#183038] dark:bg-[#0D1E24] dark:text-slate-100 dark:shadow-[0_20px_40px_-28px_rgba(0,0,0,0.65)];
+    @apply rounded-2xl border border-slate-200/80 bg-white text-slate-900 shadow-[0_16px_36px_-26px_rgba(15,23,42,0.42)] transition-all duration-200 focus-within:border-[#2cd7f2]/45 focus-within:shadow-[0_18px_36px_-24px_rgba(201,168,76,0.24)];
   }
 
   /* page-hero background is set via inline style on each hero element */
 
   .panel-strong {
-    @apply rounded-[1.75rem] border border-slate-200/80 bg-white shadow-soft dark:border-[#183038] dark:bg-[#0D1E24];
+    @apply rounded-[1.75rem] border border-slate-200/80 bg-white shadow-soft;
   }
 
   .panel-subtle {
-    @apply rounded-[1.5rem] border border-slate-200/70 bg-slate-50/90 dark:border-[#183038] dark:bg-[#151926];
+    @apply rounded-[1.5rem] border border-slate-200/70 bg-slate-50/90;
   }
 
   .hero-panel {
@@ -141,15 +113,15 @@
   }
 
   .toolbar-shell {
-    @apply rounded-[1.7rem] border border-slate-200/80 bg-white p-3 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24];
+    @apply rounded-[1.7rem] border border-slate-200/80 bg-white p-3 shadow-soft;
   }
 
   .nav-shell {
-    @apply rounded-full border border-slate-200/75 bg-white p-1 shadow-[0_14px_32px_-28px_rgba(15,23,42,0.5)] backdrop-blur-xl dark:border-[#183038]/90 dark:bg-[#141925];
+    @apply rounded-full border border-slate-200/75 bg-white p-1 shadow-[0_14px_32px_-28px_rgba(15,23,42,0.5)] backdrop-blur-xl;
   }
 
   .section-kicker {
-    @apply inline-flex items-center gap-2 rounded-full border border-[#2cd7f2]/15 bg-[#2cd7f2]/10 px-4 py-1.5 text-sm font-semibold text-[#0a7a8c] dark:border-[#2cd7f2]/20 dark:bg-[#2cd7f2]/10 dark:text-[#a8ecf8];
+    @apply inline-flex items-center gap-2 rounded-full border border-[#2cd7f2]/15 bg-[#2cd7f2]/10 px-4 py-1.5 text-sm font-semibold text-[#0a7a8c];
   }
 
   .noise-overlay {
@@ -168,48 +140,24 @@
     @apply bg-white border-slate-200;
   }
 
-  [data-mantine-color-scheme="dark"] .dark-card {
-    @apply bg-[#1e2030] border-[#183038];
-  }
-
   .dark-surface {
     @apply bg-white;
-  }
-
-  [data-mantine-color-scheme="dark"] .dark-surface {
-    @apply bg-[#0A1A20];
   }
 
   .dark-surface-elevated {
     @apply bg-slate-50;
   }
 
-  [data-mantine-color-scheme="dark"] .dark-surface-elevated {
-    @apply bg-[#1e2030];
-  }
-
   .dark-text {
     @apply text-[#0f2a2e];
-  }
-
-  [data-mantine-color-scheme="dark"] .dark-text {
-    @apply text-slate-100;
   }
 
   .dark-text-secondary {
     @apply text-slate-500;
   }
 
-  [data-mantine-color-scheme="dark"] .dark-text-secondary {
-    @apply text-slate-400;
-  }
-
   .dark-border {
     @apply border-slate-200;
-  }
-
-  [data-mantine-color-scheme="dark"] .dark-border {
-    @apply border-[#183038];
   }
 }
 
@@ -237,9 +185,6 @@
     border-radius: 0.5rem;
   }
 
-  [data-mantine-color-scheme="dark"] .skeleton-shimmer {
-    background: #183038;
-  }
 }
 
 @keyframes float {

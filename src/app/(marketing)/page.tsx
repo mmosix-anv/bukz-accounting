@@ -115,7 +115,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   href="/learn"
-                  className="btn-secondary border-white/40 bg-white/[0.15] text-white shadow-none hover:border-white/60 hover:bg-white/[0.25] dark:border-white/30 dark:bg-white/[0.12] dark:hover:bg-white/[0.20]"
+                  className="btn-secondary border-white/40 bg-white/[0.15] text-white shadow-none hover:border-white/60 hover:bg-white/[0.25]"
                 >
                   Start Learning for Free
                 </Link>
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Trust Strip ─────────────────────────────────────────────────────── */}
-      <section className="border-b border-slate-100 bg-slate-50/80 dark:border-[#0B2430] dark:bg-[#091820]">
+      <section className="border-b border-slate-100 bg-slate-50/80">
         <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {[
@@ -155,7 +155,7 @@ export default function HomePage() {
             ].map(({ Icon, label }) => (
               <div key={label} className="flex items-center justify-center gap-2.5 md:justify-start">
                 <Icon size={15} className="shrink-0 text-[#2cd7f2]" />
-                <span className="text-sm font-medium text-slate-600 dark:text-slate-300">{label}</span>
+                <span className="text-sm font-medium text-slate-600">{label}</span>
               </div>
             ))}
           </div>
@@ -169,7 +169,7 @@ export default function HomePage() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#2cd7f2]" />
             <span className="text-sm font-semibold text-[#2cd7f2]">What We Do</span>
           </div>
-          <h2 className="mt-3 text-balance text-3xl font-bold leading-tight text-[#0f2a2e] dark:text-white sm:text-4xl lg:text-5xl">
+          <h2 className="mt-3 text-balance text-3xl font-bold leading-tight text-[#0f2a2e] sm:text-4xl lg:text-5xl">
             Accounting. Advisory. Education.
           </h2>
         </div>
@@ -179,28 +179,28 @@ export default function HomePage() {
             <Link
               key={pillar.title}
               href={pillar.href}
-              className={`group relative flex flex-col rounded-2xl border border-slate-200/80 bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:border-[#2cd7f2]/30 hover:shadow-2xl hover:shadow-[#2cd7f2]/[0.06] dark:border-[#183038] dark:bg-[#0D1E24] lg:p-10 ${pillar.accentColor}`}
+              className={`group relative flex flex-col rounded-2xl border border-slate-200/80 bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:border-[#2cd7f2]/30 hover:shadow-2xl hover:shadow-[#2cd7f2]/[0.06] lg:p-10 ${pillar.accentColor}`}
             >
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0f2a2e]/[0.04] transition-transform duration-300 group-hover:scale-105 dark:bg-white/5">
-                <pillar.Icon size={24} className="text-[#0f2a2e] transition-colors duration-300 group-hover:text-[#2cd7f2] dark:text-slate-300" />
+              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#0f2a2e]/[0.04] transition-transform duration-300 group-hover:scale-105">
+                <pillar.Icon size={24} className="text-[#0f2a2e] transition-colors duration-300 group-hover:text-[#2cd7f2]" />
               </div>
 
               <p className="mb-1 text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">{pillar.subtitle}</p>
-              <h3 className="mb-3 text-xl font-bold text-[#0f2a2e] transition-colors duration-300 group-hover:text-[#2cd7f2] dark:text-white">
+              <h3 className="mb-3 text-xl font-bold text-[#0f2a2e] transition-colors duration-300 group-hover:text-[#2cd7f2]">
                 {pillar.title}
               </h3>
-              <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">{pillar.description}</p>
+              <p className="text-sm leading-relaxed text-slate-500">{pillar.description}</p>
 
               <ul className="mt-5 flex-1 space-y-1.5">
                 {pillar.services.map((s) => (
-                  <li key={s} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <li key={s} className="flex items-center gap-2 text-sm text-slate-600">
                     <CheckCircle2 size={12} className="shrink-0 text-[#2cd7f2]" />
                     {s}
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[#0f2a2e] transition-colors duration-300 group-hover:text-[#2cd7f2] dark:text-slate-100">
+              <div className="mt-8 flex items-center gap-2 text-sm font-semibold text-[#0f2a2e] transition-colors duration-300 group-hover:text-[#2cd7f2]">
                 {pillar.cta}
                 <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1.5" />
               </div>
@@ -210,14 +210,14 @@ export default function HomePage() {
       </section>
 
       {/* ── Who We Work With ────────────────────────────────────────────────── */}
-      <section className="relative border-y border-slate-100 bg-slate-50/80 dark:border-[#0B2430] dark:bg-[#091820]">
+      <section className="relative border-y border-slate-100 bg-slate-50/80">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mb-12 text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#2cd7f2]/10 px-4 py-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-[#2cd7f2]" />
               <span className="text-sm font-semibold text-[#2cd7f2]">Who We Work With</span>
             </div>
-            <h2 className="mt-3 text-balance text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">
+            <h2 className="mt-3 text-balance text-3xl font-bold text-[#0f2a2e] sm:text-4xl">
               Who We Work With
             </h2>
           </div>
@@ -226,13 +226,13 @@ export default function HomePage() {
             {clients.map(({ Icon, title, description }) => (
               <div
                 key={title}
-                className="group rounded-2xl border border-slate-200/80 bg-white p-8 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:shadow-xl dark:border-[#183038] dark:bg-[#0D1E24]"
+                className="group rounded-2xl border border-slate-200/80 bg-white p-8 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:shadow-xl"
               >
                 <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[#2cd7f2]/20 bg-[#2cd7f2]/10 transition-transform duration-300 group-hover:scale-110">
                   <Icon size={20} className="text-[#2cd7f2]" />
                 </div>
-                <h3 className="mb-2 text-lg font-bold text-[#0f2a2e] dark:text-white">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">{description}</p>
+                <h3 className="mb-2 text-lg font-bold text-[#0f2a2e]">{title}</h3>
+                <p className="text-sm leading-relaxed text-slate-500">{description}</p>
               </div>
             ))}
           </div>
@@ -240,7 +240,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Why BUKZ ────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-[#0f2a2e] dark:bg-[#0a0c14]">
+      <section className="relative overflow-hidden bg-[#0f2a2e]">
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mb-14 text-center">
             <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">Why Bukz</p>
@@ -269,10 +269,10 @@ export default function HomePage() {
               <GraduationCap size={13} className="text-[#2cd7f2]" />
               <span className="text-sm font-semibold text-[#2cd7f2]">Learn With Bukz</span>
             </div>
-            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] sm:text-4xl">
               Learn With Bukz
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
+            <p className="mt-5 text-lg leading-relaxed text-slate-500">
               Financial clarity starts with understanding. Our learning platform gives you the knowledge and tools to manage your finances with confidence.
             </p>
 
@@ -285,17 +285,17 @@ export default function HomePage() {
               ].map((topic) => (
                 <div
                   key={topic}
-                  className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50 px-4 py-3 dark:border-[#183038] dark:bg-[#0D1E24]"
+                  className="flex items-center gap-2.5 rounded-xl border border-slate-200/80 bg-slate-50 px-4 py-3"
                 >
                   <CheckCircle2 size={13} className="shrink-0 text-[#2cd7f2]" />
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{topic}</span>
+                  <span className="text-sm font-medium text-slate-700">{topic}</span>
                 </div>
               ))}
             </div>
 
             <Link
               href="/learn"
-              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#0f2a2e] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#122e33] dark:bg-[#2cd7f2] dark:text-[#0f2a2e] dark:hover:bg-[#1bc6e2]"
+              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#0f2a2e] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#122e33]"
             >
               Start Learning
               <ArrowRight size={14} />
@@ -309,12 +309,12 @@ export default function HomePage() {
               { Icon: CheckCircle2, title: 'Make better decisions', desc: 'Financial education that translates directly into smarter business choices.' },
               { Icon: Award, title: 'Build confidence', desc: 'Led by qualified accountants with real-world experience in your sector.' },
             ].map(({ Icon, title, desc }) => (
-              <div key={title} className="rounded-2xl border border-slate-200/80 bg-white p-6 dark:border-[#183038] dark:bg-[#0D1E24]">
+              <div key={title} className="rounded-2xl border border-slate-200/80 bg-white p-6">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#2cd7f2]/10">
                   <Icon size={18} className="text-[#2cd7f2]" />
                 </div>
-                <h3 className="mb-1.5 font-semibold text-[#0f2a2e] dark:text-white">{title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">{desc}</p>
+                <h3 className="mb-1.5 font-semibold text-[#0f2a2e]">{title}</h3>
+                <p className="text-sm leading-relaxed text-slate-500">{desc}</p>
               </div>
             ))}
           </div>
@@ -322,14 +322,14 @@ export default function HomePage() {
       </section>
 
       {/* ── How It Works ────────────────────────────────────────────────────── */}
-      <section className="border-t border-slate-100 bg-slate-50/80 dark:border-[#0B2430] dark:bg-[#091820]">
+      <section className="border-t border-slate-100 bg-slate-50/80">
         <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
           <div className="mb-16 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#0f2a2e]/5 px-4 py-1.5 dark:bg-white/5">
-              <CheckCircle2 size={12} className="text-[#0f2a2e] dark:text-white" />
-              <span className="text-sm font-semibold text-[#0f2a2e] dark:text-white">How It Works</span>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#0f2a2e]/5 px-4 py-1.5">
+              <CheckCircle2 size={12} className="text-[#0f2a2e]" />
+              <span className="text-sm font-semibold text-[#0f2a2e]">How It Works</span>
             </div>
-            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">How It Works</h2>
+            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] sm:text-4xl">How It Works</h2>
           </div>
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
             {[
@@ -341,8 +341,8 @@ export default function HomePage() {
                 <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0f2a2e] shadow-lg shadow-[#0f2a2e]/20">
                   <span className="text-lg font-bold text-[#2cd7f2]">{item.step}</span>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-[#0f2a2e] dark:text-white">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">{item.desc}</p>
+                <h3 className="mb-2 text-lg font-semibold text-[#0f2a2e]">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-500">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -352,7 +352,7 @@ export default function HomePage() {
       {/* ── Founder ─────────────────────────────────────────────────────────── */}
       <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-center">
-          <div className="rounded-[2rem] border border-slate-200/80 bg-[#0f2a2e] p-10 shadow-soft dark:border-[#183038]">
+          <div className="rounded-[2rem] border border-slate-200/80 bg-[#0f2a2e] p-10 shadow-soft">
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-[#2cd7f2]/15">
               <span className="text-3xl font-bold text-[#2cd7f2]">MA</span>
             </div>
@@ -366,13 +366,13 @@ export default function HomePage() {
               <Award size={13} className="text-[#2cd7f2]" />
               <span className="text-sm font-semibold text-[#2cd7f2]">About the Founder</span>
             </div>
-            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] sm:text-4xl">
               About the Founder
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
+            <p className="mt-5 text-lg leading-relaxed text-slate-500">
               Bukz Accounting Services Ltd is led by Mutiu Adebukola Adejumobi (ICAEW), a Chartered Accountant providing tailored accounting and advisory services to businesses and charities.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-slate-500 dark:text-slate-400">
+            <p className="mt-4 text-base leading-relaxed text-slate-500">
               The firm combines technical expertise with a personalised approach, ensuring every client gains clarity, confidence, and control over their finances.
             </p>
           </div>
@@ -404,13 +404,13 @@ export default function HomePage() {
               </Link>
               <Link
                 href="/services"
-                className="btn-secondary border-white/40 bg-white/[0.15] text-white shadow-none hover:border-white/60 hover:bg-white/[0.25] dark:border-white/30 dark:bg-white/[0.12] dark:hover:bg-white/[0.20]"
+                className="btn-secondary border-white/40 bg-white/[0.15] text-white shadow-none hover:border-white/60 hover:bg-white/[0.25]"
               >
                 Explore Services
               </Link>
               <Link
                 href="/learn"
-                className="btn-secondary border-white/40 bg-white/[0.15] text-white shadow-none hover:border-white/60 hover:bg-white/[0.25] dark:border-white/30 dark:bg-white/[0.12] dark:hover:bg-white/[0.20]"
+                className="btn-secondary border-white/40 bg-white/[0.15] text-white shadow-none hover:border-white/60 hover:bg-white/[0.25]"
               >
                 Start Learning
               </Link>
