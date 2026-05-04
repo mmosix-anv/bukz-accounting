@@ -21,9 +21,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning data-mantine-color-scheme="light">
       <head>
-        <ColorSchemeScript defaultColorScheme="light" />
+        <ColorSchemeScript defaultColorScheme="light" forceColorScheme="light" />
       </head>
       <body className={`${manrope.className} ${manrope.variable} ${fraunces.variable}`}>
         <Providers>
