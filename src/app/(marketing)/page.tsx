@@ -19,35 +19,35 @@ import {
 const pillars = [
   {
     title: 'Accounting',
-    subtitle: 'Reliable & Compliant',
+    subtitle: 'Accounting',
     description:
-      'Reliable, compliant, and stress-free financial management. From bookkeeping to tax compliance, we handle the numbers so you can focus on what you do best.',
+      'Reliable and compliant financial management to keep your business running smoothly.',
     href: '/services',
-    cta: 'Accounting services',
+    cta: 'Explore Services',
     Icon: Calculator,
     services: ['Bookkeeping', 'VAT Returns', 'Payroll Services', 'Financial Statements', 'Tax Compliance'],
     accentColor: 'group-hover:border-blue-400/50',
   },
   {
     title: 'Advisory',
-    subtitle: 'Strategic Support',
+    subtitle: 'Advisory',
     description:
-      'Strategic financial support to help you grow and optimise your business. Decisions backed by expertise, tailored to your specific situation and goals.',
+      'Strategic financial support to help you structure, plan, and grow your business effectively.',
     href: '/services',
-    cta: 'Advisory services',
+    cta: 'Explore Services',
     Icon: TrendingUp,
-    services: ['Business Structuring', 'Tax Planning', 'Financial Strategy', 'Growth & Scaling Support'],
+    services: ['Business Structuring', 'Tax Planning', 'Financial Strategy', 'Growth and Scaling Support'],
     accentColor: 'group-hover:border-emerald-400/50',
   },
   {
     title: 'Education',
-    subtitle: 'Financial Literacy',
+    subtitle: 'Education',
     description:
-      "We don't just manage your finances — we help you understand them. Practical courses for founders and charities, built around real-world insights.",
+      "We don't just manage your finances—we help you understand them.",
     href: '/learn',
-    cta: 'Explore courses',
+    cta: 'Explore Courses',
     Icon: GraduationCap,
-    services: ['Business Setup & Structuring', 'Charity Financial Compliance', 'UK Tax Essentials', 'Financial Systems for Growth'],
+    services: ['Practical courses for business owners and charities', 'Step-by-step financial guidance', 'Real-world insights you can apply immediately'],
     accentColor: 'group-hover:border-amber-400/50',
   },
 ];
@@ -56,26 +56,26 @@ const clients = [
   {
     Icon: Heart,
     title: 'Charities & CICs',
-    description: 'Specialist support for compliance, reporting, and structuring in the charity and social enterprise sector.',
+    description: 'Specialist support for compliance, reporting, and organisational structuring.',
   },
   {
     Icon: Briefcase,
     title: 'Founders & SMEs',
-    description: 'Helping business owners build and grow with financial confidence from day one.',
+    description: 'Helping business owners manage finances and grow with confidence.',
   },
   {
     Icon: Building2,
     title: 'Growing Businesses',
-    description: 'Strategic support for scaling operations and achieving long-term financial sustainability.',
+    description: 'Strategic financial support for scaling and long-term success.',
   },
 ];
 
 const whyBukz = [
-  { Icon: Users, title: 'Personalised, one-on-one service', desc: 'Direct access to your accountant — not a call centre or rotating team.' },
-  { Icon: Heart, title: 'Strong charity sector expertise', desc: 'Trusted by charities, CICs, and social enterprises across the UK.' },
-  { Icon: CheckCircle2, title: 'Practical, results-driven advice', desc: 'We focus on outcomes for your business, not just compliance boxes.' },
-  { Icon: BookOpen, title: 'Education that empowers clients', desc: 'We help you understand your finances, not just depend on us for them.' },
-  { Icon: Lightbulb, title: 'Technology-driven approach', desc: 'Modern tools that make financial management efficient and transparent.' },
+  { Icon: Users, title: 'Personalised, one-on-one service', desc: '' },
+  { Icon: Heart, title: 'Strong experience in the charity sector', desc: '' },
+  { Icon: CheckCircle2, title: 'Practical, results-focused advice', desc: '' },
+  { Icon: BookOpen, title: 'Clear and simple financial guidance', desc: '' },
+  { Icon: Lightbulb, title: 'Modern, technology-enabled approach', desc: '' },
 ];
 
 export default function HomePage() {
@@ -105,7 +105,7 @@ export default function HomePage() {
               </h1>
 
               <p className="hero-muted mt-8 max-w-2xl text-lg leading-relaxed animate-fade-in-up stagger-2 sm:text-xl lg:mx-0">
-                We help charities, founders, and growing businesses manage their finances, make better decisions, and build sustainable success through expert accounting, strategic advice, and practical financial education.
+                We support charities, founders, and growing businesses with expert accounting, strategic advice, and practical financial education—so you can make confident decisions and grow sustainably.
               </p>
 
               <div className="mt-10 flex flex-col items-center gap-4 animate-fade-in-up stagger-3 sm:flex-row lg:items-start">
@@ -149,9 +149,9 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {[
               { Icon: Shield, label: 'ICAEW Regulated Firm' },
-              { Icon: Star, label: 'Trusted by UK Businesses & Charities' },
-              { Icon: Users, label: 'Tailored, One-on-One Support' },
-              { Icon: Lightbulb, label: 'Modern Tools & Practical Expertise' },
+              { Icon: Star, label: 'Trusted by UK Businesses and Charities' },
+              { Icon: Users, label: 'Personalised, One-on-One Support' },
+              { Icon: Lightbulb, label: 'Practical Financial Expertise' },
             ].map(({ Icon, label }) => (
               <div key={label} className="flex items-center justify-center gap-2.5 md:justify-start">
                 <Icon size={15} className="shrink-0 text-[#2cd7f2]" />
@@ -167,14 +167,11 @@ export default function HomePage() {
         <div className="mb-16 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#2cd7f2]/10 px-4 py-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#2cd7f2]" />
-            <span className="text-sm font-semibold text-[#2cd7f2]">Our Services</span>
+            <span className="text-sm font-semibold text-[#2cd7f2]">What We Do</span>
           </div>
           <h2 className="mt-3 text-balance text-3xl font-bold leading-tight text-[#0f2a2e] dark:text-white sm:text-4xl lg:text-5xl">
             Accounting. Advisory. Education.
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-500 dark:text-slate-400">
-            Three integrated pillars designed to help UK businesses and charities achieve financial clarity and sustainable growth.
-          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
@@ -221,7 +218,7 @@ export default function HomePage() {
               <span className="text-sm font-semibold text-[#2cd7f2]">Who We Work With</span>
             </div>
             <h2 className="mt-3 text-balance text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">
-              Built for businesses and charities that want to grow with clarity
+              Who We Work With
             </h2>
           </div>
 
@@ -246,19 +243,18 @@ export default function HomePage() {
       <section className="relative overflow-hidden bg-[#0f2a2e] dark:bg-[#0a0c14]">
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
           <div className="mb-14 text-center">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">Why BUKZ</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">Why Bukz</p>
             <h2 className="mt-3 text-balance text-3xl font-bold text-white sm:text-4xl">
               Most accountants focus on numbers. We focus on outcomes.
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {whyBukz.map(({ Icon, title, desc }) => (
+            {whyBukz.map(({ Icon, title }) => (
               <div key={title} className="group flex flex-col items-center text-center">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.06] transition-all duration-300 group-hover:border-[#2cd7f2]/20 group-hover:bg-[#2cd7f2]/10">
                   <Icon size={22} className="text-[#2cd7f2]" />
                 </div>
                 <h3 className="text-base font-semibold text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{desc}</p>
               </div>
             ))}
           </div>
@@ -271,13 +267,13 @@ export default function HomePage() {
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#2cd7f2]/10 px-4 py-1.5">
               <GraduationCap size={13} className="text-[#2cd7f2]" />
-              <span className="text-sm font-semibold text-[#2cd7f2]">BUKZ Learn</span>
+              <span className="text-sm font-semibold text-[#2cd7f2]">Learn With Bukz</span>
             </div>
             <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">
-              Financial clarity starts with understanding.
+              Learn With Bukz
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
-              Our learning platform helps you understand your finances, stay compliant, and make better decisions — so you&apos;re never in the dark about your own business.
+              Financial clarity starts with understanding. Our learning platform gives you the knowledge and tools to manage your finances with confidence.
             </p>
 
             <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -333,13 +329,13 @@ export default function HomePage() {
               <CheckCircle2 size={12} className="text-[#0f2a2e] dark:text-white" />
               <span className="text-sm font-semibold text-[#0f2a2e] dark:text-white">How It Works</span>
             </div>
-            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">Simple to get started</h2>
+            <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">How It Works</h2>
           </div>
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-3">
             {[
-              { step: '01', title: 'Start with a consultation', desc: 'We take time to understand your business, your challenges, and your goals.' },
-              { step: '02', title: 'Get tailored support', desc: 'Accounting and advisory services designed specifically for your situation — not an off-the-shelf package.' },
-              { step: '03', title: 'Continue learning', desc: 'Access our financial education platform to stay informed, compliant, and in control.' },
+              { step: '01', title: 'Book a consultation', desc: 'We take time to understand your business and your needs' },
+              { step: '02', title: 'Get tailored support', desc: 'We provide accounting and advisory services built around you' },
+              { step: '03', title: 'Stay informed and in control', desc: 'Access ongoing support and financial education' },
             ].map((item) => (
               <div key={item.step} className="relative text-center">
                 <div className="mb-5 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0f2a2e] shadow-lg shadow-[#0f2a2e]/20">
@@ -360,35 +356,25 @@ export default function HomePage() {
             <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-[#2cd7f2]/15">
               <span className="text-3xl font-bold text-[#2cd7f2]">MA</span>
             </div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">Founder</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">About the Founder</p>
             <h3 className="mt-2 text-2xl font-bold text-white">Mutiu Adebukola Adejumobi</h3>
             <p className="mt-1 text-sm font-medium text-slate-400">ICAEW Chartered Accountant</p>
-            <p className="mt-6 text-base leading-relaxed text-slate-300">
-              &ldquo;Bukz Accounting Services combines technical expertise with a personalised approach, ensuring clients gain clarity, confidence, and control over their finances.&rdquo;
-            </p>
           </div>
 
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#2cd7f2]/10 px-4 py-1.5">
               <Award size={13} className="text-[#2cd7f2]" />
-              <span className="text-sm font-semibold text-[#2cd7f2]">About Us</span>
+              <span className="text-sm font-semibold text-[#2cd7f2]">About the Founder</span>
             </div>
             <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] dark:text-white sm:text-4xl">
-              A firm built on expertise and genuine relationships.
+              About the Founder
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
-              Bukz Accounting Services Ltd is a UK-based accounting firm providing accounting, advisory, and financial education services to charities, founders, and growing businesses.
+              Bukz Accounting Services Ltd is led by Mutiu Adebukola Adejumobi (ICAEW), a Chartered Accountant providing tailored accounting and advisory services to businesses and charities.
             </p>
             <p className="mt-4 text-base leading-relaxed text-slate-500 dark:text-slate-400">
-              We focus on delivering tailored solutions that help organisations achieve financial clarity and sustainable growth — combining technical excellence with a genuinely personal service.
+              The firm combines technical expertise with a personalised approach, ensuring every client gains clarity, confidence, and control over their finances.
             </p>
-            <Link
-              href="/about"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[#2cd7f2] transition-colors hover:text-[#0a7a8c] dark:hover:text-[#a8ecf8]"
-            >
-              Learn more about us
-              <ArrowRight size={14} />
-            </Link>
           </div>
         </div>
       </section>

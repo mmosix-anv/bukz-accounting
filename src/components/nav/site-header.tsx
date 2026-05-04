@@ -5,6 +5,7 @@ import { AuthedHeader } from './authed-header';
 import { GuestHeader } from './guest-header';
 
 const navLinks = [
+  { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
   { href: '/learn', label: 'Learn' },
   { href: '/about', label: 'About' },
