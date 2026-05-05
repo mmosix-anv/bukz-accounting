@@ -167,7 +167,7 @@ export default async function SectionLessonsPage({ params }: LessonsPageProps) {
                               <Video size={12} /> Video
                             </Text>
                           )}
-                          {lesson.durationMinutes > 0 && (
+                          {(lesson.durationMinutes ?? 0) > 0 && (
                             <Text size="xs" c="dimmed" className="flex items-center gap-1">
                               <Clock size={12} /> {lesson.durationMinutes} min
                             </Text>

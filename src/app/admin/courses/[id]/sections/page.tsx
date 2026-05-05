@@ -6,7 +6,7 @@ import { findCourseById, findSectionsByCourse, deleteSection } from '@/lib/servi
 import { db } from '@/lib/db';
 import { courseSections } from '@bukz/db';
 import { eq, desc } from 'drizzle-orm';
-import { AdminTable, AdminTr, AdminTd } from '../../admin-table';
+import { AdminTable, AdminTr, AdminTd } from '../../../admin-table';
 import { Button, Paper, Stack, Title, Text, Group } from '@mantine/core';
 import { Plus, ArrowLeft, Trash2, GripVertical } from 'lucide-react';
 
@@ -119,7 +119,7 @@ export default async function CourseSectionsPage({ params }: SectionsPageProps) 
                       <div>
                         <Text fw={500}>{section.title}</Text>
                         <Text size="xs" c="dimmed">
-                          {section.createdAt?.toLocaleDateString?.() || 'Recently created'}
+                          {`Position ${section.position + 1}`}
                         </Text>
                       </div>
                     </Group>
