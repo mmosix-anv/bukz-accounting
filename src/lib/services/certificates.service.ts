@@ -8,6 +8,7 @@ export async function findCertificatesByUser(userId: string) {
     .select({
       id: courseCertificates.id, issuedAt: courseCertificates.issuedAt,
       certificateUrl: courseCertificates.certificateUrl,
+      courseId: courseCertificates.courseId,
       courseTitle: courses.title, courseSlug: courses.slug, cpdHours: courses.cpdHours,
     })
     .from(courseCertificates)

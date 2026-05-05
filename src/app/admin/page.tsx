@@ -12,33 +12,9 @@ import {
   Activity,
   ArrowRight,
 } from 'lucide-react';
+import { getAdminStats } from '@/lib/services/admin.service';
 
 export const metadata: Metadata = { title: 'Admin Dashboard' };
-
-async function getStats() {
-  const supabase = createClient();
-  const [{ count: userCount }, { count: listingCount }, { count: enrollmentCount }, { data: payments }] =
-    await Promise.all([
-      supabase.from('users').select('*', { count: 'exact', head: true }),
-      supabase.from('job_listings').select('*', { count: 'exact', head: true }),
-      supabase.from('enrollments').select('*', { count: 'exact', head: true }),
-      supabase
-        .from('payments')
-        .select('amount_pence')
-        .eq('status', 'completed')
-        .order('created_at', { ascending: false })
-        .limit(30),
-    ]);
-
-  const totalRevenue = payments?.reduce((sum, payment) => sum + (payment.amount_pence ?? 0), 0) ?? 0;
-
-  return {
-    userCount: userCount ?? 0,
-    listingCount: listingCount ?? 0,
-    enrollmentCount: enrollmentCount ?? 0,
-    totalRevenue,
-  };
-}
 
 export default async function AdminDashboardPage() {
   const supabase = createClient();
@@ -50,20 +26,20 @@ export default async function AdminDashboardPage() {
     redirect('/dashboard');
   }
 
-  const stats = await getStats();
+  const stats = await getAdminStats();
 
   const statCards = [
-    { label: 'Total Users', value: stats.userCount, icon: Users, color: 'text-blue-600' },
-    { label: 'Job Listings', value: stats.listingCount, icon: Briefcase, color: 'text-emerald-600' },
+    { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-blue-600' },
+    { label: 'Job Listings', value: stats.totalListings, icon: Briefcase, color: 'text-emerald-600' },
     {
       label: 'Enrollments',
-      value: stats.enrollmentCount,
+      value: stats.totalEnrollments,
       icon: GraduationCap,
       color: 'text-purple-600',
     },
     {
       label: 'Revenue (MTD)',
-      value: `£${(stats.totalRevenue / 100).toLocaleString('en-GB', { minimumFractionDigits: 2 })}`,
+      value: `£${(stats.mtdRevenue / 100).toLocaleString('en-GB', { minimumFractionDigits: 2 })}`,
       icon: TrendingUp,
       color: 'text-accent',
     },
@@ -72,17 +48,17 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-8 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
+        <Card className="overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-white p-8 shadow-soft">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2cd7f2]">Overview</p>
-          <h2 className="font-display mt-3 text-3xl font-semibold text-[#0f2a2e] dark:text-white">
+          <h2 className="font-display mt-3 text-3xl font-semibold text-[#0f2a2e]">
             Admin Dashboard
           </h2>
-          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500 dark:text-slate-400">
+          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-500">
             Track platform growth, revenue, and operational health at a glance across jobs,
             learning, and payments.
           </p>
         </Card>
-        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-[#0f2a2e] p-8 text-white shadow-soft dark:border-[#183038] dark:bg-[#091820]">
+        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-[#0f2a2e] p-8 text-white shadow-soft">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#2cd7f2]">
               <Activity className="h-5 w-5" />
@@ -112,14 +88,14 @@ export default async function AdminDashboardPage() {
         {statCards.map(({ label, value, icon: Icon, color }) => (
           <Card
             key={label}
-            className="rounded-[1.5rem] border border-slate-200/80 bg-white p-6 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 dark:border-[#183038] dark:bg-[#0D1E24]"
+            className="rounded-[1.5rem] border border-slate-200/80 bg-white p-6 shadow-soft transition-transform duration-200 hover:-translate-y-0.5"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{label}</p>
-                <p className="mt-1 text-2xl font-semibold text-primary dark:text-white">{value}</p>
+                <p className="text-sm font-medium text-slate-500">{label}</p>
+                <p className="mt-1 text-2xl font-semibold text-primary">{value}</p>
               </div>
-              <div className={`rounded-2xl bg-slate-100 p-3 dark:bg-[#0B2430] ${color}`}>
+              <div className={`rounded-2xl bg-slate-100 p-3 ${color}`}>
                 <Icon className="h-5 w-5" />
               </div>
             </div>
@@ -128,17 +104,17 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
-          <h2 className="text-lg font-semibold text-primary dark:text-white">Quick Actions</h2>
+        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-primary">Quick Actions</h2>
           <div className="mt-4 space-y-3">
             <Link
               href="/admin/users"
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2] dark:border-[#183038] dark:hover:bg-[#0B2430]"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2]"
             >
               <Users className="h-5 w-5 text-slate-400" />
               <div>
-                <p className="font-medium text-primary dark:text-white">Manage Users</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="font-medium text-primary">Manage Users</p>
+                <p className="text-sm text-slate-500">
                   View and manage user accounts
                 </p>
               </div>
@@ -146,12 +122,12 @@ export default async function AdminDashboardPage() {
             </Link>
             <Link
               href="/admin/jobs"
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2] dark:border-[#183038] dark:hover:bg-[#0B2430]"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2]"
             >
               <Briefcase className="h-5 w-5 text-slate-400" />
               <div>
-                <p className="font-medium text-primary dark:text-white">Moderate Jobs</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="font-medium text-primary">Moderate Jobs</p>
+                <p className="text-sm text-slate-500">
                   Review and manage job listings
                 </p>
               </div>
@@ -159,12 +135,12 @@ export default async function AdminDashboardPage() {
             </Link>
             <Link
               href="/admin/payments"
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2] dark:border-[#183038] dark:hover:bg-[#0B2430]"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2cd7f2]/30 hover:bg-[#fffaf2]"
             >
               <CreditCard className="h-5 w-5 text-slate-400" />
               <div>
-                <p className="font-medium text-primary dark:text-white">Payment History</p>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="font-medium text-primary">Payment History</p>
+                <p className="text-sm text-slate-500">
                   View transactions and revenue
                 </p>
               </div>
@@ -173,8 +149,8 @@ export default async function AdminDashboardPage() {
           </div>
         </Card>
 
-        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
-          <h2 className="text-lg font-semibold text-primary dark:text-white">Platform Health</h2>
+        <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-primary">Platform Health</h2>
           <div className="mt-4 space-y-4">
             {[
               ['Database', 'Connected'],
@@ -185,7 +161,7 @@ export default async function AdminDashboardPage() {
               <div key={label} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                  <span className="text-sm text-slate-600 dark:text-slate-300">{label}</span>
+                  <span className="text-sm text-slate-600">{label}</span>
                 </div>
                 <span className="text-sm font-medium text-emerald-600">{status}</span>
               </div>

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { findApplicationsByCandidate } from '@/lib/services/job-applications.service';
 import { findEnrollmentsByUser } from '@/lib/services/enrollments.service';
 import { SkillsGapButton } from './skills-gap-button';
-import { Anchor, Badge, Box, Card, Container, Group, Progress, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Anchor, Badge, Box, Card, Group, Progress, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 
 export const metadata: Metadata = { title: 'Dashboard | BUKZ' };
 
@@ -71,18 +71,17 @@ export default async function DashboardPage() {
   const completed = enrollments.filter((e) => !!e.completedAt);
 
   return (
-    <Container size="xl" py="xl">
-      <Stack gap="xl">
+    <Stack gap="xl">
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-[1.9rem] border border-slate-200/80 bg-white p-8 shadow-soft dark:border-[#183038] dark:bg-[#0D1E24]">
+          <div className="rounded-[1.9rem] border border-slate-200/80 bg-white p-8 shadow-soft">
             <Stack gap={4}>
-              <Title order={1} fz="h2" c="primary.7" className="font-display dark:!text-white">
+              <Title order={1} fz="h2" c="primary.7" className="font-display">
                 Welcome back, {displayName}
               </Title>
               <Text c="dimmed">Here&apos;s your BUKZ activity at a glance.</Text>
             </Stack>
           </div>
-          <div className="rounded-[1.9rem] border border-slate-200/80 bg-[#0f2a2e] p-8 shadow-soft dark:border-[#183038] dark:bg-[#091820]">
+          <div className="rounded-[1.9rem] border border-slate-200/80 bg-[#0f2a2e] p-8 shadow-soft">
             <Text size="xs" fw={700} c="accent.3" tt="uppercase">
               Momentum
             </Text>
@@ -173,7 +172,7 @@ export default async function DashboardPage() {
           </Card>
         </SimpleGrid>
 
-        <Card withBorder radius="xl" p="lg" className="border border-[#2cd7f2]/20 bg-[#edf9fd] shadow-soft dark:border-[#0A4858] dark:bg-[#071E24]">
+        <Card withBorder radius="xl" p="lg" className="border border-[#2cd7f2]/20 bg-[#edf9fd] shadow-soft">
           <Group justify="space-between" align="center" gap="md">
             <Stack gap={4} flex={1}>
               <Title order={2} fz="lg" c="primary.7">
@@ -186,8 +185,7 @@ export default async function DashboardPage() {
             <SkillsGapButton token={token} />
           </Group>
         </Card>
-      </Stack>
-    </Container>
+    </Stack>
   );
 }
 

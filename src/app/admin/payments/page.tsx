@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card } from '@bukz/ui';
 import { CreditCard, CheckCircle, XCircle, Clock } from 'lucide-react';
+import { getAdminPaymentsWithUsers, getAdminPaymentsCount } from '@/lib/services/admin.service';
 
 export const metadata: Metadata = { title: 'Admin - Payments' };
 
@@ -23,19 +24,15 @@ export default async function AdminPaymentsPage({
   const pageSize = 30;
   const offset = (page - 1) * pageSize;
 
-  const { data: payments, count } = await supabase
-    .from('payments')
-    .select('id, amount_pence, currency, status, description, created_at, user_id', { count: 'exact' })
-    .order('created_at', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+  const [rawPayments, count] = await Promise.all([
+    getAdminPaymentsWithUsers(pageSize, offset),
+    getAdminPaymentsCount(),
+  ]);
+  const payments = rawPayments.map((p) => ({
+    ...p, createdAt: p.createdAt.toISOString(),
+  }));
 
-  const { data: users } = await supabase
-    .from('users')
-    .select('id, email, name');
-
-  const userMap = new Map(users?.map((u) => [u.id, u]) ?? []);
-
-  const totalPages = Math.ceil((count ?? 0) / pageSize);
+  const totalPages = Math.ceil(count / pageSize);
 
   const statusConfig: Record<string, { color: string; icon: typeof CheckCircle }> = {
     completed: { color: 'bg-emerald-100 text-emerald-700', icon: CheckCircle },
@@ -64,7 +61,6 @@ export default async function AdminPaymentsPage({
             </thead>
             <tbody className="divide-y divide-slate-100">
               {payments?.map((payment) => {
-                const userInfo = userMap.get(payment.user_id);
                 const config = statusConfig[payment.status] ?? { color: 'bg-slate-100 text-slate-700', icon: Clock };
                 const Icon = config.icon;
 
@@ -72,8 +68,8 @@ export default async function AdminPaymentsPage({
                   <tr key={payment.id} className="hover:bg-slate-50">
                     <td className="px-4 py-3">
                       <div>
-                        <p className="font-medium text-primary">{userInfo?.name ?? 'Unknown'}</p>
-                        <p className="text-sm text-slate-500">{userInfo?.email ?? payment.user_id}</p>
+                        <p className="font-medium text-primary">{payment.userName ?? 'Unknown'}</p>
+                        <p className="text-sm text-slate-500">{payment.userEmail ?? payment.userId}</p>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-slate-600">
@@ -82,7 +78,7 @@ export default async function AdminPaymentsPage({
                     <td className="px-4 py-3">
                       <span className="font-medium text-primary">
                         {payment.currency?.toUpperCase() === 'GBP' ? '£' : payment.currency?.toUpperCase() ?? '£'}
-                        {(payment.amount_pence / 100).toLocaleString('en-GB', { minimumFractionDigits: 2 })}
+                        {(payment.amountPence / 100).toLocaleString('en-GB', { minimumFractionDigits: 2 })}
                       </span>
                     </td>
                     <td className="px-4 py-3">
@@ -92,7 +88,7 @@ export default async function AdminPaymentsPage({
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-slate-500">
-                      {new Date(payment.created_at).toLocaleDateString('en-GB', {
+                      {new Date(payment.createdAt).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric',

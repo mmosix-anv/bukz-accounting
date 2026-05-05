@@ -14,15 +14,15 @@ interface Props {
 
 export function AdminTable({ columns, children, footer }: Props) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white dark:border-[#183038] dark:bg-[#0F2228]">
+    <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50 dark:border-[#183038] dark:bg-[#141621]">
+            <tr className="border-b border-slate-100 bg-slate-50">
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-4 py-3 text-xs font-semibold tracking-wide text-slate-500 dark:text-slate-400 ${
+                  className={`px-4 py-3 text-xs font-semibold tracking-wide text-slate-500 ${
                     col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'
                   }`}
                 >
@@ -31,13 +31,13 @@ export function AdminTable({ columns, children, footer }: Props) {
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-[#183038]">
+          <tbody className="divide-y divide-slate-100">
             {children}
           </tbody>
         </table>
       </div>
       {footer && (
-        <div className="border-t border-slate-100 dark:border-[#183038]">
+        <div className="border-t border-slate-100">
           {footer}
         </div>
       )}
@@ -47,7 +47,7 @@ export function AdminTable({ columns, children, footer }: Props) {
 
 export function AdminTr({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <tr className={`transition-colors hover:bg-slate-50 dark:hover:bg-[#102830] ${className}`}>
+    <tr className={`transition-colors hover:bg-slate-50 ${className}`}>
       {children}
     </tr>
   );
@@ -76,8 +76,8 @@ export function FilterTabs({ options, current, buildHref }: FilterTabsProps) {
           href={buildHref(opt.value)}
           className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
             current === opt.value
-              ? 'bg-[#0f2a2e] text-white dark:bg-[#2cd7f2] dark:text-[#0f2a2e]'
-              : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-[#0B2430] dark:text-slate-400 dark:hover:bg-[#282b3c] dark:hover:text-slate-200'
+              ? 'bg-[#0f2a2e] text-white'
+              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
           }`}
         >
           {opt.label}
@@ -97,17 +97,17 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
   if (totalPages <= 1) return null;
   return (
     <div className="flex items-center justify-between px-4 py-3">
-      <p className="text-sm text-slate-500 dark:text-slate-400">
+      <p className="text-sm text-slate-500">
         Page {page} of {totalPages}
       </p>
       <div className="flex gap-2">
         {page > 1 && (
-          <a href={buildHref(page - 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#183038] dark:text-slate-400 dark:hover:bg-[#0B2430]">
+          <a href={buildHref(page - 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50">
             ← Previous
           </a>
         )}
         {page < totalPages && (
-          <a href={buildHref(page + 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:border-[#183038] dark:text-slate-400 dark:hover:bg-[#0B2430]">
+          <a href={buildHref(page + 1)} className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50">
             Next →
           </a>
         )}

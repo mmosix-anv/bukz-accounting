@@ -33,6 +33,7 @@ interface Enrollment {
   thumbnailUrl: string | null;
   cpdHours: string;
   level: string;
+  nextLessonId?: string | null;
 }
 
 interface Certificate {
@@ -108,7 +109,13 @@ function CourseProgressCard({ enrollment }: { enrollment: Enrollment }) {
 
         <Button
           component={Link}
-          href={isComplete ? `/dashboard/learn/certificates/${enrollment.courseId}` : `/learn/${enrollment.courseSlug}`}
+          href={
+            isComplete
+              ? `/dashboard/learn/certificates`
+              : enrollment.nextLessonId
+                ? `/learn/${enrollment.courseSlug}/lesson/${enrollment.nextLessonId}`
+                : `/learn/${enrollment.courseSlug}`
+          }
           color={isComplete ? 'green' : 'primary'}
           fullWidth
         >

@@ -20,6 +20,7 @@ import {
   ThemeIcon,
   Title,
 } from '@mantine/core';
+import Link from 'next/link';
 import { Check, Lock, Play, UserRound } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
 import { createClient } from '@/lib/supabase/client';
@@ -43,6 +44,7 @@ interface Section {
 
 interface Course {
   id: string;
+  slug?: string;
   description: string;
   sections: Section[];
   instructor: { name: string; avatarUrl: string | null } | null;
@@ -113,14 +115,14 @@ function WriteReviewForm({ courseId }: { courseId: string }) {
   );
 }
 
-function LessonRow({ lesson, isEnrolled, completedIds }: { lesson: Lesson; isEnrolled: boolean; completedIds: string[] }) {
+function LessonRow({ lesson, isEnrolled, completedIds, courseSlug }: { lesson: Lesson; isEnrolled: boolean; completedIds: string[]; courseSlug?: string }) {
   const isAccessible = isEnrolled || lesson.isFree;
   const isComplete = completedIds.includes(lesson.id);
 
   const icon = isComplete ? <Check size={14} /> : isAccessible ? <Play size={14} /> : <Lock size={14} />;
 
-  return (
-    <Group px="md" py="sm" wrap="nowrap" bg={isComplete ? 'green.0' : undefined}>
+  const content = (
+    <Group px="md" py="sm" wrap="nowrap" bg={isComplete ? 'green.0' : undefined} className={isAccessible && courseSlug ? 'cursor-pointer hover:bg-slate-50 transition-colors' : ''}>
       <ThemeIcon size={26} radius="xl" variant="light" color={isComplete ? 'green' : isAccessible ? 'primary' : 'gray'}>
         {icon}
       </ThemeIcon>
@@ -141,6 +143,12 @@ function LessonRow({ lesson, isEnrolled, completedIds }: { lesson: Lesson; isEnr
       )}
     </Group>
   );
+
+  if (isAccessible && courseSlug) {
+    return <Link href={`/learn/${courseSlug}/lesson/${lesson.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>{content}</Link>;
+  }
+
+  return content;
 }
 
 export function CourseDetailClient({ course, userId, isEnrolled }: Props) {
@@ -196,7 +204,7 @@ export function CourseDetailClient({ course, userId, isEnrolled }: Props) {
               <Accordion.Panel p={0}>
                 <Stack gap={0}>
                   {section.lessons.map((lesson) => (
-                    <LessonRow key={lesson.id} lesson={lesson} isEnrolled={isEnrolled} completedIds={completedIds} />
+                    <LessonRow key={lesson.id} lesson={lesson} isEnrolled={isEnrolled} completedIds={completedIds} courseSlug={course.slug} />
                   ))}
                 </Stack>
               </Accordion.Panel>

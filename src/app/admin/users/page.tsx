@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { User, Shield, Briefcase, GraduationCap } from 'lucide-react';
 import { AdminTable, AdminTr, AdminTd, FilterTabs, Pagination } from '../admin-table';
+import { getAdminUsers, getAdminUsersCount } from '@/lib/services/admin.service';
 
 export const metadata: Metadata = { title: 'Users | Admin' };
 
@@ -26,10 +27,14 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
   const page = Math.max(1, parseInt(params.page ?? '1', 10));
   const offset = (page - 1) * PAGE_SIZE;
 
-  let query = supabase.from('users').select('id, email, name, role, avatar_url, created_at', { count: 'exact' });
-  if (roleFilter) query = query.eq('role', roleFilter);
-  const { data: users, count } = await query.order('created_at', { ascending: false }).range(offset, offset + PAGE_SIZE - 1);
-  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+  const [rawUsers, count] = await Promise.all([
+    getAdminUsers(roleFilter || undefined, PAGE_SIZE, offset),
+    getAdminUsersCount(roleFilter || undefined),
+  ]);
+  const users = rawUsers.map((u) => ({
+    ...u, createdAt: u.createdAt.toISOString(),
+  }));
+  const totalPages = Math.ceil(count / PAGE_SIZE);
 
   const filterOptions = [
     { value: '', label: 'All' },
@@ -75,9 +80,9 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
               <AdminTd>
                 <div className="flex items-center gap-3">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 dark:bg-[#0B2430]">
-                    {u.avatar_url ? (
+                    {u.avatarUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={u.avatar_url} alt="" className="h-8 w-8 object-cover" />
+                      <img src={u.avatarUrl} alt="" className="h-8 w-8 object-cover" />
                     ) : (
                       <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
                         {(u.name ?? u.email).charAt(0).toUpperCase()}
@@ -97,7 +102,7 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                 </span>
               </AdminTd>
               <AdminTd className="text-slate-500 dark:text-slate-400">
-                {new Date(u.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                {new Date(u.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
               </AdminTd>
               <AdminTd align="right">
                 <a href={`/admin/users/${u.id}`} className="text-sm font-medium text-[#2cd7f2] hover:text-[#B8943A]">

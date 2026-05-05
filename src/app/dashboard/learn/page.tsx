@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { findEnrollmentsByUser } from '@/lib/services/enrollments.service';
 import { findCertificatesByUser } from '@/lib/services/certificates.service';
 import { getCpdSummary } from '@/lib/services/cpd.service';
+import { getCourseSyllabus } from '@/lib/services/courses.service';
 import { LearnDashboardClient } from './learn-dashboard-client';
 import { Button, Container, Group, Stack, Text, Title } from '@mantine/core';
 import Link from 'next/link';
@@ -63,11 +64,23 @@ export default async function LearnDashboardPage() {
     getCpdSummary(user.id).catch(() => null),
   ]);
 
-  const enrollments: Enrollment[] = rawEnrolls.map((e) => ({
+  const inProgressRaw = rawEnrolls.filter((e) => e.progressPercent < 100);
+  const syllabusMap = new Map<string, string | null>();
+  await Promise.all(
+    inProgressRaw.map(async (e) => {
+      const syllabus = await getCourseSyllabus(e.courseId, user.id).catch(() => []);
+      const allLessons = syllabus.flatMap((s) => s.lessons);
+      const firstIncomplete = allLessons.find((l) => !l.completed);
+      syllabusMap.set(e.courseId, firstIncomplete?.id ?? allLessons[0]?.id ?? null);
+    }),
+  );
+
+  const enrollments = rawEnrolls.map((e) => ({
     id: e.id, courseId: e.courseId, progressPercent: e.progressPercent,
     completedAt: e.completedAt?.toISOString() ?? null, createdAt: e.createdAt.toISOString(),
     courseTitle: e.courseTitle, courseSlug: e.courseSlug, thumbnailUrl: e.thumbnailUrl,
     cpdHours: e.cpdHours, priceGbp: e.priceGbp, level: e.level, ratingAvg: e.ratingAvg,
+    nextLessonId: syllabusMap.get(e.courseId) ?? null,
   }));
 
   const certificates: Certificate[] = rawCerts.map((c) => ({

@@ -1,8 +1,11 @@
 ﻿import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import { MapPin, Eye, Users } from 'lucide-react';
+import Link from 'next/link';
+import { MapPin, Eye, Users, Plus } from 'lucide-react';
 import { AdminTable, AdminTr, AdminTd, FilterTabs, Pagination } from '../admin-table';
+import { getAdminJobListings, getAdminJobListingsCount } from '@/lib/services/admin.service';
+import { DeleteJobButton } from './delete-job-button';
 
 export const metadata: Metadata = { title: 'Jobs | Admin' };
 
@@ -13,8 +16,8 @@ const STATUS_COLOURS: Record<string, string> = {
   filled: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400',
 };
 
-function fmtSalary(min?: number | null, max?: number | null) {
-  const fmt = (n: number) => `£${(n / 1000).toFixed(0)}k`;
+function fmtSalary(min?: string | null, max?: string | null) {
+  const fmt = (n: string) => `£${(Number(n) / 1000).toFixed(0)}k`;
   if (min && max) return `${fmt(min)} – ${fmt(max)}`;
   if (min) return `from ${fmt(min)}`;
   if (max) return `up to ${fmt(max)}`;
@@ -33,12 +36,17 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
   const page = Math.max(1, parseInt(params.page ?? '1', 10));
   const offset = (page - 1) * PAGE_SIZE;
 
-  let query = supabase
-    .from('job_listings')
-    .select('id, title, status, location, salary_min, salary_max, views_count, applications_count, featured, created_at, expires_at', { count: 'exact' });
-  if (statusFilter) query = query.eq('status', statusFilter);
-  const { data: jobs, count } = await query.order('created_at', { ascending: false }).range(offset, offset + PAGE_SIZE - 1);
-  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+  const [rawJobs, count] = await Promise.all([
+    getAdminJobListings(statusFilter || undefined, PAGE_SIZE, offset),
+    getAdminJobListingsCount(statusFilter || undefined),
+  ]);
+  const jobs = rawJobs.map((j) => ({
+    ...j,
+    createdAt: j.createdAt.toISOString(),
+    updatedAt: j.updatedAt.toISOString(),
+    expiresAt: j.expiresAt?.toISOString() ?? null,
+  }));
+  const totalPages = Math.ceil(count / PAGE_SIZE);
 
   return (
     <div className="space-y-6">
@@ -47,6 +55,13 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
           <h1 className="text-2xl font-bold text-[#0f2a2e] dark:text-white">Job listings</h1>
           <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{count ?? 0} total listings</p>
         </div>
+        <div className="flex items-center gap-3">
+          <Link href="/admin/jobs/new" className="inline-flex items-center gap-2 rounded-xl bg-[#0f2a2e] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#0f2a2e]/90 transition">
+            <Plus size={16} /> Create Job
+          </Link>
+        </div>
+      </div>
+      <div className="flex items-center">
         <FilterTabs
           options={[
             { value: '', label: 'All' },
@@ -95,20 +110,21 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
             </AdminTd>
             <AdminTd align="center">
               <div className="flex items-center justify-center gap-3">
-                <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"><Eye size={11} />{job.views_count ?? 0}</span>
-                <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"><Users size={11} />{job.applications_count ?? 0}</span>
+                <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"><Eye size={11} />{job.viewsCount ?? 0}</span>
+                <span className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400"><Users size={11} />{job.applicationsCount ?? 0}</span>
               </div>
             </AdminTd>
             <AdminTd className="text-slate-600 dark:text-slate-400">
-              {fmtSalary(job.salary_min, job.salary_max)}
+              {fmtSalary(job.salaryMin, job.salaryMax)}
             </AdminTd>
             <AdminTd className="text-slate-500 dark:text-slate-400">
-              {job.expires_at ? new Date(job.expires_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—'}
+              {job.expiresAt ? new Date(job.expiresAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—'}
             </AdminTd>
             <AdminTd align="right">
               <div className="flex items-center justify-end gap-3">
                 <a href={`/jobs/${job.id}`} className="text-xs text-slate-500 hover:text-[#0f2a2e] dark:hover:text-slate-200">View</a>
                 <a href={`/admin/jobs/${job.id}/edit`} className="text-xs font-medium text-[#2cd7f2] hover:text-[#B8943A]">Edit</a>
+                <DeleteJobButton jobId={job.id} />
               </div>
             </AdminTd>
           </AdminTr>

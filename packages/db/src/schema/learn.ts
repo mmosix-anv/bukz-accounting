@@ -127,6 +127,78 @@ export const cpdLog = pgTable('cpd_log', {
   loggedAt: timestamp('logged_at').notNull().defaultNow(),
 });
 
+export const quizzes = pgTable('quizzes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  courseId: uuid('course_id')
+    .notNull()
+    .references(() => courses.id, { onDelete: 'cascade' }),
+  lessonId: uuid('lesson_id').references(() => courseLessons.id, { onDelete: 'set null' }),
+  title: text('title').notNull(),
+  description: text('description'),
+  passingScore: integer('passing_score').notNull().default(70),
+  timeLimitMinutes: integer('time_limit_minutes'),
+  maxAttempts: integer('max_attempts'),
+  isPublished: boolean('is_published').notNull().default(false),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+export const quizQuestionTypeEnum = pgEnum('quiz_question_type', [
+  'multiple_choice',
+  'true_false',
+  'multi_select',
+]);
+
+export const quizQuestions = pgTable('quiz_questions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  quizId: uuid('quiz_id')
+    .notNull()
+    .references(() => quizzes.id, { onDelete: 'cascade' }),
+  questionText: text('question_text').notNull(),
+  questionType: quizQuestionTypeEnum('question_type').notNull().default('multiple_choice'),
+  points: integer('points').notNull().default(1),
+  position: integer('position').notNull(),
+  explanation: text('explanation'),
+});
+
+export const quizOptions = pgTable('quiz_options', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  questionId: uuid('question_id')
+    .notNull()
+    .references(() => quizQuestions.id, { onDelete: 'cascade' }),
+  optionText: text('option_text').notNull(),
+  isCorrect: boolean('is_correct').notNull().default(false),
+  position: integer('position').notNull(),
+});
+
+export const quizAttempts = pgTable('quiz_attempts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  quizId: uuid('quiz_id')
+    .notNull()
+    .references(() => quizzes.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  score: integer('score'),
+  totalPoints: integer('total_points'),
+  passed: boolean('passed'),
+  startedAt: timestamp('started_at').notNull().defaultNow(),
+  completedAt: timestamp('completed_at'),
+});
+
+export const quizAnswers = pgTable('quiz_answers', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  attemptId: uuid('attempt_id')
+    .notNull()
+    .references(() => quizAttempts.id, { onDelete: 'cascade' }),
+  questionId: uuid('question_id')
+    .notNull()
+    .references(() => quizQuestions.id, { onDelete: 'cascade' }),
+  selectedOptionIds: text('selected_option_ids').array().notNull().default([]),
+  isCorrect: boolean('is_correct'),
+  pointsAwarded: integer('points_awarded').notNull().default(0),
+});
+
 export const insertCourseSchema = createInsertSchema(courses);
 export const selectCourseSchema = createSelectSchema(courses);
 export const insertEnrollmentSchema = createInsertSchema(enrollments);
@@ -135,3 +207,7 @@ export const insertCourseReviewSchema = createInsertSchema(courseReviews);
 export const selectCourseReviewSchema = createSelectSchema(courseReviews);
 export const insertCpdLogSchema = createInsertSchema(cpdLog);
 export const selectCpdLogSchema = createSelectSchema(cpdLog);
+export const insertQuizSchema = createInsertSchema(quizzes);
+export const selectQuizSchema = createSelectSchema(quizzes);
+export const insertQuizQuestionSchema = createInsertSchema(quizQuestions);
+export const insertQuizOptionSchema = createInsertSchema(quizOptions);

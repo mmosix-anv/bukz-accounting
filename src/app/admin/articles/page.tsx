@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card } from '@bukz/ui';
 import { Eye, Calendar } from 'lucide-react';
+import { getAdminArticles, getAdminArticlesCount } from '@/lib/services/admin.service';
 
 export const metadata: Metadata = { title: 'Admin - Articles' };
 
@@ -29,19 +30,18 @@ export default async function AdminArticlesPage({
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
-  let query = supabase
-    .from('articles')
-    .select('id, title, slug, status, view_count, published_at, created_at', { count: 'exact' });
+  const [rawArticles, count] = await Promise.all([
+    getAdminArticles(statusFilter || undefined, pageSize, offset),
+    getAdminArticlesCount(statusFilter || undefined),
+  ]);
+  const articles = rawArticles.map((a) => ({
+    ...a,
+    createdAt: a.createdAt.toISOString(),
+    publishedAt: a.publishedAt?.toISOString() ?? null,
+    updatedAt: a.updatedAt.toISOString(),
+  }));
 
-  if (statusFilter) {
-    query = query.eq('status', statusFilter);
-  }
-
-  const { data: articles, count } = await query
-    .order('created_at', { ascending: false })
-    .range(offset, offset + pageSize - 1);
-
-  const totalPages = Math.ceil((count ?? 0) / pageSize);
+  const totalPages = Math.ceil(count / pageSize);
 
   return (
     <div>
@@ -97,12 +97,12 @@ export default async function AdminArticlesPage({
                   </td>
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-1 text-sm text-slate-500">
-                      <Eye className="h-3 w-3" />{article.view_count ?? 0}
+                      <Eye className="h-3 w-3" />{article.viewCount ?? 0}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-slate-500">
-                    {article.published_at
-                      ? new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+                    {article.publishedAt
+                      ? new Date(article.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
                       : '—'}
                   </td>
                   <td className="px-4 py-3 text-right">

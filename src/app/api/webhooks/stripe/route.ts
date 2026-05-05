@@ -11,7 +11,12 @@ import {
   type JobPostingPackageId,
   type JobPostingPackageSetting,
   type PlatformSettingKey,
+  enrollments,
+  courses,
+  payments as paymentsTable,
 } from '@bukz/db';
+import { db } from '@/lib/db';
+import { eq, and, sql } from 'drizzle-orm';
 
 function getStripeClient() {
   const key = process.env['STRIPE_SECRET_KEY'];
@@ -185,44 +190,34 @@ export async function POST(request: Request) {
         }
       }
 
-      if (metadata?.['courseId']) {
-        const userId = metadata['userId'];
-        const courseId = metadata['courseId'];
+      if (metadata?.['courseId'] && metadata?.['userId']) {
+        const userId = metadata['userId']!;
+        const courseId = metadata['courseId']!;
         const paymentIntentId = session.payment_intent as string;
-        const { data: existingPayment } = await supabase
-          .from('payments')
-          .select('id')
-          .eq('stripe_payment_intent_id', paymentIntentId)
-          .limit(1);
 
-        const { data: courseData } = await supabase
-          .from('courses')
-          .select('id, title, price_gbp, cpd_hours')
-          .eq('id', courseId)
-          .single();
+        const [existingPayment] = await db.select({ id: paymentsTable.id }).from(paymentsTable)
+          .where(eq(paymentsTable.stripePaymentIntentId, paymentIntentId)).limit(1);
 
-        if (courseData && !existingPayment?.[0]) {
-          const { data: existingEnrollment } = await supabase
-            .from('enrollments')
-            .select('id')
-            .eq('user_id', userId)
-            .eq('course_id', courseId)
-            .limit(1);
+        const [courseData] = await db.select({ id: courses.id, title: courses.title, priceGbp: courses.priceGbp })
+          .from(courses).where(eq(courses.id, courseId)).limit(1);
 
-          if (!existingEnrollment?.[0]) {
-            await supabase.from('enrollments').insert({
-              user_id: userId,
-              course_id: courseId,
-              stripe_payment_intent_id: paymentIntentId,
-              progress_percent: 0,
+        if (courseData && !existingPayment) {
+          const [existingEnrollment] = await db.select({ id: enrollments.id }).from(enrollments)
+            .where(and(eq(enrollments.userId, userId), eq(enrollments.courseId, courseId))).limit(1);
+
+          if (!existingEnrollment) {
+            await db.insert(enrollments).values({
+              userId, courseId, stripePaymentIntentId: paymentIntentId, progressPercent: 0,
             });
-            await supabase.rpc('increment_course_enrollments', { course_id: courseId });
+            await db.update(courses).set({
+              enrollmentsCount: sql`${courses.enrollmentsCount} + 1`, updatedAt: new Date(),
+            }).where(eq(courses.id, courseId));
           }
 
-          await supabase.from('payments').insert({
-            user_id: userId,
-            stripe_payment_intent_id: paymentIntentId,
-            amount_pence: session.amount_total ?? 0,
+          await db.insert(paymentsTable).values({
+            userId,
+            stripePaymentIntentId: paymentIntentId,
+            amountPence: session.amount_total ?? 0,
             currency: session.currency ?? 'gbp',
             status: 'completed',
             description: `Course enrolment: ${courseData.title}`,
