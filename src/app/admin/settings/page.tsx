@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import type {
-  EmployerSubscriptionTierSetting,
-  JobPostingPackageSetting,
-} from '@bukz/db';
 import { createClient } from '@/lib/supabase/server';
+import { getPublicPricingSettings } from '@/lib/services/settings.service';
 import { SettingsForm } from './settings-form';
 
 export const metadata: Metadata = { title: 'Admin - Settings' };
@@ -24,22 +21,7 @@ export default async function AdminSettingsPage() {
     redirect('/dashboard');
   }
 
-  const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? process.env['API_URL'] ?? 'http://localhost:3001';
-  const response = await fetch(`${apiUrl}/api/v1/admin/settings/pricing`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    next: { tags: ['platform-settings'] },
-  });
-
-  if (!response.ok) {
-    throw new Error('Could not load settings');
-  }
-
-  const settings = await response.json() as {
-    employerSubscriptionTiers: EmployerSubscriptionTierSetting[];
-    jobPostingPackages: JobPostingPackageSetting[];
-  };
+  const settings = await getPublicPricingSettings();
 
   return (
     <div className="space-y-6">

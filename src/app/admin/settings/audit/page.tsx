@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
+import { db } from '@/lib/db';
+import { settingsAuditLog } from '@bukz/db';
+import { desc, eq } from 'drizzle-orm';
 
 export const metadata: Metadata = { title: 'Admin - Settings Audit Log' };
 
@@ -12,7 +15,7 @@ interface AuditEntry {
   newValue: unknown;
   changedBy: string | null;
   reason: string | null;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export default async function AdminSettingsAuditPage({
@@ -27,28 +30,19 @@ export default async function AdminSettingsAuditPage({
     redirect('/dashboard');
   }
 
-  const session = await supabase.auth.getSession();
-  const token = session.data.session?.access_token;
-  if (!token) redirect('/dashboard');
-
   const page = parseInt(searchParams['page'] ?? '1', 10);
   const limit = 25;
   const offset = (page - 1) * limit;
   const settingKey = searchParams['settingKey'];
 
-  const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? process.env['API_URL'] ?? 'http://localhost:3001';
-  const params = new URLSearchParams({
-    limit: String(limit),
-    offset: String(offset),
-    ...(settingKey ? { settingKey } : {}),
-  });
+  const query = db.select().from(settingsAuditLog)
+    .orderBy(desc(settingsAuditLog.createdAt))
+    .limit(limit)
+    .offset(offset);
 
-  const response = await fetch(`${apiUrl}/api/v1/admin/settings/audit?${params.toString()}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    cache: 'no-store',
-  });
-
-  const entries: AuditEntry[] = response.ok ? await response.json() as AuditEntry[] : [];
+  const entries: AuditEntry[] = settingKey
+    ? await query.where(eq(settingsAuditLog.settingKey, settingKey))
+    : await query;
 
   return (
     <div className="space-y-6">
@@ -85,7 +79,7 @@ export default async function AdminSettingsAuditPage({
                 <tr key={entry.id} className="border-b border-slate-100 last:border-0">
                   <td className="px-4 py-3 font-mono text-xs text-slate-600">{entry.settingKey}</td>
                   <td className="px-4 py-3 text-slate-500 whitespace-nowrap">
-                    {new Date(entry.createdAt).toLocaleString()}
+                    {entry.createdAt.toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-slate-500">{entry.reason ?? '—'}</td>
                   <td className="px-4 py-3">
