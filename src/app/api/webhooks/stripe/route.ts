@@ -190,10 +190,11 @@ export async function POST(request: Request) {
         }
       }
 
-      if (metadata?.['courseId'] && metadata?.['userId']) {
+      if (metadata?.['courseId'] && metadata?.['userId'] && session.payment_status === 'paid') {
         const userId = metadata['userId']!;
         const courseId = metadata['courseId']!;
-        const paymentIntentId = session.payment_intent as string;
+        const rawPi = session.payment_intent;
+        const paymentIntentId = typeof rawPi === 'string' ? rawPi : rawPi?.id ?? session.id;
 
         const [existingPayment] = await db.select({ id: paymentsTable.id }).from(paymentsTable)
           .where(eq(paymentsTable.stripePaymentIntentId, paymentIntentId)).limit(1);

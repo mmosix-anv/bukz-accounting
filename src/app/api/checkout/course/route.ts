@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const session = await createCourseCheckout(user.id, courseId);
+    const session = await createCourseCheckout(user.id, courseId, user.email);
     if (session.url) {
       return NextResponse.redirect(session.url);
     }

@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (!user) return unauthorized();
   try {
     const { tier } = await req.json() as { tier: Exclude<EmployerSubscriptionTierId, 'free'> };
-    const session = await createEmployerSubscriptionCheckout(user.id, tier);
+    const session = await createEmployerSubscriptionCheckout(user.id, tier, user.email);
     return ok({ url: session.url });
   } catch (e) { return err((e as Error).message); }
 }

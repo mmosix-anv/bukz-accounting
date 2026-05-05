@@ -14,13 +14,14 @@ export async function getEmployerSubscription(userId: string) {
   return sub ?? null;
 }
 
-export async function createEmployerSubscriptionCheckout(userId: string, tier: Exclude<EmployerSubscriptionTierId, 'free'>) {
+export async function createEmployerSubscriptionCheckout(userId: string, tier: Exclude<EmployerSubscriptionTierId, 'free'>, userEmail?: string) {
   const plan = await getEmployerSubscriptionTier(tier);
   capture(userId, 'employer_subscription_checkout_started', { tier });
 
   return stripe.checkout.sessions.create({
     mode: 'subscription',
     payment_method_types: ['card'],
+    ...(userEmail ? { customer_email: userEmail } : {}),
     line_items: [{
       price_data: {
         currency: 'gbp',
@@ -54,13 +55,14 @@ export async function upsertEmployerSubscription(userId: string, tier: EmployerS
   return created;
 }
 
-export async function createJobPostingCheckout(employerId: string, packageType: JobPostingPackageId) {
+export async function createJobPostingCheckout(employerId: string, packageType: JobPostingPackageId, userEmail?: string) {
   const pkg = await getJobPostingPackage(packageType);
   capture(employerId, 'job_posting_checkout_started', { packageType });
 
   return stripe.checkout.sessions.create({
     mode: pkg.recurringInterval ? 'subscription' : 'payment',
     payment_method_types: ['card'],
+    ...(userEmail ? { customer_email: userEmail } : {}),
     line_items: [{
       price_data: {
         currency: 'gbp',
@@ -76,8 +78,8 @@ export async function createJobPostingCheckout(employerId: string, packageType: 
   });
 }
 
-export async function createCourseCheckout(userId: string, courseId: string) {
-  const [course] = await db.select({ id: courses.id, title: courses.title, status: courses.status, priceGbp: courses.priceGbp })
+export async function createCourseCheckout(userId: string, courseId: string, userEmail?: string) {
+  const [course] = await db.select({ id: courses.id, title: courses.title, slug: courses.slug, status: courses.status, priceGbp: courses.priceGbp })
     .from(courses).where(eq(courses.id, courseId)).limit(1);
 
   if (!course) throw new Error('Course not found');
@@ -91,12 +93,13 @@ export async function createCourseCheckout(userId: string, courseId: string) {
   return stripe.checkout.sessions.create({
     mode: 'payment',
     payment_method_types: ['card'],
+    ...(userEmail ? { customer_email: userEmail } : {}),
     line_items: [{
       price_data: { currency: 'gbp', unit_amount: amountPence, product_data: { name: `BUKZ Learn — ${course.title}` } },
       quantity: 1,
     }],
     metadata: { userId, courseId },
     success_url: `${APP_URL}/dashboard/learn?enrolled=${courseId}`,
-    cancel_url: `${APP_URL}/learn/${courseId}`,
+    cancel_url: `${APP_URL}/learn/${course.slug}`,
   });
 }
