@@ -126,10 +126,30 @@ export async function submitAttempt(attemptId: string, userId: string, answers: 
 
   const [quiz] = await db.select().from(quizzes).where(eq(quizzes.id, attempt.quizId)).limit(1);
   if (!quiz) throw new Error('Quiz not found');
+  if (quiz.timeLimitMinutes) {
+    const expiresAt = new Date(attempt.startedAt).getTime() + quiz.timeLimitMinutes * 60 * 1000;
+    if (Date.now() > expiresAt) throw new Error('Quiz attempt time limit exceeded');
+  }
 
   const questions = await db.select().from(quizQuestions).where(eq(quizQuestions.quizId, quiz.id));
+  if (questions.length === 0) throw new Error('Quiz has no questions');
   const allOptions = await db.select().from(quizOptions)
     .where(sql`${quizOptions.questionId} IN (${sql.join(questions.map((q) => sql`${q.id}`), sql`, `)})`);
+  const questionIds = new Set(questions.map((q) => q.id));
+  const optionsByQuestion = new Map<string, Set<string>>();
+  for (const option of allOptions) {
+    const existing = optionsByQuestion.get(option.questionId) ?? new Set<string>();
+    existing.add(option.id);
+    optionsByQuestion.set(option.questionId, existing);
+  }
+
+  for (const answer of answers) {
+    if (!questionIds.has(answer.questionId)) throw new Error('Invalid quiz answer');
+    const validOptions = optionsByQuestion.get(answer.questionId) ?? new Set<string>();
+    if (answer.selectedOptionIds.some((optionId) => !validOptions.has(optionId))) {
+      throw new Error('Invalid quiz answer');
+    }
+  }
 
   let totalScore = 0;
   let totalPoints = 0;

@@ -1,6 +1,9 @@
 import {
+  check,
+  index,
   pgTable,
   pgEnum,
+  uniqueIndex,
   uuid,
   text,
   timestamp,
@@ -8,6 +11,7 @@ import {
   integer,
   numeric,
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { users } from './auth';
 
@@ -66,55 +70,87 @@ export const courseLessons = pgTable('course_lessons', {
   isFree: boolean('is_free').notNull().default(false),
 });
 
-export const enrollments = pgTable('enrollments', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  courseId: uuid('course_id')
-    .notNull()
-    .references(() => courses.id, { onDelete: 'cascade' }),
-  stripePaymentIntentId: text('stripe_payment_intent_id'),
-  progressPercent: integer('progress_percent').notNull().default(0),
-  completedAt: timestamp('completed_at'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const enrollments = pgTable(
+  'enrollments',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    courseId: uuid('course_id')
+      .notNull()
+      .references(() => courses.id, { onDelete: 'cascade' }),
+    stripePaymentIntentId: text('stripe_payment_intent_id'),
+    progressPercent: integer('progress_percent').notNull().default(0),
+    completedAt: timestamp('completed_at'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('enrollments_user_course_unique_idx').on(table.userId, table.courseId),
+    index('enrollments_user_id_idx').on(table.userId),
+    index('enrollments_course_id_idx').on(table.courseId),
+  ],
+);
 
-export const lessonProgress = pgTable('lesson_progress', {
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  lessonId: uuid('lesson_id')
-    .notNull()
-    .references(() => courseLessons.id, { onDelete: 'cascade' }),
-  completed: boolean('completed').notNull().default(false),
-  completedAt: timestamp('completed_at'),
-});
+export const lessonProgress = pgTable(
+  'lesson_progress',
+  {
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    lessonId: uuid('lesson_id')
+      .notNull()
+      .references(() => courseLessons.id, { onDelete: 'cascade' }),
+    completed: boolean('completed').notNull().default(false),
+    completedAt: timestamp('completed_at'),
+  },
+  (table) => [
+    uniqueIndex('lesson_progress_user_lesson_unique_idx').on(table.userId, table.lessonId),
+    index('lesson_progress_user_id_idx').on(table.userId),
+    index('lesson_progress_lesson_id_idx').on(table.lessonId),
+  ],
+);
 
-export const courseCertificates = pgTable('course_certificates', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  courseId: uuid('course_id')
-    .notNull()
-    .references(() => courses.id, { onDelete: 'cascade' }),
-  issuedAt: timestamp('issued_at').notNull().defaultNow(),
-  certificateUrl: text('certificate_url'),
-});
+export const courseCertificates = pgTable(
+  'course_certificates',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    courseId: uuid('course_id')
+      .notNull()
+      .references(() => courses.id, { onDelete: 'cascade' }),
+    issuedAt: timestamp('issued_at').notNull().defaultNow(),
+    certificateUrl: text('certificate_url'),
+  },
+  (table) => [
+    uniqueIndex('course_certificates_user_course_unique_idx').on(table.userId, table.courseId),
+    index('course_certificates_user_id_idx').on(table.userId),
+    index('course_certificates_course_id_idx').on(table.courseId),
+  ],
+);
 
-export const courseReviews = pgTable('course_reviews', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  courseId: uuid('course_id')
-    .notNull()
-    .references(() => courses.id, { onDelete: 'cascade' }),
-  rating: integer('rating').notNull(),
-  body: text('body'),
-  createdAt: timestamp('created_at').notNull().defaultNow(),
-});
+export const courseReviews = pgTable(
+  'course_reviews',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    courseId: uuid('course_id')
+      .notNull()
+      .references(() => courses.id, { onDelete: 'cascade' }),
+    rating: integer('rating').notNull(),
+    body: text('body'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('course_reviews_user_course_unique_idx').on(table.userId, table.courseId),
+    index('course_reviews_course_id_idx').on(table.courseId),
+    check('course_reviews_rating_range_check', sql`${table.rating} between 1 and 5`),
+  ],
+);
 
 export const cpdLog = pgTable('cpd_log', {
   id: uuid('id').primaryKey().defaultRandom(),

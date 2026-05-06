@@ -7,6 +7,12 @@ interface Article { slug: string; publishedAt: string | null }
 interface Course { slug: string; updatedAt: string }
 interface JobListing { slug: string; updatedAt: string }
 
+function lastModifiedOrNow(value: string | null) {
+  if (!value) return new Date();
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? new Date() : date;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
@@ -30,21 +36,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const articleRoutes: MetadataRoute.Sitemap = articles.map((a) => ({
     url: `${BASE}/insight/${a.slug}`,
-    lastModified: a.publishedAt ? new Date(a.publishedAt) : new Date(),
+    lastModified: lastModifiedOrNow(a.publishedAt),
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
   const courseRoutes: MetadataRoute.Sitemap = courses.map((c) => ({
     url: `${BASE}/learn/${c.slug}`,
-    lastModified: new Date(c.updatedAt),
+    lastModified: lastModifiedOrNow(c.updatedAt),
     changeFrequency: 'weekly',
     priority: 0.7,
   }));
 
   const jobRoutes: MetadataRoute.Sitemap = jobs.map((j) => ({
     url: `${BASE}/jobs/${j.slug}`,
-    lastModified: new Date(j.updatedAt),
+    lastModified: lastModifiedOrNow(j.updatedAt),
     changeFrequency: 'daily',
     priority: 0.8,
   }));

@@ -13,6 +13,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { getAdminStats } from '@/lib/services/admin.service';
+import { getHealthCheck, type HealthCheckResult } from '@/lib/services/health.service';
 
 export const metadata: Metadata = { title: 'Admin Dashboard' };
 
@@ -26,7 +27,10 @@ export default async function AdminDashboardPage() {
     redirect('/dashboard');
   }
 
-  const stats = await getAdminStats();
+  const [stats, health] = await Promise.all([
+    getAdminStats(),
+    getHealthCheck(),
+  ]);
 
   const statCards = [
     { label: 'Total Users', value: stats.totalUsers, icon: Users, color: 'text-blue-600' },
@@ -44,6 +48,19 @@ export default async function AdminDashboardPage() {
       color: 'text-accent',
     },
   ];
+  const healthLabels: Record<keyof HealthCheckResult['checks'], string> = {
+    database: 'Database',
+    stripe: 'Stripe',
+    search: 'Search',
+    email: 'Email',
+    sentry: 'Sentry',
+  };
+
+  const healthStatusLabel = {
+    ok: 'Operational',
+    missing_config: 'Missing config',
+    error: 'Error',
+  } satisfies Record<HealthCheckResult['checks'][keyof HealthCheckResult['checks']], string>;
 
   return (
     <div>
@@ -65,19 +82,18 @@ export default async function AdminDashboardPage() {
             </div>
             <div>
               <p className="text-sm font-semibold">Operations summary</p>
-              <p className="text-sm text-slate-300">Core services are active and ready for review.</p>
+              <p className="text-sm text-slate-300">
+                Platform status is {health.status === 'ok' ? 'operational' : 'degraded'}.
+              </p>
             </div>
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            {[
-              ['Database', 'Connected'],
-              ['API', 'Operational'],
-              ['Stripe', 'Active'],
-              ['Search', 'Indexed'],
-            ].map(([label, status]) => (
-              <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3">
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{label}</p>
-                <p className="mt-2 text-sm font-semibold text-white">{status}</p>
+            {Object.entries(health.checks).slice(0, 4).map(([key, status]) => (
+              <div key={key} className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3">
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                  {healthLabels[key as keyof HealthCheckResult['checks']]}
+                </p>
+                <p className="mt-2 text-sm font-semibold text-white">{healthStatusLabel[status]}</p>
               </div>
             ))}
           </div>
@@ -152,18 +168,17 @@ export default async function AdminDashboardPage() {
         <Card className="rounded-[1.75rem] border border-slate-200/80 bg-white p-6 shadow-soft">
           <h2 className="text-lg font-semibold text-primary">Platform Health</h2>
           <div className="mt-4 space-y-4">
-            {[
-              ['Database', 'Connected'],
-              ['API', 'Operational'],
-              ['Stripe', 'Active'],
-              ['Search (Algolia)', 'Indexed'],
-            ].map(([label, status]) => (
-              <div key={label} className="flex items-center justify-between">
+            {Object.entries(health.checks).map(([key, status]) => (
+              <div key={key} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                  <span className="text-sm text-slate-600">{label}</span>
+                  <div className={`h-2 w-2 rounded-full ${status === 'ok' ? 'bg-emerald-500' : status === 'missing_config' ? 'bg-amber-500' : 'bg-red-500'}`} />
+                  <span className="text-sm text-slate-600">
+                    {healthLabels[key as keyof HealthCheckResult['checks']]}
+                  </span>
                 </div>
-                <span className="text-sm font-medium text-emerald-600">{status}</span>
+                <span className={`text-sm font-medium ${status === 'ok' ? 'text-emerald-600' : status === 'missing_config' ? 'text-amber-600' : 'text-red-600'}`}>
+                  {healthStatusLabel[status]}
+                </span>
               </div>
             ))}
           </div>

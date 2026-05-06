@@ -4,7 +4,7 @@ import { capture } from '@/lib/analytics';
 import { enrollments, courses, lessonProgress, courseLessons, courseSections, users } from '@bukz/db';
 import { eq, and, sql } from 'drizzle-orm';
 
-export async function enrolInCourse(userId: string, courseId: string, stripePaymentIntentId?: string) {
+export async function enrolInCourse(userId: string, courseId: string) {
   const [course] = await db.select().from(courses).where(eq(courses.id, courseId)).limit(1);
   if (!course) throw new Error('Course not found');
   if (course.status !== 'published') throw new Error('Course is not available for enrolment');
@@ -13,12 +13,12 @@ export async function enrolInCourse(userId: string, courseId: string, stripePaym
     .where(and(eq(enrollments.courseId, courseId), eq(enrollments.userId, userId))).limit(1);
   if (existing) throw new Error('Already enrolled in this course');
 
-  if (Number(course.priceGbp) > 0 && !stripePaymentIntentId) {
+  if (Number(course.priceGbp) > 0) {
     throw new Error('Paid courses must be purchased via checkout');
   }
 
   const [enrollment] = await db.insert(enrollments).values({
-    userId, courseId, stripePaymentIntentId: stripePaymentIntentId ?? null, progressPercent: 0,
+    userId, courseId, stripePaymentIntentId: null, progressPercent: 0,
   }).returning();
 
   await db.update(courses).set({ enrollmentsCount: sql`${courses.enrollmentsCount} + 1`, updatedAt: new Date() }).where(eq(courses.id, courseId));

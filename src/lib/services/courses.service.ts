@@ -40,6 +40,7 @@ export async function findAllCourses(filter: CourseFilter = {}) {
 export async function findCourseBySlug(slug: string, userId?: string) {
   const [course] = await db.select().from(courses).where(eq(courses.slug, slug)).limit(1);
   if (!course) throw new Error(`Course not found: ${slug}`);
+  if (course.status !== 'published') throw new Error(`Course not found: ${slug}`);
 
   const sections = await db.select().from(courseSections).where(eq(courseSections.courseId, course.id)).orderBy(asc(courseSections.position));
   const lessons = await db.select().from(courseLessons)

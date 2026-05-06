@@ -1,7 +1,6 @@
 import { db } from '@/lib/db';
 import { lessonProgress, courseLessons, courseSections, enrollments, courseCertificates, cpdLog, courses } from '@bukz/db';
 import { eq, and, sql } from 'drizzle-orm';
-import { v4 as uuidv4 } from 'uuid';
 
 export async function markLessonComplete(userId: string, lessonId: string) {
   const [lesson] = await db.select().from(courseLessons).where(eq(courseLessons.id, lessonId)).limit(1);
@@ -66,8 +65,14 @@ async function recalculateProgress(enrollmentId: string, userId: string, courseI
 async function handleCourseCompletion(userId: string, enrollmentId: string, courseId: string) {
   await db.update(enrollments).set({ completedAt: new Date(), progressPercent: 100 }).where(eq(enrollments.id, enrollmentId));
 
-  const certificateId = uuidv4();
-  await db.insert(courseCertificates).values({ id: certificateId, userId, courseId, issuedAt: new Date() });
+  const certificateRows = await db.insert(courseCertificates)
+    .values({ userId, courseId, issuedAt: new Date() })
+    .onConflictDoNothing({
+      target: [courseCertificates.userId, courseCertificates.courseId],
+    })
+    .returning({ id: courseCertificates.id });
+
+  if (certificateRows.length === 0) return;
 
   const [course] = await db.select({ cpdHours: courses.cpdHours, title: courses.title }).from(courses).where(eq(courses.id, courseId)).limit(1);
   if (course) {
