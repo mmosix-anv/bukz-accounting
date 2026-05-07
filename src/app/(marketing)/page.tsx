@@ -358,7 +358,7 @@ export default function HomePage() {
             </div>
             <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">About the Founder</p>
             <h3 className="mt-2 text-2xl font-bold text-white">Mutiu Adebukola Adejumobi</h3>
-            <p className="mt-1 text-sm font-medium text-slate-400">ICAEW Chartered Accountant</p>
+            <p className="mt-1 text-sm font-medium text-slate-400">ACA, BFP</p>
           </div>
 
           <div>

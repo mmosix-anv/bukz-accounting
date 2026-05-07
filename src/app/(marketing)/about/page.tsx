@@ -58,7 +58,7 @@ export default function AboutPage() {
             </div>
             <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">Founder</p>
             <h3 className="mt-2 text-2xl font-bold text-white">Mutiu Adebukola Adejumobi</h3>
-            <p className="mt-1 text-sm font-medium text-[#2cd7f2]/70">ICAEW Chartered Accountant</p>
+            <p className="mt-1 text-sm font-medium text-[#2cd7f2]/70">ACA, BFP</p>
             <p className="mt-6 text-base leading-relaxed text-slate-300">
               &ldquo;Bukz Accounting Services combines technical expertise with a personalised approach, ensuring clients gain clarity, confidence, and control over their finances.&rdquo;
             </p>
