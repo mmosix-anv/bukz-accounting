@@ -370,7 +370,7 @@ export default function HomePage() {
               About the Founder
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-slate-500">
-              Bukz Accounting Services Ltd is led by Mutiu Adebukola Adejumobi (ICAEW), a Chartered Accountant providing tailored accounting and advisory services to businesses and charities.
+              Bukz Accounting Services Ltd is led by Mutiu Adebukola Adejumobi ACA, BFP, a Chartered Accountant (ICAEW), delivering tailored accounting and advisory services to businesses and charities.
             </p>
             <p className="mt-4 text-base leading-relaxed text-slate-500">
               The firm combines technical expertise with a personalised approach, ensuring every client gains clarity, confidence, and control over their finances.
