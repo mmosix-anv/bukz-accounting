@@ -1,0 +1,19 @@
+index.js
+  s_0837830590c98c::t_fc59e94f765433 1-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "129a49c875dc960e2dbda169634c4210702b9b20",
+  "prompts": {},
+  "sessions": {
+    "s_0837830590c98c": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "3c04fb1b-8166-4036-a51f-94b15e19cf80",
+        "model": "GPT-5.5 Low Thinking"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
