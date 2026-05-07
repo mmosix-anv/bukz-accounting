@@ -1,0 +1,19 @@
+index.js
+  s_1a60477d8d413c::t_d211fc411a09c4 6-7,14-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "f5119ef5e9c7da87f34a9651acf07da87b24c7be",
+  "prompts": {},
+  "sessions": {
+    "s_1a60477d8d413c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "19432950-9f7a-4180-84b6-f63e14baef5b",
+        "model": "unknown"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
