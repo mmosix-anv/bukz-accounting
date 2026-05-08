@@ -1,0 +1,32 @@
+tsconfig.tsbuildinfo
+  s_1a60477d8d413c::t_f6ff4a7f500bff 1
+package.json
+  s_1a60477d8d413c::t_31407234e9a5ba 46
+src/app/(marketing)/about/page.tsx
+  s_1a60477d8d413c::t_dbf9c0e4bca0b6 32
+  s_1a60477d8d413c::t_0ae799160c75a5 60-62
+next.config.js
+  s_1a60477d8d413c::t_e3c4c53a90d6ce 23,38
+src/components/nav/site-footer.tsx
+  s_1a60477d8d413c::t_f13817d172f2ed 113-123
+src/app/global-error.tsx
+  s_1a60477d8d413c::t_6706c8554d002f 13,25,28-31,33-37,39
+.claude/settings.local.json
+  s_1a60477d8d413c::t_962dd40e9ba747 14-15,18,21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "72390bf794fe433fa23dee43b41fd7aa83d60fcd",
+  "prompts": {},
+  "sessions": {
+    "s_1a60477d8d413c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "19432950-9f7a-4180-84b6-f63e14baef5b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
