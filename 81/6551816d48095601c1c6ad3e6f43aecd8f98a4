@@ -1,0 +1,19 @@
+src/app/global-error.tsx
+  s_1a60477d8d413c::t_42e2b98fa95581 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "816551816d48095601c1c6ad3e6f43aecd8f98a4",
+  "prompts": {},
+  "sessions": {
+    "s_1a60477d8d413c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "19432950-9f7a-4180-84b6-f63e14baef5b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
