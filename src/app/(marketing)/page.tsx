@@ -364,7 +364,7 @@ export default function HomePage() {
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#2cd7f2]/10 px-4 py-1.5">
               <Award size={13} className="text-[#2cd7f2]" />
-              <span className="text-sm font-semibold text-[#2cd7f2]">About the Founder</span>
+              <span className="text-sm font-semibold text-[#2cd7f2]">About</span>
             </div>
             <h2 className="mt-3 text-3xl font-bold text-[#0f2a2e] sm:text-4xl">
               About the Founder

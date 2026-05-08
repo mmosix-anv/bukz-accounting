@@ -1,8 +1,6 @@
 'use client';
 
-import * as Sentry from '@sentry/nextjs';
 import { useEffect } from 'react';
-import { Button } from '@bukz/ui';
 
 export default function GlobalError({
   error,
@@ -12,7 +10,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    Sentry.captureException(error);
+    console.error(error);
   }, [error]);
 
   return (
@@ -24,15 +22,21 @@ export default function GlobalError({
               Something went wrong
             </h1>
             <p className="mt-4 text-base text-gray-500">
-              A critical application error occurred. Our team has been notified and is looking into it.
+              A critical application error occurred. Please try again or go back to the home page.
             </p>
             <div className="mt-8 flex justify-center gap-4">
-              <Button onClick={() => reset()} variant="default">
+              <button
+                onClick={() => reset()}
+                className="rounded-lg bg-[#0f2a2e] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#122e33]"
+              >
                 Try again
-              </Button>
-              <Button onClick={() => window.location.href = '/'} variant="outline">
+              </button>
+              <button
+                onClick={() => { window.location.href = '/'; }}
+                className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-[#0f2a2e] hover:bg-slate-50"
+              >
                 Go home
-              </Button>
+              </button>
             </div>
           </div>
         </div>

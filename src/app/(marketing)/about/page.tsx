@@ -29,7 +29,7 @@ export default function AboutPage() {
               We focus on delivering tailored solutions that help businesses and charities achieve clarity and sustainable growth.
             </h2>
             <p className="mt-5 text-lg leading-relaxed text-slate-500 dark:text-slate-400">
-              Bukz Accounting Services Ltd provides accounting, advisory, and financial education services to charities, founders, and growing businesses across the UK.
+              Bukz Accounting Services Ltd is led by Mutiu Adebukola Adejumobi ACA, BFP, a Chartered Accountant (ICAEW), delivering tailored accounting and advisory services to businesses and charities.
             </p>
             <p className="mt-4 leading-relaxed text-slate-500 dark:text-slate-400">
               We combine technical excellence with a genuinely personal service — giving every client direct access to a qualified accountant who understands their business and is invested in their success.
@@ -57,8 +57,9 @@ export default function AboutPage() {
               <span className="text-3xl font-bold text-[#2cd7f2]">MA</span>
             </div>
             <p className="text-xs font-bold uppercase tracking-widest text-[#2cd7f2]">Founder</p>
-            <h3 className="mt-2 text-2xl font-bold text-white">Mutiu Adebukola Adejumobi</h3>
-            <p className="mt-1 text-sm font-medium text-[#2cd7f2]/70">ACA, BFP</p>
+            <h3 className="mt-2 text-2xl font-bold text-white">
+              Mutiu Adebukola Adejumobi <span className="text-[#2cd7f2]/80 font-medium">ACA, BFP</span>
+            </h3>
             <p className="mt-6 text-base leading-relaxed text-slate-300">
               &ldquo;Bukz Accounting Services combines technical expertise with a personalised approach, ensuring clients gain clarity, confidence, and control over their finances.&rdquo;
             </p>

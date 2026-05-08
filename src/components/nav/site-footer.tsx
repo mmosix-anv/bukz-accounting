@@ -110,6 +110,17 @@ export function SiteFooter() {
               </Link>
             </div>
           </div>
+          <p className="mt-4 text-center text-xs text-slate-600">
+            Developed by{' '}
+            <a
+              href="https://nextoasis.co.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-500 hover:text-slate-300 transition-colors"
+            >
+              Next Oasis Group Ltd
+            </a>
+          </p>
         </div>
       </div>
     </footer>

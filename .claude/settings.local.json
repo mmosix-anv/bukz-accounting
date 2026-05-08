@@ -11,11 +11,12 @@
       "Bash(pnpm db:migrate)",
       "Bash(pnpm db:generate)",
       "Bash(claude mcp *)",
-      "Bash(npx skills *)"
+      "Bash(npx skills *)",
+      "Bash(pnpm remove *)"
     ]
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "supabase"
-  ],
-  "enableAllProjectMcpServers": true
+  ]
 }
