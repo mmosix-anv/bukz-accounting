@@ -1,0 +1,19 @@
+.npmrc
+  s_1a60477d8d413c::t_b7d5f37d538197 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "d8686b15a28554e328207ff951c7bb6aa6af6366",
+  "prompts": {},
+  "sessions": {
+    "s_1a60477d8d413c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "19432950-9f7a-4180-84b6-f63e14baef5b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
