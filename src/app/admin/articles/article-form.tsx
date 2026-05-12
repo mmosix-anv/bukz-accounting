@@ -9,9 +9,8 @@ interface ArticleData {
   title?: string;
   slug?: string;
   excerpt?: string;
-  body?: string;
+  content?: string;
   categoryId?: string;
-  readTimeMinutes?: number;
   status?: string;
 }
 
@@ -28,9 +27,8 @@ export function ArticleForm({ token, article }: { token?: string; article?: Arti
     title: article?.title ?? '',
     slug: article?.slug ?? '',
     excerpt: article?.excerpt ?? '',
-    body: article?.body ?? '',
+    content: article?.content ?? '',
     categoryId: article?.categoryId ?? '',
-    readTimeMinutes: article?.readTimeMinutes ?? 5,
   });
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -58,7 +56,7 @@ export function ArticleForm({ token, article }: { token?: string; article?: Arti
     const res = await fetch(url, {
       method: isEdit ? 'PATCH' : 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
-      body: JSON.stringify({ ...form, readTimeMinutes: Number(form.readTimeMinutes) }),
+      body: JSON.stringify(form),
     });
 
     if (!res.ok) {
@@ -112,14 +110,6 @@ export function ArticleForm({ token, article }: { token?: string; article?: Arti
           />
         </SimpleGrid>
 
-        <NumberInput
-          label="Read time (minutes)"
-          min={1}
-          value={form.readTimeMinutes}
-          onChange={(value) => update('readTimeMinutes', value || 1)}
-          maw={240}
-        />
-
         <Textarea
           label="Excerpt"
           description="Shown in listings"
@@ -130,11 +120,11 @@ export function ArticleForm({ token, article }: { token?: string; article?: Arti
         />
 
         <Textarea
-          label="Body"
+          label="Content"
           description="HTML supported"
           minRows={14}
-          value={form.body}
-          onChange={(event) => update('body', event.currentTarget.value)}
+          value={form.content}
+          onChange={(event) => update('content', event.currentTarget.value)}
           placeholder="<p>Article content...</p>"
         />
 

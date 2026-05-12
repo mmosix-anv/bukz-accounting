@@ -1,5 +1,5 @@
 import { type NextRequest } from 'next/server';
-import { getAuthUser, ok, unauthorized, err } from '@/lib/route-handler';
+import { getAuthUser, ok, unauthorized, err, forbidden } from '@/lib/route-handler';
 import { findAllArticles, createArticle } from '@/lib/services/articles.service';
 
 export async function GET(req: NextRequest) {
@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
+  if (user.user_metadata?.['role'] !== 'admin') return forbidden();
   try {
     const body = await req.json() as Parameters<typeof createArticle>[0];
     return ok(await createArticle({ ...body, authorId: user.id }), 201);

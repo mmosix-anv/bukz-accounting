@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Edit Article | Admin' };
 
 interface Article {
   id: string; title: string; slug: string; excerpt: string | null;
-  body: string | null; categoryId: string | null; readTimeMinutes: number | null; status: string;
+  content: string | null; category_id: string | null; status: string;
 }
 
 export default async function EditArticlePage({ params }: { params: { id: string } }) {
@@ -29,8 +29,8 @@ export default async function EditArticlePage({ params }: { params: { id: string
       </div>
       <ArticleForm token={token} article={{
         id: article.id, title: article.title, slug: article.slug,
-        excerpt: article.excerpt, body: article.body, categoryId: article.category_id,
-        readTimeMinutes: article.read_time_minutes, status: article.status,
+        excerpt: article.excerpt, content: article.content, categoryId: article.category_id,
+        status: article.status,
       }} />
     </div>
   );
