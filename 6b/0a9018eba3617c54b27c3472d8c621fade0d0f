@@ -1,0 +1,21 @@
+tsconfig.tsbuildinfo
+  s_fce9b92b2b1804::t_04bd03797ec65b 1
+src/app/api/v1/learn/courses/[id]/route.ts
+  s_fce9b92b2b1804::t_839eb71940e467 2-3,22-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "6b0a9018eba3617c54b27c3472d8c621fade0d0f",
+  "prompts": {},
+  "sessions": {
+    "s_fce9b92b2b1804": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "352c1208-97f6-407f-8cb2-f0b3355ced20",
+        "model": "unknown"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
