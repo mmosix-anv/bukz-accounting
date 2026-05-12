@@ -1,0 +1,28 @@
+tsconfig.tsbuildinfo
+  s_fce9b92b2b1804::t_9f6b3ec90c475e 1
+src/app/admin/articles/[id]/edit/page.tsx
+  s_fce9b92b2b1804::t_23bfcc400bbaab 11
+  s_fce9b92b2b1804::t_f6d6c2c4748e25 32-33
+src/app/admin/articles/article-form.tsx
+  s_fce9b92b2b1804::t_e9ca5814507101 12,30
+  s_fce9b92b2b1804::t_e04cd7be3990e5 123,126-127
+  s_fce9b92b2b1804::t_0fd7fe1996ccb5 59
+src/app/api/v1/insight/articles/route.ts
+  s_fce9b92b2b1804::t_174df4d71e0f16 2,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "7237f65341ee2b4618e71ecc5062594c0e49e61a",
+  "prompts": {},
+  "sessions": {
+    "s_fce9b92b2b1804": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "352c1208-97f6-407f-8cb2-f0b3355ced20",
+        "model": "unknown"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
