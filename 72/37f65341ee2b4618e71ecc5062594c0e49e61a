@@ -1,14 +1,14 @@
+src/app/admin/articles/article-form.tsx
+  s_fce9b92b2b1804::t_e04cd7be3990e5 123,126-127
+  s_fce9b92b2b1804::t_0fd7fe1996ccb5 59
+  s_fce9b92b2b1804::t_e9ca5814507101 12,30
+tsconfig.tsbuildinfo
+  s_fce9b92b2b1804::t_9f6b3ec90c475e 1
 src/app/api/v1/insight/articles/route.ts
   s_fce9b92b2b1804::t_174df4d71e0f16 2,18
 src/app/admin/articles/[id]/edit/page.tsx
-  s_fce9b92b2b1804::t_f6d6c2c4748e25 32-33
   s_fce9b92b2b1804::t_23bfcc400bbaab 11
-tsconfig.tsbuildinfo
-  s_fce9b92b2b1804::t_9f6b3ec90c475e 1
-src/app/admin/articles/article-form.tsx
-  s_fce9b92b2b1804::t_e04cd7be3990e5 123,126-127
-  s_fce9b92b2b1804::t_e9ca5814507101 12,30
-  s_fce9b92b2b1804::t_0fd7fe1996ccb5 59
+  s_fce9b92b2b1804::t_f6d6c2c4748e25 32-33
 ---
 {
   "schema_version": "authorship/3.0.0",
