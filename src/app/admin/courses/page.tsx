@@ -43,6 +43,7 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
     ...c, createdAt: c.createdAt.toISOString(),
   }));
   const totalPages = Math.ceil(count / PAGE_SIZE);
+  const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   return (
     <div className="space-y-6">
@@ -132,7 +133,7 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
                 <a href={`/admin/courses/${course.id}/quizzes`} className="text-xs font-medium text-violet-600 hover:text-violet-800 flex items-center gap-1">
                   Quizzes
                 </a>
-                <DeleteCourseButton courseId={course.id} />
+                <DeleteCourseButton courseId={course.id} token={token} />
               </div>
             </AdminTd>
           </AdminTr>

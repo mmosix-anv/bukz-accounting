@@ -47,6 +47,7 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
     expiresAt: j.expiresAt?.toISOString() ?? null,
   }));
   const totalPages = Math.ceil(count / PAGE_SIZE);
+  const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   return (
     <div className="space-y-6">
@@ -124,7 +125,7 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
               <div className="flex items-center justify-end gap-3">
                 <a href={`/jobs/${job.id}`} className="text-xs text-slate-500 hover:text-[#0f2a2e] dark:hover:text-slate-200">View</a>
                 <a href={`/admin/jobs/${job.id}/edit`} className="text-xs font-medium text-[#2cd7f2] hover:text-[#B8943A]">Edit</a>
-                <DeleteJobButton jobId={job.id} />
+                <DeleteJobButton jobId={job.id} token={token} />
               </div>
             </AdminTd>
           </AdminTr>
