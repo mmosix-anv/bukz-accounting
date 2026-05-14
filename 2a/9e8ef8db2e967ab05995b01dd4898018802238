@@ -1,0 +1,22 @@
+src/lib/auth-actions.ts
+  s_5b53ec56243f54::t_32f83fa5fcdfd9 25,28,31
+src/app/auth/login/login-form.tsx
+  s_5b53ec56243f54::t_f836f76e0c3c52 23,40-44
+  s_5b53ec56243f54::t_67553f8fd5b41e 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "2a9e8ef8db2e967ab05995b01dd4898018802238",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
