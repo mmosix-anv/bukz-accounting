@@ -1,0 +1,23 @@
+.claude/settings.local.json
+  s_5b53ec56243f54::t_eaaa4a5146dfdf 15-16
+tsconfig.tsbuildinfo
+  s_5b53ec56243f54::t_2ad22fb7ec944f 1
+src/app/auth/login/login-form.tsx
+  s_5b53ec56243f54::t_4187db33282d84 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "ef8eb62d5330881b0612699c7e3b4114cc5595e0",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
