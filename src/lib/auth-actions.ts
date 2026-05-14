@@ -20,16 +20,15 @@ export async function loginAction(formData: FormData) {
       token: data.session.access_token,
     }).catch(() => null);
 
-    // Redirect admin users to admin portal
     const userRole = data.user?.user_metadata?.['role'];
     if (userRole === 'admin') {
-      redirect('/admin');
+      return { redirectTo: '/admin' };
     }
   } else {
-    redirect(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+    return { redirectTo: `/auth/verify-email?email=${encodeURIComponent(email)}` };
   }
 
-  redirect(redirectTo);
+  return { redirectTo };
 }
 
 export async function registerAction(formData: FormData) {

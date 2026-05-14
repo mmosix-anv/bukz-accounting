@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function LoginForm({ redirectTo }: Props) {
+  const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -35,7 +37,11 @@ export function LoginForm({ redirectTo }: Props) {
     if (redirectTo) fd.set('redirectTo', redirectTo);
 
     const result = await loginAction(fd);
-    if (result?.error) setServerError(result.error);
+    if (result?.error) {
+      setServerError(result.error);
+    } else if (result?.redirectTo) {
+      router.push(result.redirectTo);
+    }
   }
 
   return (
