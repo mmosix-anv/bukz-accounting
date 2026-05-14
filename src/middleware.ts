@@ -67,8 +67,14 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith(adminPrefix)) {
-    const role = user?.user_metadata?.['role'];
-    if (!user || role !== 'admin') {
+    if (!user) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = '/auth/login';
+      redirectUrl.searchParams.set('redirectTo', pathname);
+      return NextResponse.redirect(redirectUrl);
+    }
+    const role = user.user_metadata?.['role'];
+    if (role !== 'admin') {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
