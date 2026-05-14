@@ -1,0 +1,19 @@
+src/middleware.ts
+  s_5b53ec56243f54::t_843b42d841b4e2 70-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.4",
+  "base_commit_sha": "82176a095ed7fc39a0575e472daeeca2b95d64d1",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
