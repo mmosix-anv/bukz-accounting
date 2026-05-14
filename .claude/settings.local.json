@@ -12,7 +12,8 @@
       "Bash(pnpm db:generate)",
       "Bash(claude mcp *)",
       "Bash(npx skills *)",
-      "Bash(pnpm remove *)"
+      "Bash(pnpm remove *)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")"
     ]
   },
   "enableAllProjectMcpServers": true,
