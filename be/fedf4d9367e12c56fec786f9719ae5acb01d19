@@ -1,0 +1,46 @@
+tsconfig.tsbuildinfo
+  s_5b53ec56243f54::t_e571a554b78be7 1
+src/lib/services/courses.service.ts
+  s_5b53ec56243f54::t_d7e9cdcbcc65ae 4,86,101,175,200,205,257-290
+src/lib/algolia.ts
+  s_5b53ec56243f54::t_b2e56b9ec9cb2f 1-9
+src/app/(insight)/insight/page.tsx
+  s_5b53ec56243f54::t_d7268ecb157e3b 5
+  s_5b53ec56243f54::t_21325ef36dd8cc 26-30,38,46-49
+  s_5b53ec56243f54::t_9e451f7d85c28f 20
+  s_5b53ec56243f54::t_406d803e7c7c07 94,96
+src/app/(insight)/tools/salary-benchmarker/salary-benchmarker-client.tsx
+  s_5b53ec56243f54::t_ab1b4c56d4f4b8 78
+src/app/(insight)/insight/insight-client.tsx
+  s_5b53ec56243f54::t_016fc063fc60ee 1,15,20-24,27,31,33,42-43,45,50,93,95
+src/app/api/v1/insight/tools/salary-benchmark/route.ts
+  s_5b53ec56243f54::t_6dc5dcf6a236ee 5-16
+src/lib/services/articles.service.ts
+  s_5b53ec56243f54::t_2390c039d4db77 2,5-8,16-34,42-67
+src/app/(insight)/insight/[slug]/page.tsx
+  s_5b53ec56243f54::t_de3952ff7135a3 52,57
+src/app/(learn)/learn/learn-search.tsx
+  s_5b53ec56243f54::t_1f35b5303138d6 120
+  s_5b53ec56243f54::t_6caa3e5457ba01 22-33
+src/lib/services/job-listings.service.ts
+  s_5b53ec56243f54::t_0effa565753949 2,4,52,60,69,85-121
+packages/db/algolia-sync.ts
+  s_5b53ec56243f54::t_bb447139c7cffa 145,148-149
+  s_5b53ec56243f54::t_00d715310f9eff 204,207-208
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "befedf4d9367e12c56fec786f9719ae5acb01d19",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
