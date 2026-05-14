@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -12,19 +12,25 @@ interface Article {
   excerpt: string;
   featuredImageUrl: string | null;
   categoryId: string | null;
+  categoryName: string | null;
   publishedAt: string | null;
   viewCount: number;
 }
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface Props {
   articles: Article[];
-  categories: string[];
+  categories: Category[];
 }
 
 export function InsightClient({ articles, categories }: Props) {
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('all');
 
-  const filtered = activeCategory === 'All'
+  const filtered = activeCategory === 'all'
     ? articles
     : articles.filter((a) => a.categoryId === activeCategory);
 
@@ -33,15 +39,15 @@ export function InsightClient({ articles, categories }: Props) {
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
         {categories.map((cat) => (
           <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
             className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-              activeCategory === cat
+              activeCategory === cat.id
                 ? 'bg-[#0f2a2e] text-white shadow-sm'
                 : 'border border-slate-200 text-slate-600 hover:border-[#2cd7f2]/40 hover:text-[#2cd7f2] hover:bg-[#2cd7f2]/5'
             }`}
           >
-            {cat}
+            {cat.name}
           </button>
         ))}
       </div>
@@ -84,9 +90,9 @@ function ArticleCard({ article }: { article: Article }) {
         )}
       </div>
       <div className="flex flex-col flex-1 p-6">
-        {article.categoryId && (
+        {article.categoryName && (
           <span className="mb-3 inline-block self-start rounded-full bg-[#2cd7f2]/10 border border-[#2cd7f2]/15 px-2.5 py-0.5 text-xs font-semibold text-[#2cd7f2]">
-            {article.categoryId}
+            {article.categoryName}
           </span>
         )}
         <h3 className="font-semibold text-primary leading-snug group-hover:text-[#2cd7f2] transition-colors duration-200 line-clamp-2">

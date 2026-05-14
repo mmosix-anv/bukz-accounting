@@ -70,13 +70,12 @@ export function SalaryBenchmarkerClient() {
     setError(null);
     setSubmittedSalary(values.yourSalary);
     try {
-      const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
       const params = new URLSearchParams({
         title: values.title,
         location: values.location,
         experienceLevel: values.experienceLevel,
       });
-      const res = await fetch(`${apiUrl}/api/v1/insight/tools/salary-benchmark?${params}`);
+      const res = await fetch(`/api/v1/insight/tools/salary-benchmark?${params}`);
       if (!res.ok) throw new Error('Benchmark failed');
       const data = await res.json() as BenchmarkResult;
       setResult(data);

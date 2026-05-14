@@ -19,6 +19,18 @@ const searchClient = algoliasearch(
   process.env['NEXT_PUBLIC_ALGOLIA_SEARCH_KEY'] ?? 'placeholder',
 );
 
+function CourseCount() {
+  const { results } = useInstantSearch();
+  const count = results?.nbHits ?? 0;
+  if (!count) return null;
+  return (
+    <span className="flex items-center gap-1.5">
+      <BookOpen size={13} className="text-[#2cd7f2]" />
+      {count.toLocaleString()} courses
+    </span>
+  );
+}
+
 function EmptyState() {
   const { results } = useInstantSearch();
   if (!results || results.nbHits > 0) return null;
@@ -105,9 +117,7 @@ export function LearnSearch() {
                 Earn recognised CPD hours for ICAEW, ACCA, CIMA and AAT with structured learning built around real practice.
               </p>
               <div className="mt-6 flex flex-wrap gap-4 text-sm text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <BookOpen size={13} className="text-[#2cd7f2]" /> 150+ courses
-                </span>
+                <CourseCount />
                 <span className="flex items-center gap-1.5">
                   <Award size={13} className="text-[#2cd7f2]" /> Verified certificates
                 </span>

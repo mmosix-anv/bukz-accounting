@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { courses, courseSections, courseLessons, courseCategories, users, enrollments } from '@bukz/db';
 import { eq, and, gte, lte, desc, asc, sql } from 'drizzle-orm';
+import { algoliaAdmin, LEARN_INDEX } from '@/lib/algolia';
 
 export interface CourseFilter {
   level?: string[];
@@ -82,6 +83,7 @@ export async function updateCourse(id: string, instructorId: string, data: Parti
   const existing = await findCourseById(id);
   if (!isAdmin && existing.instructorId !== instructorId) throw new Error('You do not own this course');
   const [updated] = await db.update(courses).set({ ...data, updatedAt: new Date() }).where(eq(courses.id, id)).returning();
+  await syncCourseToAlgolia(updated!);
   return updated!;
 }
 
@@ -96,6 +98,7 @@ export async function publishCourse(id: string, instructorId: string) {
   if (!lesson) throw new Error('Course must have at least one lesson');
 
   const [updated] = await db.update(courses).set({ status: 'published', updatedAt: new Date() }).where(eq(courses.id, id)).returning();
+  await syncCourseToAlgolia(updated!);
   return updated!;
 }
 
@@ -169,6 +172,7 @@ export async function findAllAdminCourses(status?: string, limit = 20, offset = 
 
 export async function deleteCourse(id: string) {
   await db.delete(courses).where(eq(courses.id, id));
+  await algoliaAdmin.deleteObject({ indexName: LEARN_INDEX, objectID: id }).catch(() => null);
 }
 
 export async function deleteSection(sectionId: string) {
@@ -193,12 +197,12 @@ export async function findCourseWithContent(id: string) {
   const lessons = await db.select().from(courseLessons)
     .where(sql`${courseLessons.sectionId} IN (SELECT id FROM course_sections WHERE course_id = ${id})`)
     .orderBy(asc(courseLessons.position));
-  
+
   const sectionsWithLessons = sections.map((s) => ({
     ...s,
     lessons: lessons.filter((l) => l.sectionId === s.id),
   }));
-  
+
   return { ...course, sections: sectionsWithLessons };
 }
 
@@ -248,6 +252,42 @@ export async function getCourseSyllabus(courseId: string, userId: string | null)
       completed: completedIds.includes(l.id),
     })),
   }));
+}
+
+async function syncCourseToAlgolia(course: typeof courses.$inferSelect) {
+  if (course.status !== 'published') {
+    await algoliaAdmin.deleteObject({ indexName: LEARN_INDEX, objectID: course.id }).catch(() => null);
+    return;
+  }
+
+  const [instructor] = await db.select({ name: users.name }).from(users)
+    .where(eq(users.id, course.instructorId)).limit(1);
+
+  const [category] = course.categoryId
+    ? await db.select({ name: courseCategories.name }).from(courseCategories)
+        .where(eq(courseCategories.id, course.categoryId)).limit(1)
+    : [null];
+
+  await algoliaAdmin.saveObject({
+    indexName: LEARN_INDEX,
+    body: {
+      objectID: course.id,
+      title: course.title,
+      slug: course.slug,
+      shortDescription: course.shortDescription,
+      thumbnailUrl: course.thumbnailUrl,
+      level: course.level,
+      priceGbp: Number(course.priceGbp),
+      cpdHours: Number(course.cpdHours),
+      status: course.status,
+      enrollmentsCount: course.enrollmentsCount,
+      ratingAvg: course.ratingAvg ? Number(course.ratingAvg) : 0,
+      ratingCount: course.ratingCount,
+      instructorName: instructor?.name ?? '',
+      categoryName: category?.name ?? '',
+      createdAt: course.createdAt.getTime(),
+    },
+  }).catch(() => null);
 }
 
 function slugify(text: string) {

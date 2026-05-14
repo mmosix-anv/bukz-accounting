@@ -49,12 +49,12 @@ export default async function ArticleDetailPage({ params }: Props) {
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       <article>
         <header className="mb-8">
-          {raw.categoryId && (
+          {raw.categoryName && (
             <Link
               href={`/insight?category=${raw.categoryId}`}
               className="inline-block rounded-full bg-accent/10 px-3 py-0.5 text-xs font-medium text-accent mb-4 hover:bg-accent/20 transition-colors"
             >
-              {raw.categoryId}
+              {raw.categoryName}
             </Link>
           )}
           <h1 className="text-3xl font-bold text-primary leading-tight">{raw.title}</h1>

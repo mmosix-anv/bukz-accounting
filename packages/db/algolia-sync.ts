@@ -142,10 +142,11 @@ async function syncJobs() {
   }));
 
   if (records.length > 0) {
-    await algolia.saveObjects({ indexName: 'bukz_jobs', objects: records });
+    await algolia.replaceAllObjects({ indexName: 'bukz_jobs', objects: records });
     console.log(`    ✓ Indexed ${records.length} job(s)`);
   } else {
-    console.log('    No active jobs to index');
+    await algolia.clearObjects({ indexName: 'bukz_jobs' });
+    console.log('    No active jobs — index cleared');
   }
 }
 
@@ -200,10 +201,11 @@ async function syncCourses() {
   }));
 
   if (records.length > 0) {
-    await algolia.saveObjects({ indexName: 'bukz_learn', objects: records });
+    await algolia.replaceAllObjects({ indexName: 'bukz_learn', objects: records });
     console.log(`    ✓ Indexed ${records.length} course(s)`);
   } else {
-    console.log('    No published courses to index');
+    await algolia.clearObjects({ indexName: 'bukz_learn' });
+    console.log('    No published courses — index cleared');
   }
 }
 

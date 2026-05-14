@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
-import { jobListings, employerSubscriptions } from '@bukz/db';
+import { jobListings, employerSubscriptions, users, jobCategories } from '@bukz/db';
 import { eq, and, gte, lte, desc, inArray, sql } from 'drizzle-orm';
+import { algoliaAdmin, JOBS_INDEX } from '@/lib/algolia';
 
 export interface JobListingsFilter {
   jobType?: string[];
@@ -48,6 +49,7 @@ export async function createJobListing(data: typeof jobListings.$inferInsert) {
   await assertEmployerCanCreateListing(data.employerId);
   const slug = slugify(data.title ?? '') + '-' + Date.now();
   const [listing] = await db.insert(jobListings).values({ ...data, slug }).returning();
+  await syncJobToAlgolia(listing!);
   return listing!;
 }
 
@@ -55,6 +57,7 @@ export async function updateJobListing(id: string, employerId: string, data: Par
   const existing = await findJobListingById(id);
   if (!isAdmin && existing.employerId !== employerId) throw new Error('You do not own this listing');
   const [updated] = await db.update(jobListings).set({ ...data, updatedAt: new Date() }).where(eq(jobListings.id, id)).returning();
+  await syncJobToAlgolia(updated!);
   return updated!;
 }
 
@@ -63,6 +66,7 @@ export const softDeleteJobListing = (id: string, employerId: string, isAdmin = f
 
 export async function markJobListingFeatured(id: string, featured: boolean) {
   const [updated] = await db.update(jobListings).set({ featured, updatedAt: new Date() }).where(eq(jobListings.id, id)).returning();
+  await syncJobToAlgolia(updated!);
   return updated!;
 }
 
@@ -76,6 +80,45 @@ export async function incrementJobApplications(id: string) {
 
 export async function findJobListingsByEmployer(employerId: string) {
   return db.select().from(jobListings).where(eq(jobListings.employerId, employerId)).orderBy(desc(jobListings.createdAt));
+}
+
+async function syncJobToAlgolia(job: typeof jobListings.$inferSelect) {
+  if (job.status !== 'active') {
+    await algoliaAdmin.deleteObject({ indexName: JOBS_INDEX, objectID: job.id }).catch(() => null);
+    return;
+  }
+
+  const [employer] = await db.select({ name: users.name }).from(users)
+    .where(eq(users.id, job.employerId)).limit(1);
+
+  const [category] = job.categoryId
+    ? await db.select({ name: jobCategories.name }).from(jobCategories)
+        .where(eq(jobCategories.id, job.categoryId)).limit(1)
+    : [null];
+
+  await algoliaAdmin.saveObject({
+    indexName: JOBS_INDEX,
+    body: {
+      objectID: job.id,
+      title: job.title,
+      slug: job.slug,
+      description: job.description.replace(/<[^>]*>/g, ' ').slice(0, 500),
+      location: job.location,
+      salaryMin: job.salaryMin ? Number(job.salaryMin) : null,
+      salaryMax: job.salaryMax ? Number(job.salaryMax) : null,
+      salaryCurrency: job.salaryCurrency,
+      jobType: job.jobType,
+      experienceLevel: job.experienceLevel,
+      remotePolicy: job.remotePolicy,
+      qualifications: job.qualifications,
+      softwareSkills: job.softwareSkills,
+      status: job.status,
+      featured: job.featured,
+      companyName: employer?.name ?? '',
+      categoryName: category?.name ?? '',
+      createdAt: job.createdAt.getTime(),
+    },
+  }).catch(() => null);
 }
 
 function slugify(text: string) {

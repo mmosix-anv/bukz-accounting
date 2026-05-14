@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Lightbulb, Calculator, CheckSquare, BarChart3, ArrowRight } from 'lucide-react';
-import { findAllArticles } from '@/lib/services/articles.service';
+import { findAllArticles, findAllArticleCategories } from '@/lib/services/articles.service';
 import { InsightClient } from './insight-client';
 
 export const metadata: Metadata = {
@@ -17,12 +17,17 @@ interface Article {
   excerpt: string;
   featuredImageUrl: string | null;
   categoryId: string | null;
+  categoryName: string | null;
   publishedAt: string | null;
   viewCount: number;
 }
 
 export default async function InsightPage() {
-  const rawArticles = await findAllArticles(21).catch(() => []);
+  const [rawArticles, rawCategories] = await Promise.all([
+    findAllArticles(21).catch(() => []),
+    findAllArticleCategories().catch(() => []),
+  ]);
+
   const articles = rawArticles.map((a) => ({
     id: a.id,
     title: a.title,
@@ -30,6 +35,7 @@ export default async function InsightPage() {
     excerpt: a.excerpt,
     featuredImageUrl: a.featuredImageUrl,
     categoryId: a.categoryId,
+    categoryName: a.categoryName ?? null,
     publishedAt: a.publishedAt?.toISOString() ?? null,
     viewCount: a.viewCount,
   }));
@@ -37,7 +43,10 @@ export default async function InsightPage() {
   const featured = articles[0] ?? null;
   const rest = articles.slice(1);
 
-  const categories = ['All', 'Tax & HMRC', 'VAT', 'Payroll', 'MTD', 'Career Advice', 'Software'];
+  const categories = [
+    { id: 'all', name: 'All' },
+    ...rawCategories.map((c) => ({ id: c.id, name: c.name })),
+  ];
 
   return (
     <div className="space-y-0">
@@ -82,9 +91,9 @@ export default async function InsightPage() {
                 </span>
               </div>
               <div className="flex flex-col justify-center p-8 lg:p-10">
-                {featured.categoryId && (
+                {featured.categoryName && (
                   <span className="mb-3 inline-block self-start rounded-full bg-[#2cd7f2]/10 border border-[#2cd7f2]/20 px-3 py-1 text-xs font-semibold text-[#2cd7f2]">
-                    {featured.categoryId}
+                    {featured.categoryName}
                   </span>
                 )}
                 <h2 className="text-2xl lg:text-3xl font-bold text-primary group-hover:text-[#2cd7f2] transition-colors duration-300 leading-snug">
