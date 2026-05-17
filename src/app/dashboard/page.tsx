@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { findApplicationsByCandidate } from '@/lib/services/job-applications.service';
 import { findEnrollmentsByUser } from '@/lib/services/enrollments.service';
-import { SkillsGapButton } from './skills-gap-button';
 import { Anchor, Badge, Box, Card, Group, Progress, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 
 export const metadata: Metadata = { title: 'Dashboard | BUKZ' };
@@ -42,12 +41,8 @@ const STATUS_COLOURS: Record<string, string> = {
 
 export default async function DashboardPage() {
   const supabase = createClient();
-  const [{ data: { user } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
-  const token = session?.access_token;
 
   const [rawApps, rawEnrolls] = await Promise.all([
     findApplicationsByCandidate(user.id).catch(() => []),
@@ -172,19 +167,6 @@ export default async function DashboardPage() {
           </Card>
         </SimpleGrid>
 
-        <Card withBorder radius="xl" p="lg" className="border border-[#2cd7f2]/20 bg-[#edf9fd] shadow-soft">
-          <Group justify="space-between" align="center" gap="md">
-            <Stack gap={4} flex={1}>
-              <Title order={2} fz="lg" c="primary.7">
-                AI Skills Gap Analysis
-              </Title>
-              <Text size="sm" c="dimmed">
-                Get a personalised analysis of your skills versus current UK market demand, with course recommendations to close the gap.
-              </Text>
-            </Stack>
-            <SkillsGapButton token={token} />
-          </Group>
-        </Card>
     </Stack>
   );
 }
