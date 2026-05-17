@@ -12,6 +12,8 @@ import { Step3Requirements } from './step3-requirements';
 import { Step4Package } from './step4-package';
 import { Step5Preview } from './step5-preview';
 import type { JobPostingPackageSetting } from '@bukz/db';
+import { apiFetch } from '@/lib/api';
+import { createClient } from '@/lib/supabase/client';
 
 const STEPS = ['Details', 'Description', 'Requirements', 'Package', 'Preview'];
 
@@ -38,6 +40,7 @@ interface Props {
 
 export function PostJobForm({ packages }: Props) {
   const [step, setStep] = useState(1);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
 
   const methods = useForm<PostJobFormValues>({
@@ -55,8 +58,33 @@ export function PostJobForm({ packages }: Props) {
   });
 
   async function onFinalSubmit(values: PostJobFormValues) {
-    router.push('/employers/dashboard?posted=true');
-    void values;
+    setSubmitError(null);
+    try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      await apiFetch('/jobs/listings', {
+        method: 'POST',
+        token: session?.access_token,
+        body: JSON.stringify({
+          title: values.title,
+          description: values.description,
+          jobType: values.jobType,
+          experienceLevel: values.experienceLevel,
+          remotePolicy: values.remotePolicy,
+          location: values.location,
+          salaryMin: values.salaryMin ? String(values.salaryMin) : null,
+          salaryMax: values.salaryMax ? String(values.salaryMax) : null,
+          salaryCurrency: 'GBP',
+          qualifications: values.qualifications,
+          softwareSkills: values.softwareSkills,
+          categoryId: values.categoryId ?? null,
+          status: 'active',
+        }),
+      });
+      router.push('/employers/dashboard?posted=true');
+    } catch (e) {
+      setSubmitError((e as Error).message ?? 'Failed to post job. Please try again.');
+    }
   }
 
   return (
@@ -69,11 +97,16 @@ export function PostJobForm({ packages }: Props) {
         {step === 3 && <Step3Requirements onNext={() => setStep(4)} onBack={() => setStep(2)} />}
         {step === 4 && <Step4Package packages={packages} onNext={() => setStep(5)} onBack={() => setStep(3)} />}
         {step === 5 && (
-          <Step5Preview
-            onBack={() => setStep(4)}
-            onSubmit={methods.handleSubmit(onFinalSubmit)}
-            isSubmitting={methods.formState.isSubmitting}
-          />
+          <>
+            <Step5Preview
+              onBack={() => setStep(4)}
+              onSubmit={methods.handleSubmit(onFinalSubmit)}
+              isSubmitting={methods.formState.isSubmitting}
+            />
+            {submitError && (
+              <p className="mt-3 text-center text-sm text-red-600">{submitError}</p>
+            )}
+          </>
         )}
       </div>
     </FormProvider>

@@ -46,10 +46,10 @@ export default async function EmployerDashboardPage({
   const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   const [stats, listings] = await Promise.all([
-    apiFetch<EmployerStats>('/jobs/employers/me/stats', { token }).catch(() => ({
+    apiFetch<EmployerStats>('/jobs/employers/me?view=stats', { token }).catch(() => ({
       activeListings: 0, totalApplications: 0, totalViews: 0, totalListings: 0,
     })),
-    apiFetch<JobListing[]>('/jobs/employers/me/listings', { token }).catch(() => [] as JobListing[]),
+    apiFetch<JobListing[]>('/jobs/employers/me?view=listings', { token }).catch(() => [] as JobListing[]),
   ]);
 
   return (

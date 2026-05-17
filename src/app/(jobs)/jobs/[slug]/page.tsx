@@ -2,10 +2,16 @@ import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { findJobListingBySlug, incrementJobViews } from '@/lib/services/job-listings.service';
+import { findJobListingBySlug, findJobListingById, incrementJobViews } from '@/lib/services/job-listings.service';
 import { JobDetailClient, type JobListing } from './job-detail.client';
 
-const getJob = cache(findJobListingBySlug);
+const getJob = cache(async (slug: string) => {
+  try {
+    return await findJobListingBySlug(slug);
+  } catch {
+    return findJobListingById(slug);
+  }
+});
 
 interface Props {
   params: { slug: string };
