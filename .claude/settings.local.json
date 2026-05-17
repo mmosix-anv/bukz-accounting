@@ -13,7 +13,8 @@
       "Bash(claude mcp *)",
       "Bash(npx skills *)",
       "Bash(pnpm remove *)",
-      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")"
+      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
+      "Bash(pnpm add *)"
     ]
   },
   "enableAllProjectMcpServers": true,
