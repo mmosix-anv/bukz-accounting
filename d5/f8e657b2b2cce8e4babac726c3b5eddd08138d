@@ -1,0 +1,27 @@
+src/app/(jobs)/employers/post-job/post-job-form.tsx
+  s_5b53ec56243f54::t_e80bf3a7a5c680 15-16
+  s_5b53ec56243f54::t_956dc460187caf 100-109
+  s_5b53ec56243f54::t_b1d92c923d1748 43,61-87
+src/app/(jobs)/jobs/[slug]/page.tsx
+  s_5b53ec56243f54::t_c645da4433e6cb 5,8-14
+src/app/(jobs)/employers/dashboard/page.tsx
+  s_5b53ec56243f54::t_f4054a2e666d32 49,52
+tsconfig.tsbuildinfo
+  s_5b53ec56243f54::t_0ef101fe79cd77 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "d5f8e657b2b2cce8e4babac726c3b5eddd08138d",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
