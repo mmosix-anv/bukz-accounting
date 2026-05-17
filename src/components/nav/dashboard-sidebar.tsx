@@ -10,7 +10,6 @@ import {
   Clock,
   Settings,
   LogOut,
-  User,
   BookOpen,
 } from 'lucide-react';
 import { logoutAction } from '@/lib/auth-actions';
@@ -106,13 +105,6 @@ export function DashboardSidebar() {
 
       {/* Bottom Actions */}
       <div className="mt-5 border-t border-slate-100 pt-4">
-        <Link
-          href="/"
-          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-slate-500 transition-all duration-200 hover:bg-slate-100 hover:text-[#0f2a2e]"
-        >
-          <User size={18} />
-          View Site
-        </Link>
         <form action={logoutAction}>
           <button
             type="submit"

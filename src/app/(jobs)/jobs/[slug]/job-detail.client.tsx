@@ -60,7 +60,7 @@ export function JobDetailClient(props: {
 
   return (
     <Container size="md" py="xl">
-      <Group align="flex-start" gap="xl" wrap="nowrap">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-10">
         <Stack flex={1} gap="lg" style={{ minWidth: 0 }}>
           <div>
             <Group gap="sm" mb={6}>
@@ -96,7 +96,10 @@ export function JobDetailClient(props: {
               <Title order={3} c="primary">
                 About this role
               </Title>
-              <Text style={{ whiteSpace: 'pre-wrap' }}>{job.description}</Text>
+              <div
+                className="prose prose-sm max-w-none prose-headings:text-primary prose-a:text-accent prose-strong:text-slate-800 prose-ul:my-2 prose-li:my-0.5"
+                dangerouslySetInnerHTML={{ __html: job.description }}
+              />
 
               {job.qualifications.length > 0 && (
                 <>
@@ -161,8 +164,8 @@ export function JobDetailClient(props: {
           </Group>
         </Stack>
 
-        <div style={{ width: 340 }}>
-          <div style={{ position: 'sticky', top: 96 }}>
+        <div className="w-full lg:w-[340px] lg:shrink-0">
+          <div className="lg:sticky lg:top-24">
             <Card withBorder radius="lg" padding="lg">
               <Stack gap="sm">
                 <div>
@@ -212,7 +215,7 @@ export function JobDetailClient(props: {
             </Card>
           </div>
         </div>
-      </Group>
+      </div>
     </Container>
   );
 }

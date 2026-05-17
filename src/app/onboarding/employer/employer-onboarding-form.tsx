@@ -6,7 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { OnboardingProgress } from '@/components/onboarding/progress-bar';
-import { Button, Group, Radio, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { Alert, Button, Group, Radio, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
+import { apiFetch } from '@/lib/api';
+import { createClient } from '@/lib/supabase/client';
 
 const STEPS = ['Company details', 'Sector & size'];
 
@@ -17,7 +19,7 @@ const step1Schema = z.object({
 
 const step2Schema = z.object({
   companySize: z.enum(['1-10', '11-50', '51-250', '251-1000', '1000+']),
-  sector: z.string().min(2, 'Select or enter a sector'),
+  sector: z.string().min(1, 'Select an industry sector'),
 });
 
 type Step1 = z.infer<typeof step1Schema>;
@@ -29,6 +31,8 @@ export function EmployerOnboardingForm() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [step1Data, setStep1Data] = useState<Step1 | null>(null);
 
   const form1 = useForm<Step1>({ resolver: zodResolver(step1Schema) });
   const form2 = useForm<Step2>({
@@ -36,16 +40,30 @@ export function EmployerOnboardingForm() {
     defaultValues: { companySize: '11-50' },
   });
 
-  async function onStep1(data: Step1) {
-    void data;
+  function onStep1(data: Step1) {
+    setStep1Data(data);
     setStep(2);
   }
 
-  async function onStep2(_data: Step2) {
+  async function onStep2(data: Step2) {
     setSaving(true);
+    setSaveError(null);
     try {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      await apiFetch('/jobs/employers/me', {
+        method: 'PATCH',
+        token: session?.access_token,
+        body: JSON.stringify({
+          companyName: step1Data?.companyName,
+          websiteUrl: step1Data?.website || undefined,
+          companySize: data.companySize,
+          sector: data.sector,
+        }),
+      });
       router.push('/employers/dashboard');
-    } finally {
+    } catch (e) {
+      setSaveError((e as Error).message ?? 'Could not save profile. Please try again.');
       setSaving(false);
     }
   }
@@ -80,56 +98,53 @@ export function EmployerOnboardingForm() {
       {step === 2 && (
         <form onSubmit={form2.handleSubmit(onStep2)}>
           <Stack gap="md">
-          <Radio.Group label="Company size (employees)" value={form2.watch('companySize')} onChange={(value) => form2.setValue('companySize', value as Step2['companySize'])}>
-            <SimpleGrid cols={{ base: 3, sm: 5 }} spacing="xs" mt="xs">
-              {(['1-10', '11-50', '51-250', '251-1000', '1000+'] as const).map((size) => (
-                <Radio.Card
-                  key={size}
-                  value={size}
-                  radius="md"
-                  p="sm"
-                >
-                  <Text ta="center" size="sm" fw={600}>{size}</Text>
-                </Radio.Card>
-              ))}
-            </SimpleGrid>
-          </Radio.Group>
-          <Stack gap="xs">
-            <Text size="sm" fw={600}>
-              Industry sector
-            </Text>
-            <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="xs">
-              {SECTORS.map((s) => (
-                <Button
-                  key={s}
-                  type="button"
-                  onClick={() => form2.setValue('sector', s)}
-                  variant={form2.watch('sector') === s ? 'filled' : 'default'}
-                >
-                  {s}
-                </Button>
-              ))}
-            </SimpleGrid>
-            <input type="hidden" {...form2.register('sector')} />
-            {form2.formState.errors.sector && (
-              <Text size="xs" c="red">{form2.formState.errors.sector.message}</Text>
+            <Radio.Group
+              label="Company size (employees)"
+              value={form2.watch('companySize')}
+              onChange={(value) => form2.setValue('companySize', value as Step2['companySize'])}
+            >
+              <SimpleGrid cols={{ base: 3, sm: 5 }} spacing="xs" mt="xs">
+                {(['1-10', '11-50', '51-250', '251-1000', '1000+'] as const).map((size) => (
+                  <Radio.Card key={size} value={size} radius="md" p="sm">
+                    <Text ta="center" size="sm" fw={600}>{size}</Text>
+                  </Radio.Card>
+                ))}
+              </SimpleGrid>
+            </Radio.Group>
+
+            <Stack gap="xs">
+              <Text size="sm" fw={600}>Industry sector</Text>
+              <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="xs">
+                {SECTORS.map((s) => (
+                  <Button
+                    key={s}
+                    type="button"
+                    onClick={() => form2.setValue('sector', s, { shouldValidate: true })}
+                    variant={form2.watch('sector') === s ? 'filled' : 'default'}
+                    color={form2.watch('sector') === s ? 'primary' : undefined}
+                  >
+                    {s}
+                  </Button>
+                ))}
+              </SimpleGrid>
+              <input type="hidden" {...form2.register('sector')} />
+              {form2.formState.errors.sector && (
+                <Text size="xs" c="red">{form2.formState.errors.sector.message}</Text>
+              )}
+            </Stack>
+
+            {saveError && (
+              <Alert color="red" variant="light">{saveError}</Alert>
             )}
-          </Stack>
-          <Group grow>
-            <Button
-              type="button"
-              onClick={() => setStep(1)}
-              variant="default"
-            >
-              Back
-            </Button>
-            <Button
-              type="submit"
-              loading={saving}
-            >
-              Finish setup
-            </Button>
-          </Group>
+
+            <Group grow>
+              <Button type="button" onClick={() => setStep(1)} variant="default">
+                Back
+              </Button>
+              <Button type="submit" loading={saving}>
+                Finish setup
+              </Button>
+            </Group>
           </Stack>
         </form>
       )}

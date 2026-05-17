@@ -115,7 +115,7 @@ export function SalaryBenchmarkerClient() {
             {errors.title && <p className="mt-1 text-xs text-red-600">{errors.title.message}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-slate-700" htmlFor="location">
                 Location

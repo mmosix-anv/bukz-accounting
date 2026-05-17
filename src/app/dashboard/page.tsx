@@ -66,7 +66,7 @@ export default async function DashboardPage() {
     courseTitle: e.courseTitle, courseSlug: e.courseSlug, thumbnailUrl: e.thumbnailUrl,
   }));
 
-  const displayName = user.user_metadata?.['full_name'] ?? user.email?.split('@')[0] ?? 'there';
+  const displayName = user.user_metadata?.['name'] ?? user.email?.split('@')[0] ?? 'there';
   const inProgress = enrollments.filter((e) => !e.completedAt);
   const completed = enrollments.filter((e) => !!e.completedAt);
 

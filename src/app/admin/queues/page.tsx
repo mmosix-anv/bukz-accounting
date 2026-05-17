@@ -43,7 +43,7 @@ export default async function AdminQueuesPage() {
               </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-3 gap-4">
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 text-emerald-600">
                   <CheckCircle className="h-4 w-4" />

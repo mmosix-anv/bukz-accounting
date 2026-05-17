@@ -33,7 +33,7 @@ export function Step3Requirements({ onNext, onBack }: Props) {
     <div className="space-y-6">
       <div>
         <p className="text-sm font-medium text-slate-700 mb-2">Preferred qualifications</p>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {QUALIFICATIONS.map((q) => (
             <button key={q} type="button" onClick={() => toggleQual(q)}
               className={`rounded-lg border py-2 text-sm font-medium transition-colors ${quals.includes(q) ? 'border-primary bg-primary text-white' : 'border-slate-200 text-slate-700 hover:border-primary/50'}`}>
@@ -45,7 +45,7 @@ export function Step3Requirements({ onNext, onBack }: Props) {
 
       <div>
         <p className="text-sm font-medium text-slate-700 mb-2">Software skills</p>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {SOFTWARE.map((s) => (
             <button key={s} type="button" onClick={() => toggleSkill(s)}
               className={`rounded-lg border py-2 text-xs font-medium transition-colors ${skills.includes(s) ? 'border-primary bg-primary text-white' : 'border-slate-200 text-slate-700 hover:border-primary/50'}`}>
@@ -55,7 +55,7 @@ export function Step3Requirements({ onNext, onBack }: Props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-slate-700">Min salary (£ GBP)</label>
           <input type="number" placeholder="30000" className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-primary focus:outline-none" {...register('salaryMin')} />

@@ -100,7 +100,7 @@ export function LessonPlayerClient({ lesson, syllabus, isEnrolled, progressPerce
           <div className="flex-1 min-w-0">
             <Text size="sm" fw={600} c="primary.7" truncate>{lesson.courseTitle}</Text>
           </div>
-          <Group gap="xs" wrap="nowrap">
+          <Group gap="xs" wrap="nowrap" visibleFrom="sm">
             <Text size="xs" c="dimmed">{completedCount}/{totalLessons} lessons</Text>
             <Progress value={progress} size="sm" radius="xl" color="accent" w={120} />
             <Text size="xs" fw={600} c="accent">{progress}%</Text>

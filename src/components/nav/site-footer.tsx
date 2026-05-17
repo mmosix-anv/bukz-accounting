@@ -35,9 +35,9 @@ export function SiteFooter() {
   return (
     <footer className="relative bg-[#0f2a2e] overflow-hidden">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-10">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand Column */}
-          <div className="col-span-2">
+          <div className="sm:col-span-2">
             <Link href="/" className="inline-block group">
               <Image
                 src="/images/logo-full.svg"
@@ -80,7 +80,7 @@ export function SiteFooter() {
               </h3>
               <ul className="space-y-2.5">
                 {section.links.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <Link
                       href={link.href}
                       className="group/link inline-flex items-center gap-1 text-sm text-slate-400 hover:text-white transition-colors duration-200"

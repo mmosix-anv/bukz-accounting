@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Alert, Anchor, Badge, Button, Card, Group, Stack, Text } from '@mantine/core';
+import { apiFetch } from '@/lib/api';
 
 interface SkillGap {
   skill: string;
@@ -41,12 +42,10 @@ export function SkillsGapButton({ token }: Props) {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-      const res = await fetch(`${apiUrl}/api/v1/jobs/candidates/me/skills-gap`, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      const data = await apiFetch<SkillsGapResult>('/ai/skills-gap', {
+        method: 'POST',
+        token,
       });
-      if (!res.ok) throw new Error('Analysis failed');
-      const data = (await res.json()) as SkillsGapResult;
       setResult(data);
     } catch {
       setError('Could not run analysis. Please try again.');
