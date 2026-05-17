@@ -1,0 +1,23 @@
+.claude/settings.local.json
+  s_5b53ec56243f54::t_fdee16dd63cd06 16-17
+package.json
+  s_5b53ec56243f54::t_fdee16dd63cd06 34
+packages/config/tailwind/index.js
+  s_5b53ec56243f54::t_a4a2517ab1a4ba 64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "c822fe51b84d29cc1f491e12fc03459f87e60d94",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
