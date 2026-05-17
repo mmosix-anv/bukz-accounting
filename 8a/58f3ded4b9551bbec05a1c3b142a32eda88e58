@@ -1,0 +1,46 @@
+src/app/(jobs)/employers/post-job/step3-requirements.tsx
+  s_5b53ec56243f54::t_0376affce75be3 36
+  s_5b53ec56243f54::t_59ce32a7a72c57 48
+  s_5b53ec56243f54::t_a506c06bd74c8f 58
+src/app/admin/queues/page.tsx
+  s_5b53ec56243f54::t_935d8c5528abe3 46
+src/app/dashboard/skills-gap-button.tsx
+  s_5b53ec56243f54::t_56308777453c3d 6
+  s_5b53ec56243f54::t_d225cbb0a7d380 45-47
+src/app/onboarding/employer/employer-onboarding-form.tsx
+  s_5b53ec56243f54::t_95e7a02da98e17 9-11,22,34-35,43-44,48,50,52-63,65-66,101-104,106-147
+tsconfig.tsbuildinfo
+  s_5b53ec56243f54::t_152ea84e07e52a 1
+src/app/dashboard/page.tsx
+  s_5b53ec56243f54::t_b6549c8c0b3a51 69
+src/components/nav/site-footer.tsx
+  s_5b53ec56243f54::t_7c53f662202a4e 38,40
+  s_5b53ec56243f54::t_8a13cd85aa1698 83
+src/app/auth/register/register-form.tsx
+  s_5b53ec56243f54::t_91484898c09f7e 13-18
+src/app/(insight)/tools/salary-benchmarker/salary-benchmarker-client.tsx
+  s_5b53ec56243f54::t_01c1394953f14c 118
+src/app/(learn)/learn/[slug]/lesson/[lessonId]/lesson-player-client.tsx
+  s_5b53ec56243f54::t_fe41be7ee5e516 103
+src/app/(jobs)/jobs/[slug]/job-detail.client.tsx
+  s_5b53ec56243f54::t_25b402f2128516 99-102
+  s_5b53ec56243f54::t_2a39e9f3662dbc 63
+  s_5b53ec56243f54::t_8f40458fa491c3 167-168
+  s_5b53ec56243f54::t_9a3840c671efef 218
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "8a58f3ded4b9551bbec05a1c3b142a32eda88e58",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
