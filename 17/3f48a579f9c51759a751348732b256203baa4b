@@ -1,0 +1,21 @@
+tsconfig.tsbuildinfo
+  s_5b53ec56243f54::t_aa2f329f219492 1
+src/app/dashboard/page.tsx
+  s_5b53ec56243f54::t_c4cc48d551b70d 44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "173f48a579f9c51759a751348732b256203baa4b",
+  "prompts": {},
+  "sessions": {
+    "s_5b53ec56243f54": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "18890eb7-8847-40da-b20e-c5c5b4dbbbc5",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
