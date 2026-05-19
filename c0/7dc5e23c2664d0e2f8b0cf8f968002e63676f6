@@ -1,0 +1,24 @@
+src/app/auth/callback/route.ts
+  s_9b78ddb92a8cb5::t_fed2e8f828b471 14
+src/app/auth/login/login-form.tsx
+  s_9b78ddb92a8cb5::t_d039d828ae4a75 7-8
+src/lib/auth-actions.ts
+  s_9b78ddb92a8cb5::t_fd3529196f4311 79
+  s_9b78ddb92a8cb5::t_6ee15d5bee18cf 49-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.10",
+  "base_commit_sha": "c07dc5e23c2664d0e2f8b0cf8f968002e63676f6",
+  "prompts": {},
+  "sessions": {
+    "s_9b78ddb92a8cb5": {
+      "agent_id": {
+        "tool": "windsurf",
+        "id": "888ecd69-2f24-4d46-ab49-8ad87368a3d3",
+        "model": "Claude Sonnet 4.6 Thinking"
+      },
+      "human_author": "Moses Oyewole <moses@anvillive.com>"
+    }
+  }
+}
