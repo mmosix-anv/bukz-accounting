@@ -10,9 +10,8 @@ export async function GET(request: Request) {
     const supabase = createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      // Redirect admin users to admin portal
       const userRole = data.user?.user_metadata?.['role'];
-      if (userRole === 'admin') {
+      if (userRole === 'admin' && !next.startsWith('/auth/')) {
         return NextResponse.redirect(`${origin}/admin`);
       }
       return NextResponse.redirect(`${origin}${next}`);

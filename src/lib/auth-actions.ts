@@ -46,6 +46,10 @@ export async function registerAction(formData: FormData) {
 
   if (error) return { error: error.message };
 
+  if (data.user?.identities?.length === 0) {
+    return { error: 'An account with this email address already exists.' };
+  }
+
   if (data.session) {
     await apiFetch('/auth/sync', {
       method: 'POST',
@@ -72,7 +76,7 @@ export async function forgotPasswordAction(formData: FormData) {
   const email = formData.get('email') as string;
   const supabase = createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env['NEXT_PUBLIC_APP_URL']}/auth/reset-password`,
+    redirectTo: `${process.env['NEXT_PUBLIC_APP_URL']}/auth/callback?next=/auth/reset-password`,
   });
   if (error) return { error: error.message };
   return { success: true };
