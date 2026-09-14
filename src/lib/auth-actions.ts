@@ -9,6 +9,7 @@ import { db } from '@/lib/db';
 import { users, profiles, verificationTokens } from '@bukz/db';
 import { signIn, signOut } from '@/auth';
 import { email as mailer } from '@/lib/email';
+import { logger } from '@/lib/logger';
 
 const APP_URL = process.env['NEXT_PUBLIC_APP_URL'];
 
@@ -23,7 +24,8 @@ export async function loginAction(formData: FormData): Promise<{ error?: string;
     if (error instanceof AuthError) {
       return { error: 'Invalid email or password.' };
     }
-    throw error;
+    logger.error('loginAction failed', error);
+    return { error: 'Something went wrong. Please try again.' };
   }
 
   return { redirectTo };
