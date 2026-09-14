@@ -13,7 +13,6 @@ import { Step4Package } from './step4-package';
 import { Step5Preview } from './step5-preview';
 import type { JobPostingPackageSetting } from '@bukz/db';
 import { apiFetch } from '@/lib/api';
-import { createClient } from '@/lib/supabase/client';
 
 const STEPS = ['Details', 'Description', 'Requirements', 'Package', 'Preview'];
 
@@ -60,11 +59,8 @@ export function PostJobForm({ packages }: Props) {
   async function onFinalSubmit(values: PostJobFormValues) {
     setSubmitError(null);
     try {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
       await apiFetch('/jobs/listings', {
         method: 'POST',
-        token: session?.access_token,
         body: JSON.stringify({
           title: values.title,
           description: values.description,

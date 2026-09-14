@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { getLessonContent, getCourseSyllabus } from '@/lib/services/courses.service';
 import { getCourseProgress } from '@/lib/services/progress.service';
 import { LessonPlayerClient } from './lesson-player-client';
@@ -21,11 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LessonPlayerPage({ params }: Props) {
   const { slug, lessonId } = await params;
-  const supabase = createClient();
-  const [{ data: { user } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
+  const session = await auth();
+  const user = session?.user;
 
   const lesson = await getLessonContent(user?.id ?? null, lessonId).catch(() => null);
   if (!lesson) notFound();
@@ -66,7 +63,6 @@ export default async function LessonPlayerPage({ params }: Props) {
       syllabus={syllabus}
       isEnrolled={enrolled}
       progressPercent={progress.progressPercent}
-      token={session?.access_token}
       prevLessonId={prevLessonId}
       nextLessonId={nextLessonId}
     />

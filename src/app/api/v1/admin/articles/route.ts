@@ -5,7 +5,7 @@ import { getAdminArticles } from '@/lib/services/admin.service';
 export async function GET(req: NextRequest) {
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
-  if (user.user_metadata?.['role'] !== 'admin') return forbidden();
+  if (user.role !== 'admin') return forbidden();
   const { searchParams } = new URL(req.url);
   return ok(await getAdminArticles(searchParams.get('status') ?? undefined, Number(searchParams.get('limit') ?? 20), Number(searchParams.get('offset') ?? 0)));
 }

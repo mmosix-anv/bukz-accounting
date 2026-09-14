@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { Card } from '@bukz/ui';
 import { CreditCard, CheckCircle, XCircle, Clock } from 'lucide-react';
@@ -12,10 +12,10 @@ export default async function AdminPaymentsPage({
 }: {
   searchParams: Promise<{ page?: string }>;
 }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 

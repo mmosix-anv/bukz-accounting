@@ -5,7 +5,7 @@ import { updateUserRole } from '@/lib/services/admin.service';
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
-  if (user.user_metadata?.['role'] !== 'admin') return forbidden();
+  if (user.role !== 'admin') return forbidden();
   try {
     const { role } = await req.json() as { role: string };
     return ok(await updateUserRole(params.id, role));

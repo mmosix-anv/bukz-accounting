@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { User, Shield, Briefcase, GraduationCap } from 'lucide-react';
 import { AdminTable, AdminTr, AdminTd, FilterTabs, Pagination } from '../admin-table';
@@ -18,9 +18,9 @@ const ROLE_COLOURS = {
 const PAGE_SIZE = 20;
 
 export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<{ role?: string; page?: string }> }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') redirect('/dashboard');
 
   const params = await searchParams;
   const roleFilter = params.role ?? '';

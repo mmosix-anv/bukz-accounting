@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
-import { 
-  findCourseById, 
+import { auth } from '@/auth';
+import {
+  findCourseById,
   findSectionsByCourse, 
   findLessonsBySection,
   deleteLesson 
@@ -11,6 +11,7 @@ import {
 import { db } from '@/lib/db';
 import { courseLessons } from '@bukz/db';
 import { eq, desc } from 'drizzle-orm';
+import { ConfirmDeleteButton } from '@/app/admin/confirm-delete-button';
 import { Button, Paper, Stack, Title, Text, Group, Checkbox } from '@mantine/core';
 import { Plus, Trash2, GripVertical, Clock, Video } from 'lucide-react';
 
@@ -22,18 +23,19 @@ interface LessonsPageProps {
 
 async function createLessonAction(courseId: string, sectionId: string, formData: FormData) {
   'use server';
-  
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
     throw new Error('Unauthorized');
   }
 
   const title = formData.get('title') as string;
+  const content = formData.get('content') as string;
   const videoUrl = formData.get('videoUrl') as string;
   const durationMinutes = parseInt(formData.get('durationMinutes') as string) || 0;
   const isFree = formData.get('isFree') === 'on';
-  
+
   // Get max position
   const existingLessons = await db
     .select({ position: courseLessons.position })
@@ -41,12 +43,13 @@ async function createLessonAction(courseId: string, sectionId: string, formData:
     .where(eq(courseLessons.sectionId, sectionId))
     .orderBy(desc(courseLessons.position))
     .limit(1);
-  
+
   const nextPosition = (existingLessons[0]?.position ?? 0) + 1;
 
   await db.insert(courseLessons).values({
     sectionId,
     title,
+    content: content || null,
     videoUrl: videoUrl || null,
     durationMinutes,
     isFree,
@@ -56,12 +59,38 @@ async function createLessonAction(courseId: string, sectionId: string, formData:
   redirect(`/admin/courses/${courseId}/sections/${sectionId}/lessons`);
 }
 
+async function updateLessonAction(courseId: string, sectionId: string, lessonId: string, formData: FormData) {
+  'use server';
+
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  const title = formData.get('title') as string;
+  const content = formData.get('content') as string;
+  const videoUrl = formData.get('videoUrl') as string;
+  const durationMinutes = parseInt(formData.get('durationMinutes') as string) || 0;
+  const isFree = formData.get('isFree') === 'on';
+
+  await db.update(courseLessons).set({
+    title,
+    content: content || null,
+    videoUrl: videoUrl || null,
+    durationMinutes,
+    isFree,
+  }).where(eq(courseLessons.id, lessonId));
+
+  redirect(`/admin/courses/${courseId}/sections/${sectionId}/lessons`);
+}
+
 export default async function SectionLessonsPage({ params }: LessonsPageProps) {
   const { id, sectionId } = await params;
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
@@ -115,6 +144,7 @@ export default async function SectionLessonsPage({ params }: LessonsPageProps) {
                     placeholder="Video URL (optional)"
                   />
                 </Group>
+                <TextArea name="content" placeholder="Lesson content (optional, HTML supported)" />
                 <Group grow>
                   <NumberInput
                     name="durationMinutes"
@@ -182,22 +212,54 @@ export default async function SectionLessonsPage({ params }: LessonsPageProps) {
                       }}
                       className="inline"
                     >
-                      <Button
-                        type="submit"
-                        variant="subtle"
-                        color="red"
-                        size="xs"
-                        leftSection={<Trash2 size={14} />}
-                        onClick={(e) => {
-                          if (!confirm('Delete this lesson?')) {
-                            e.preventDefault();
-                          }
-                        }}
-                      >
-                        Delete
-                      </Button>
+                      <ConfirmDeleteButton confirmMessage="Delete this lesson?" />
                     </form>
                   </Group>
+
+                  <details className="mt-3">
+                    <summary className="cursor-pointer text-xs font-medium text-[#2cd7f2] hover:underline">
+                      Edit lesson details
+                    </summary>
+                    <form action={updateLessonAction.bind(null, id, sectionId, lesson.id)} className="mt-3">
+                      <Paper p="md" radius="lg" className="border border-slate-200 bg-slate-50">
+                        <Stack gap="md">
+                          <Group grow>
+                            <TextInput
+                              name="title"
+                              placeholder="Lesson title"
+                              defaultValue={lesson.title}
+                              required
+                            />
+                            <TextInput
+                              name="videoUrl"
+                              placeholder="Video URL (optional)"
+                              defaultValue={lesson.videoUrl ?? ''}
+                            />
+                          </Group>
+                          <TextArea
+                            name="content"
+                            placeholder="Lesson content (optional, HTML supported)"
+                            defaultValue={lesson.content ?? ''}
+                          />
+                          <Group grow>
+                            <NumberInput
+                              name="durationMinutes"
+                              placeholder="Duration (minutes)"
+                              min={0}
+                              defaultValue={lesson.durationMinutes ?? 0}
+                            />
+                            <label className="flex items-center gap-2 text-sm">
+                              <input type="checkbox" name="isFree" className="rounded" defaultChecked={lesson.isFree} />
+                              Free preview lesson
+                            </label>
+                            <Button type="submit" leftSection={<Plus size={14} />}>
+                              Save changes
+                            </Button>
+                          </Group>
+                        </Stack>
+                      </Paper>
+                    </form>
+                  </details>
                 </Paper>
               ))}
             </Stack>
@@ -211,25 +273,39 @@ export default async function SectionLessonsPage({ params }: LessonsPageProps) {
 }
 
 // Simple input components
-function TextInput({ name, placeholder, required }: { name: string; placeholder: string; required?: boolean }) {
+function TextInput({ name, placeholder, required, defaultValue }: { name: string; placeholder: string; required?: boolean; defaultValue?: string }) {
   return (
     <input
       type="text"
       name={name}
       placeholder={placeholder}
       required={required}
+      defaultValue={defaultValue}
       className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2cd7f2] focus:outline-none"
     />
   );
 }
 
-function NumberInput({ name, placeholder, min }: { name: string; placeholder: string; min?: number }) {
+function NumberInput({ name, placeholder, min, defaultValue }: { name: string; placeholder: string; min?: number; defaultValue?: number }) {
   return (
     <input
       type="number"
       name={name}
       placeholder={placeholder}
       min={min}
+      defaultValue={defaultValue}
+      className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2cd7f2] focus:outline-none"
+    />
+  );
+}
+
+function TextArea({ name, placeholder, defaultValue }: { name: string; placeholder: string; defaultValue?: string }) {
+  return (
+    <textarea
+      name={name}
+      placeholder={placeholder}
+      defaultValue={defaultValue}
+      rows={4}
       className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2cd7f2] focus:outline-none"
     />
   );

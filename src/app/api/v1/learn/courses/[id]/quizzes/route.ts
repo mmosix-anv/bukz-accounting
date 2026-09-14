@@ -8,7 +8,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const user = await getAuthUser(req);
-  if (!user || !['admin', 'instructor'].includes(user.user_metadata?.['role'])) return unauthorized();
+  if (!user || !['admin', 'instructor'].includes(user.role)) return unauthorized();
   try {
     const body = await req.json();
     return ok(await createQuiz(params.id, body));

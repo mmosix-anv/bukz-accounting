@@ -4,7 +4,7 @@ import { updateQuestion, deleteQuestion, replaceOptions } from '@/lib/services/q
 
 export async function PATCH(req: NextRequest, { params }: { params: { questionId: string } }) {
   const user = await getAuthUser(req);
-  if (!user || !['admin', 'instructor'].includes(user.user_metadata?.['role'])) return unauthorized();
+  if (!user || !['admin', 'instructor'].includes(user.role)) return unauthorized();
   try {
     const body = await req.json();
     if (body.options) {
@@ -20,7 +20,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { questionId
 
 export async function DELETE(req: NextRequest, { params }: { params: { questionId: string } }) {
   const user = await getAuthUser(req);
-  if (!user || !['admin', 'instructor'].includes(user.user_metadata?.['role'])) return unauthorized();
+  if (!user || !['admin', 'instructor'].includes(user.role)) return unauthorized();
   try { return ok(await deleteQuestion(params.questionId)); }
   catch (e) { return err((e as Error).message); }
 }

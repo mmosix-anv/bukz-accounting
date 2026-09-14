@@ -15,7 +15,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!user) return unauthorized();
   try {
     const body = await req.json() as Parameters<typeof updateCourse>[2];
-    const isAdmin = user.user_metadata?.['role'] === 'admin';
+    const isAdmin = user.role === 'admin';
     return ok(await updateCourse(params.id, user.id, body, isAdmin));
   } catch (e) { return err((e as Error).message); }
 }
@@ -23,7 +23,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
-  if (user.user_metadata?.['role'] !== 'admin') return forbidden();
+  if (user.role !== 'admin') return forbidden();
   try {
     await deleteCourse(params.id);
     return ok({ deleted: true });

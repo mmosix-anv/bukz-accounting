@@ -47,7 +47,6 @@ interface Course {
 
 interface Props {
   course: Course;
-  token: string | undefined;
 }
 
 function SortableLesson({
@@ -113,14 +112,14 @@ function SortableLesson({
 
 function LessonEditor({
   lesson,
+  courseId,
   sectionId,
-  token,
   onSave,
   onClose,
 }: {
   lesson: Lesson | null;
+  courseId: string;
   sectionId: string;
-  token: string | undefined;
   onSave: (updated: Lesson) => void;
   onClose: () => void;
 }) {
@@ -149,12 +148,12 @@ function LessonEditor({
 
       let saved: Lesson;
       if (lesson) {
-        saved = await apiFetch<Lesson>(`/learn/courses/lessons/${lesson.id}`, {
-          method: 'PATCH', token, body: JSON.stringify(body),
+        saved = await apiFetch<Lesson>(`/learn/courses/${courseId}/sections/${sectionId}/lessons/${lesson.id}`, {
+          method: 'PATCH', body: JSON.stringify(body),
         });
       } else {
-        saved = await apiFetch<Lesson>(`/learn/courses/sections/${sectionId}/lessons`, {
-          method: 'POST', token, body: JSON.stringify(body),
+        saved = await apiFetch<Lesson>(`/learn/courses/${courseId}/sections/${sectionId}/lessons`, {
+          method: 'POST', body: JSON.stringify(body),
         });
       }
       onSave(saved);
@@ -263,7 +262,7 @@ function LessonEditor({
   );
 }
 
-export function LessonBuilder({ course, token }: Props) {
+export function LessonBuilder({ course }: Props) {
   const [sections, setSections] = useState<Section[]>(course.sections);
   const [editingLesson, setEditingLesson] = useState<{ lesson: Lesson | null; sectionId: string } | null>(null);
   const [newSectionTitle, setNewSectionTitle] = useState('');
@@ -294,15 +293,15 @@ export function LessonBuilder({ course, token }: Props) {
       prev.map((s) => (s.id === sectionId ? { ...s, lessons: reordered } : s)),
     );
 
-    await apiFetch(`/learn/courses/sections/${sectionId}/reorder`, {
-      method: 'POST', token, body: JSON.stringify({ orderedIds }),
+    await apiFetch(`/learn/courses/${course.id}/sections/${sectionId}/lessons/reorder`, {
+      method: 'POST', body: JSON.stringify({ orderedIds }),
     });
   }
 
   async function addSection() {
     if (!newSectionTitle.trim()) return;
     const section = await apiFetch<Section>(`/learn/courses/${course.id}/sections`, {
-      method: 'POST', token, body: JSON.stringify({ title: newSectionTitle }),
+      method: 'POST', body: JSON.stringify({ title: newSectionTitle }),
     });
     setSections((prev) => [...prev, { ...section, lessons: [] }]);
     setNewSectionTitle('');
@@ -324,8 +323,8 @@ export function LessonBuilder({ course, token }: Props) {
   }
 
   async function toggleLessonFree(sectionId: string, lesson: Lesson) {
-    const updated = await apiFetch<Lesson>(`/learn/courses/lessons/${lesson.id}`, {
-      method: 'PATCH', token, body: JSON.stringify({ isFree: !lesson.isFree }),
+    const updated = await apiFetch<Lesson>(`/learn/courses/${course.id}/sections/${sectionId}/lessons/${lesson.id}`, {
+      method: 'PATCH', body: JSON.stringify({ isFree: !lesson.isFree }),
     });
     setSections((prev) =>
       prev.map((s) =>
@@ -409,8 +408,8 @@ export function LessonBuilder({ course, token }: Props) {
       {editingLesson && (
         <LessonEditor
           lesson={editingLesson.lesson}
+          courseId={course.id}
           sectionId={editingLesson.sectionId}
-          token={token}
           onSave={(saved) => handleLessonSaved(editingLesson.sectionId, saved)}
           onClose={() => setEditingLesson(null)}
         />

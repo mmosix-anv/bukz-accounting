@@ -5,7 +5,13 @@ import { ResetPasswordForm } from './reset-password-form';
 
 export const metadata: Metadata = { title: 'Set New Password | BUKZ' };
 
-export default function ResetPasswordPage() {
+export default function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: { token?: string; email?: string };
+}) {
+  const { token, email } = searchParams;
+
   return (
     <Center mih="100vh" bg="gray.0" px="md">
       <Stack w="100%" maw={420} gap="lg">
@@ -20,7 +26,14 @@ export default function ResetPasswordPage() {
             Choose a strong password for your account.
           </Text>
         </Stack>
-        <ResetPasswordForm />
+        {token && email ? (
+          <ResetPasswordForm token={token} email={email} />
+        ) : (
+          <Text size="sm" c="red" ta="center">
+            This reset link is invalid. Please request a new one from the{' '}
+            <Anchor component={Link} href="/auth/forgot-password">forgot password</Anchor> page.
+          </Text>
+        )}
       </Stack>
     </Center>
   );

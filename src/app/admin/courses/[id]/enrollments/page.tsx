@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { findCourseById } from '@/lib/services/courses.service';
 import { db } from '@/lib/db';
 import { enrollments, users } from '@bukz/db';
 import { eq, desc } from 'drizzle-orm';
+import { ConfirmDeleteButton } from '@/app/admin/confirm-delete-button';
 import { Button, Paper, Stack, Title, Text, Group, Progress, Badge } from '@mantine/core';
 import { ArrowLeft, Users, Clock, Trash2 } from 'lucide-react';
 
@@ -18,9 +19,9 @@ interface EnrollmentsPageProps {
 async function deleteEnrollmentAction(courseId: string, enrollmentId: string) {
   'use server';
   
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
     throw new Error('Unauthorized');
   }
 
@@ -30,10 +31,10 @@ async function deleteEnrollmentAction(courseId: string, enrollmentId: string) {
 
 export default async function CourseEnrollmentsPage({ params }: EnrollmentsPageProps) {
   const { id } = await params;
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
@@ -156,20 +157,7 @@ export default async function CourseEnrollmentsPage({ params }: EnrollmentsPageP
                       <form
                         action={deleteEnrollmentAction.bind(null, id, enrollment.id)}
                       >
-                        <Button
-                          type="submit"
-                          variant="subtle"
-                          color="red"
-                          size="xs"
-                          leftSection={<Trash2 size={14} />}
-                          onClick={(e) => {
-                            if (!confirm('Remove this enrollment?')) {
-                              e.preventDefault();
-                            }
-                          }}
-                        >
-                          Remove
-                        </Button>
+                        <ConfirmDeleteButton confirmMessage="Remove this enrollment?" label="Remove" />
                       </form>
                     </Group>
                   </Group>

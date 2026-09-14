@@ -52,12 +52,11 @@ interface Props {
   syllabus: SyllabusSection[];
   isEnrolled: boolean;
   progressPercent: number;
-  token: string | undefined;
   prevLessonId: string | null;
   nextLessonId: string | null;
 }
 
-export function LessonPlayerClient({ lesson, syllabus, isEnrolled, progressPercent, token, prevLessonId, nextLessonId }: Props) {
+export function LessonPlayerClient({ lesson, syllabus, isEnrolled, progressPercent, prevLessonId, nextLessonId }: Props) {
   const router = useRouter();
   const [completing, setCompleting] = useState(false);
   const [completed, setCompleted] = useState(
@@ -69,7 +68,6 @@ export function LessonPlayerClient({ lesson, syllabus, isEnrolled, progressPerce
     setCompleting(true);
     const result = await apiFetch<{ progressPercent: number }>(`/learn/lessons/${lesson.id}/complete`, {
       method: 'POST',
-      token,
     }).catch(() => null);
     setCompleting(false);
     if (result) {
@@ -83,7 +81,7 @@ export function LessonPlayerClient({ lesson, syllabus, isEnrolled, progressPerce
     if (nextLessonId) {
       router.push(`/learn/${lesson.courseSlug}/lesson/${nextLessonId}`);
     }
-  }, [lesson.id, lesson.courseSlug, nextLessonId, token, router]);
+  }, [lesson.id, lesson.courseSlug, nextLessonId, router]);
 
   const allLessons = syllabus.flatMap((s) => s.lessons);
   const totalLessons = allLessons.length;

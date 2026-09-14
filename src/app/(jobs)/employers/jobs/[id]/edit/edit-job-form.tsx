@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Alert, Button, Card, Group, Select, SimpleGrid, Stack, Text, Textarea, TextInput, Title } from '@mantine/core';
+import { apiFetch } from '@/lib/api';
 
 interface JobListing {
   id: string;
@@ -22,7 +23,7 @@ const JOB_TYPES = ['permanent', 'contract', 'temp', 'interim', 'part_time'];
 const REMOTE = ['office', 'hybrid', 'remote'];
 const EXPERIENCE = ['entry', 'mid', 'senior', 'manager', 'director'];
 
-export function EditJobForm({ listing, token }: { listing: JobListing; token?: string }) {
+export function EditJobForm({ listing }: { listing: JobListing }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -47,28 +48,26 @@ export function EditJobForm({ listing, token }: { listing: JobListing; token?: s
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true); setError(null);
-    const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-    const res = await fetch(`${apiUrl}/api/v1/jobs/listings/${listing.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
-      body: JSON.stringify({
-        ...form,
-        salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
-        salaryMax: form.salaryMax ? Number(form.salaryMax) : null,
-      }),
-    });
-    setSaving(false);
-    if (!res.ok) { setError('Failed to save changes.'); return; }
-    router.push('/employers/dashboard');
+    try {
+      await apiFetch(`/jobs/listings/${listing.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          ...form,
+          salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
+          salaryMax: form.salaryMax ? Number(form.salaryMax) : null,
+        }),
+      });
+      router.push('/employers/dashboard');
+    } catch {
+      setError('Failed to save changes.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleDelete() {
     setDeleting(true);
-    const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-    await fetch(`${apiUrl}/api/v1/jobs/listings/${listing.id}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token ?? ''}` },
-    });
+    await apiFetch(`/jobs/listings/${listing.id}`, { method: 'DELETE' }).catch(() => null);
     router.push('/employers/dashboard');
   }
 

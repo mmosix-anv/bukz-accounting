@@ -4,18 +4,13 @@ function getBaseUrl() {
   return `http://localhost:${process.env['PORT'] ?? 3000}`;
 }
 
-export async function apiFetch<T>(
-  path: string,
-  options: RequestInit & { token?: string } = {},
-): Promise<T> {
-  const { token, ...rest } = options;
+export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...(rest.headers ?? {}),
+    ...(options.headers ?? {}),
   };
 
-  const res = await fetch(`${getBaseUrl()}/api/v1${path}`, { ...rest, headers });
+  const res = await fetch(`${getBaseUrl()}/api/v1${path}`, { ...options, headers });
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({ message: res.statusText }));

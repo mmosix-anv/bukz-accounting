@@ -1,6 +1,6 @@
 ﻿import type { Metadata } from 'next';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { Card } from '@bukz/ui';
 import {
@@ -18,12 +18,10 @@ import { getHealthCheck, type HealthCheckResult } from '@/lib/services/health.se
 export const metadata: Metadata = { title: 'Admin Dashboard' };
 
 export default async function AdminDashboardPage() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 

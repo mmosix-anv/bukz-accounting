@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect, notFound } from 'next/navigation';
-import { apiFetch } from '@/lib/api';
+import { apiFetchServer } from '@/lib/api-server';
 import { EditJobForm } from './edit-job-form';
 
 export const metadata: Metadata = { title: 'Edit Job | BUKZ' };
@@ -22,12 +22,11 @@ interface JobListing {
 }
 
 export default async function EditJobPage({ params }: { params: { id: string } }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login');
 
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-  const listing = await apiFetch<JobListing>(`/jobs/listings/${params.id}`, { token }).catch(() => null);
+  const listing = await apiFetchServer<JobListing>(`/jobs/listings/${params.id}`).catch(() => null);
   if (!listing) notFound();
 
   return (
@@ -36,7 +35,7 @@ export default async function EditJobPage({ params }: { params: { id: string } }
         <a href="/employers/dashboard" className="text-sm text-slate-400 hover:text-primary">← Back to dashboard</a>
         <h1 className="mt-2 text-2xl font-bold text-primary">Edit: {listing.title}</h1>
       </div>
-      <EditJobForm listing={listing} token={token} />
+      <EditJobForm listing={listing} />
     </div>
   );
 }

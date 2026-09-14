@@ -102,6 +102,14 @@ export async function publishCourse(id: string, instructorId: string) {
   return updated!;
 }
 
+export async function unpublishCourse(id: string, instructorId: string) {
+  const existing = await findCourseById(id);
+  if (existing.instructorId !== instructorId) throw new Error('You do not own this course');
+  const [updated] = await db.update(courses).set({ status: 'draft', updatedAt: new Date() }).where(eq(courses.id, id)).returning();
+  await syncCourseToAlgolia(updated!);
+  return updated!;
+}
+
 export async function createSection(courseId: string, instructorId: string, title: string) {
   const course = await findCourseById(courseId);
   if (course.instructorId !== instructorId) throw new Error('Not your course');
@@ -148,6 +156,39 @@ export async function updateLesson(lessonId: string, instructorId: string, data:
 
 export async function getInstructorCourses(instructorId: string) {
   return db.select().from(courses).where(eq(courses.instructorId, instructorId)).orderBy(desc(courses.createdAt));
+}
+
+export async function reorderLessons(sectionId: string, instructorId: string, orderedIds: string[]) {
+  const [section] = await db.select().from(courseSections).where(eq(courseSections.id, sectionId)).limit(1);
+  if (!section) throw new Error('Section not found');
+  const course = await findCourseById(section.courseId);
+  if (course.instructorId !== instructorId) throw new Error('Not your course');
+
+  await Promise.all(
+    orderedIds.map((lessonId, index) =>
+      db.update(courseLessons)
+        .set({ position: index })
+        .where(and(eq(courseLessons.id, lessonId), eq(courseLessons.sectionId, sectionId))),
+    ),
+  );
+}
+
+export async function getCourseAnalytics(courseId: string, instructorId: string) {
+  const course = await findCourseById(courseId);
+  if (course.instructorId !== instructorId) throw new Error('Not your course');
+
+  const rows = await db.select({ progressPercent: enrollments.progressPercent, completedAt: enrollments.completedAt })
+    .from(enrollments).where(eq(enrollments.courseId, courseId));
+
+  const totalEnrollments = rows.length;
+  const completedEnrollments = rows.filter((r) => r.completedAt !== null).length;
+  const completionRate = totalEnrollments ? Math.round((completedEnrollments / totalEnrollments) * 100) : 0;
+  const averageProgress = totalEnrollments
+    ? Math.round(rows.reduce((s, r) => s + r.progressPercent, 0) / totalEnrollments)
+    : 0;
+  const revenueGbp = Number(course.priceGbp) * totalEnrollments;
+
+  return { totalEnrollments, completedEnrollments, completionRate, revenueGbp, averageProgress };
 }
 
 export const getCourseCategories = () => db.select().from(courseCategories);

@@ -1,19 +1,16 @@
 import type { Metadata } from 'next';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { getAdminUserById } from '@/lib/services/admin.service';
 import { UserEditForm } from './user-edit-form';
 
 export const metadata: Metadata = { title: 'Edit User | Admin' };
 
 export default async function AdminUserEditPage({ params }: { params: Promise<{ id: string }> }) {
-  const supabase = createClient();
-  const [{ data: { user: authUser } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
-  if (!authUser || authUser.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
+  const session = await auth();
+  const authUser = session?.user;
+  if (!authUser || authUser.role !== 'admin') redirect('/dashboard');
 
   const { id } = await params;
   const userData = await getAdminUserById(id).catch(() => null);
@@ -45,7 +42,7 @@ export default async function AdminUserEditPage({ params }: { params: Promise<{ 
         </Link>
         <h1 className="mt-2 text-2xl font-bold text-[#0f2a2e]">Edit User</h1>
       </div>
-      <UserEditForm user={serialised} token={session?.access_token} />
+      <UserEditForm user={serialised} />
     </div>
   );
 }

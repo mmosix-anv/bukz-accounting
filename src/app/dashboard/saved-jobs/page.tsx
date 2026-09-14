@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getSavedJobs } from '@/lib/services/saved-jobs.service';
@@ -8,11 +8,8 @@ import { SavedJobsClient } from './saved-jobs-client';
 export const metadata: Metadata = { title: 'Saved Jobs | BUKZ' };
 
 export default async function SavedJobsPage() {
-  const supabase = createClient();
-  const [{ data: { user } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login?redirectTo=/dashboard/saved-jobs');
 
   const rawJobs = await getSavedJobs(user.id).catch(() => []);
@@ -35,7 +32,7 @@ export default async function SavedJobsPage() {
           Browse jobs
         </Link>
       </div>
-      <SavedJobsClient jobs={jobs} token={session?.access_token} />
+      <SavedJobsClient jobs={jobs} />
     </div>
   );
 }

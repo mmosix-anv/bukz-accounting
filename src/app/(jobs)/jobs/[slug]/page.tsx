@@ -1,7 +1,7 @@
 import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { findJobListingBySlug, findJobListingById, incrementJobViews } from '@/lib/services/job-listings.service';
 import { JobDetailClient, type JobListing } from './job-detail.client';
 
@@ -32,17 +32,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function JobDetailPage({ params }: Props) {
-  const supabase = createClient();
-  const [listingResult, { data: { user } }] = await Promise.all([
+  const [listingResult, session] = await Promise.all([
     getJob(params.slug).catch(() => null),
-    supabase.auth.getUser(),
+    auth(),
   ]);
+  const user = session?.user;
 
   if (!listingResult) notFound();
   const listing = listingResult;
 
   void incrementJobViews(listing.id).catch(() => undefined);
-  const isCandidate = user?.user_metadata?.['role'] === 'candidate';
+  const isCandidate = user?.role === 'candidate';
   const shareUrl = `${process.env['NEXT_PUBLIC_APP_URL'] ?? ''}/jobs/${listing.slug}`;
 
   const job: JobListing = {

@@ -1,17 +1,15 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { NewCourseForm } from './new-course-form';
 
 export const metadata: Metadata = { title: 'Create Course | BUKZ Learn' };
 
 export default async function NewCoursePage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login');
-  if (!['instructor', 'admin'].includes(user.user_metadata?.['role'])) redirect('/dashboard');
-
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
+  if (!['instructor', 'admin'].includes(user.role)) redirect('/dashboard');
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
@@ -20,7 +18,7 @@ export default async function NewCoursePage() {
         <h1 className="mt-2 text-2xl font-bold text-primary">Create a new course</h1>
         <p className="mt-1 text-slate-500">Fill in the details below. You can add lessons after creating the course.</p>
       </div>
-      <NewCourseForm token={token} />
+      <NewCourseForm />
     </div>
   );
 }

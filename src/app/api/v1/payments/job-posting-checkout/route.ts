@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (!user) return unauthorized();
   try {
     const { packageType } = await req.json() as { packageType: JobPostingPackageId };
-    const session = await createJobPostingCheckout(user.id, packageType, user.email);
+    const session = await createJobPostingCheckout(user.id, packageType, user.email ?? undefined);
     return ok({ url: session.url });
   } catch (e) { return err((e as Error).message); }
 }

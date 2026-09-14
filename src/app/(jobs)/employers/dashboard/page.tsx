@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
-import { apiFetch } from '@/lib/api';
+import { apiFetchServer } from '@/lib/api-server';
 import { EmployerDashboardClient } from './employer-dashboard-client';
 
 export const metadata: Metadata = { title: 'Employer Dashboard | BUKZ Jobs' };
@@ -35,21 +35,19 @@ export default async function EmployerDashboardPage({
 }: {
   searchParams: { posted?: string };
 }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
   if (!user) redirect('/auth/login?redirectTo=/employers/dashboard');
-  if (user.user_metadata?.['role'] !== 'employer' && user.user_metadata?.['role'] !== 'admin') {
+  if (user.role !== 'employer' && user.role !== 'admin') {
     redirect('/dashboard');
   }
 
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-
   const [stats, listings] = await Promise.all([
-    apiFetch<EmployerStats>('/jobs/employers/me?view=stats', { token }).catch(() => ({
+    apiFetchServer<EmployerStats>('/jobs/employers/me?view=stats').catch(() => ({
       activeListings: 0, totalApplications: 0, totalViews: 0, totalListings: 0,
     })),
-    apiFetch<JobListing[]>('/jobs/employers/me?view=listings', { token }).catch(() => [] as JobListing[]),
+    apiFetchServer<JobListing[]>('/jobs/employers/me?view=listings').catch(() => [] as JobListing[]),
   ]);
 
   return (
@@ -73,7 +71,7 @@ export default async function EmployerDashboardPage({
         </div>
       )}
 
-      <EmployerDashboardClient stats={stats} listings={listings} token={token} />
+      <EmployerDashboardClient stats={stats} listings={listings} />
     </div>
   );
 }

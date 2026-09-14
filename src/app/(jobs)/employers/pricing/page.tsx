@@ -5,7 +5,7 @@ import {
   getEmployerSubscriptionSettingKey,
   getJobPostingPackageSettingKey,
 } from '@bukz/db';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import Link from 'next/link';
 import { PricingCheckoutButton } from './pricing-checkout-button';
 
@@ -17,10 +17,9 @@ export const metadata: Metadata = {
 const PAID_TIERS: Exclude<EmployerSubscriptionTierId, 'free'>[] = ['starter', 'pro', 'enterprise'];
 
 export default async function PricingPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  const token = user ? (await supabase.auth.getSession()).data.session?.access_token : undefined;
-  const isEmployer = user?.user_metadata?.['role'] === 'employer' || user?.user_metadata?.['role'] === 'admin';
+  const session = await auth();
+  const user = session?.user;
+  const isEmployer = user?.role === 'employer' || user?.role === 'admin';
 
   const subscriptionTiers = PAID_TIERS.map((id) =>
     getPlatformSettingDefault(getEmployerSubscriptionSettingKey(id)) as EmployerSubscriptionTierSetting
@@ -80,7 +79,6 @@ export default async function PricingPage() {
               <PricingCheckoutButton
                 tier={tier.id as Exclude<EmployerSubscriptionTierId, 'free'>}
                 highlight={tier.highlight}
-                token={token}
               />
             ) : (
               <Link

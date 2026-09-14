@@ -39,7 +39,7 @@ const APP_STATUS_COLOURS: Record<string, string> = {
   rejected: 'red',
 };
 
-export function UserEditForm({ user, token }: { user: UserData; token: string | undefined }) {
+export function UserEditForm({ user }: { user: UserData }) {
   const router = useRouter();
   const [role, setRole] = useState(user.role);
   const [saving, setSaving] = useState(false);
@@ -49,7 +49,6 @@ export function UserEditForm({ user, token }: { user: UserData; token: string | 
     setSaving(true);
     await apiFetch(`/admin/users/${user.id}`, {
       method: 'PATCH',
-      token,
       body: JSON.stringify({ role }),
     }).catch(() => null);
     setSaving(false);

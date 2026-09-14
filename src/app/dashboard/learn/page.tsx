@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { findEnrollmentsByUser } from '@/lib/services/enrollments.service';
 import { findCertificatesByUser } from '@/lib/services/certificates.service';
 import { getCpdSummary } from '@/lib/services/cpd.service';
@@ -50,13 +50,9 @@ interface CpdSummary {
 }
 
 export default async function LearnDashboardPage() {
-  const supabase = createClient();
-  const [{ data: { user } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login?redirectTo=/dashboard/learn');
-  const token = session?.access_token;
 
   const [rawEnrolls, rawCerts, cpdSummary] = await Promise.all([
     findEnrollmentsByUser(user.id).catch(() => []),
@@ -110,7 +106,6 @@ export default async function LearnDashboardPage() {
         enrollments={enrollments}
         certificates={certificates}
         cpdSummary={cpdSummary}
-        token={token}
       />
     </Container>
   );

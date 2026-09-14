@@ -1,29 +1,29 @@
 'use client';
 
 import { useState } from 'react';
+import { apiFetch } from '@/lib/api';
 
 interface Props {
   tier: 'starter' | 'pro' | 'enterprise';
   highlight: boolean;
-  token?: string;
 }
 
-export function PricingCheckoutButton({ tier, highlight, token }: Props) {
+export function PricingCheckoutButton({ tier, highlight }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function checkout() {
-    if (!token) { window.location.href = '/auth/login?redirectTo=/employers/pricing'; return; }
     setLoading(true); setError(null);
-    const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-    const res = await fetch(`${apiUrl}/api/v1/payments/employer-subscription-checkout`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ tier }),
-    });
-    if (!res.ok) { setError('Could not start checkout. Please try again.'); setLoading(false); return; }
-    const { url } = await res.json() as { url: string };
-    if (url) window.location.href = url;
+    try {
+      const { url } = await apiFetch<{ url: string }>('/payments/employer-subscription-checkout', {
+        method: 'POST',
+        body: JSON.stringify({ tier }),
+      });
+      if (url) window.location.href = url;
+    } catch {
+      setError('Could not start checkout. Please try again.');
+      setLoading(false);
+    }
   }
 
   return (

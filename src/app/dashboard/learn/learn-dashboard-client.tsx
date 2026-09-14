@@ -22,6 +22,7 @@ import {
 } from '@mantine/core';
 import { BookOpen, GraduationCap } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { apiFetch } from '@/lib/api';
 
 interface Enrollment {
   id: string;
@@ -61,7 +62,6 @@ interface Props {
   enrollments: Enrollment[];
   certificates: Certificate[];
   cpdSummary: CpdSummary | null;
-  token: string | undefined;
 }
 
 const LEVEL_COLOURS: Record<string, string> = {
@@ -137,7 +137,7 @@ function EmptyState({ children, action }: { children: string; action?: ReactNode
   );
 }
 
-export function LearnDashboardClient({ enrollments, certificates, cpdSummary, token }: Props) {
+export function LearnDashboardClient({ enrollments, certificates, cpdSummary }: Props) {
   const [tab, setTab] = useState<string | null>('in-progress');
   const [showManualCpd, setShowManualCpd] = useState(false);
   const [manualHours, setManualHours] = useState<string | number>('');
@@ -148,12 +148,8 @@ export function LearnDashboardClient({ enrollments, certificates, cpdSummary, to
 
   async function submitManualCpd() {
     if (!manualHours || !manualDescription) return;
-    const supabase = (await import('@/lib/supabase/client')).createClient();
-    const { data } = await supabase.auth.getSession();
-    const t = data.session?.access_token ?? token;
-    await (await import('@/lib/api')).apiFetch('/learn/cpd/manual', {
+    await apiFetch('/learn/cpd/my', {
       method: 'POST',
-      token: t,
       body: JSON.stringify({ hours: Number(manualHours), activityDescription: manualDescription }),
     });
     setShowManualCpd(false);

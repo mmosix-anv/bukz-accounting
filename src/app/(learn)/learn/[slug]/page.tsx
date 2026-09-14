@@ -2,7 +2,7 @@ import { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { findCourseBySlug } from '@/lib/services/courses.service';
 import { CourseDetailClient } from './course-detail-client';
 
@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CourseDetailPage({ params }: Props) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
   let raw: Awaited<ReturnType<typeof getCourse>>;
   try {

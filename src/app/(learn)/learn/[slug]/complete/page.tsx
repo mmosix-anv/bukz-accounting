@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { findCourseBySlug } from '@/lib/services/courses.service';
 import { getCourseProgress } from '@/lib/services/progress.service';
 import { findCertificatesByUser } from '@/lib/services/certificates.service';
@@ -11,8 +11,8 @@ export const metadata: Metadata = { title: 'Course Complete! | BUKZ Learn' };
 
 export default async function CourseCompletePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect(`/auth/login?redirectTo=/learn/${slug}/complete`);
 
   const course = await findCourseBySlug(slug, user.id).catch(() => null);
@@ -25,8 +25,6 @@ export default async function CourseCompletePage({ params }: { params: Promise<{
 
   const certs = await findCertificatesByUser(user.id);
   const cert = certs.find((c) => c.courseId === course.id);
-
-  const API_URL = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0f2a2e] to-[#1a3f44]">
@@ -63,7 +61,7 @@ export default async function CourseCompletePage({ params }: { params: Promise<{
             </p>
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <a
-                href={`${API_URL}/api/v1/learn/certificates/${cert.id}/download`}
+                href={`/api/v1/learn/certificates/${cert.id}/pdf`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#0f2a2e] transition-colors hover:bg-slate-100"
@@ -72,7 +70,7 @@ export default async function CourseCompletePage({ params }: { params: Promise<{
                 Download PDF
               </a>
               <a
-                href={`${API_URL}/api/v1/learn/certificates/${cert.id}/verify`}
+                href={`/api/v1/learn/certificates/${cert.id}/verify`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"

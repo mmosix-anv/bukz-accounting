@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
+import { auth } from '@/auth';
 import { enrolInCourse } from '@/lib/services/enrollments.service';
 import { createCourseCheckout } from '@/lib/services/payments.service';
 import { db } from '@/lib/db';
@@ -12,18 +12,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/learn', req.url));
   }
 
-  const supabase = createServerClient(
-    process.env['NEXT_PUBLIC_SUPABASE_URL']!,
-    process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!,
-    {
-      cookies: {
-        getAll: () => req.cookies.getAll().map((c) => ({ name: c.name, value: c.value })),
-        setAll: () => {},
-      },
-    },
-  );
-
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) {
     return NextResponse.redirect(new URL(`/auth/login?redirectTo=/learn`, req.url));
   }
@@ -45,9 +35,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const session = await createCourseCheckout(user.id, courseId, user.email);
-    if (session.url) {
-      return NextResponse.redirect(session.url);
+    const checkoutSession = await createCourseCheckout(user.id, courseId, user.email ?? undefined);
+    if (checkoutSession.url) {
+      return NextResponse.redirect(checkoutSession.url);
     }
     return NextResponse.redirect(new URL(`/learn/${course.slug}?error=checkout_failed`, req.url));
   } catch {

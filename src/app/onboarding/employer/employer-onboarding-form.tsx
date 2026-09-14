@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { OnboardingProgress } from '@/components/onboarding/progress-bar';
 import { Alert, Button, Group, Radio, SimpleGrid, Stack, Text, TextInput } from '@mantine/core';
 import { apiFetch } from '@/lib/api';
-import { createClient } from '@/lib/supabase/client';
 
 const STEPS = ['Company details', 'Sector & size'];
 
@@ -49,11 +48,8 @@ export function EmployerOnboardingForm() {
     setSaving(true);
     setSaveError(null);
     try {
-      const supabase = createClient();
-      const { data: { session } } = await supabase.auth.getSession();
       await apiFetch('/jobs/employers/me', {
         method: 'PATCH',
-        token: session?.access_token,
         body: JSON.stringify({
           companyName: step1Data?.companyName,
           websiteUrl: step1Data?.website || undefined,

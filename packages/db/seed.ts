@@ -2,7 +2,8 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { createClient } from '@supabase/supabase-js';
+import { eq } from 'drizzle-orm';
+import bcrypt from 'bcryptjs';
 import * as schema from './src/schema/index';
 
 // ── Env loading (same as drizzle.config.ts) ────────────────────────────────
@@ -36,58 +37,37 @@ loadEnv(resolve(root, '.env.local'), resolve(root, '.env'));
 const client = postgres(process.env['DATABASE_URL']!);
 const db = drizzle(client, { schema });
 
-const supabaseAdmin = createClient(
-  process.env['NEXT_PUBLIC_SUPABASE_URL']!,
-  process.env['SUPABASE_SERVICE_ROLE_KEY']!,
-  { auth: { autoRefreshToken: false, persistSession: false } },
-);
-
 // ── Helpers ──────────────────────────────────────────────────────────────────
-async function createAuthUser(email: string, password: string, name: string, role: string) {
-  const { data, error } = await supabaseAdmin.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true,
-    user_metadata: { name, role },
-  });
-
-  if (error) {
-    if (error.message.includes('already been registered') || error.message.includes('already exists')) {
-      const { data: existing } = await supabaseAdmin.auth.admin.listUsers();
-      const user = existing?.users.find(u => u.email === email);
-      if (user) {
-        console.log(`  ↩  ${email} already exists (${user.id})`);
-        return user.id;
-      }
-    }
-    throw new Error(`Failed to create ${email}: ${error.message}`);
+async function upsertUser(email: string, password: string, name: string, role: 'candidate' | 'employer' | 'instructor' | 'admin') {
+  const [existing] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, email)).limit(1);
+  if (existing) {
+    console.log(`  ↩  ${email} already exists (${existing.id})`);
+    return existing.id;
   }
 
-  console.log(`  ✓  Created auth user: ${email} (${data.user.id})`);
-  return data.user.id;
+  const passwordHash = await bcrypt.hash(password, 12);
+  const [created] = await db.insert(schema.users).values({
+    email, name, role, passwordHash, emailVerified: new Date(),
+  }).returning({ id: schema.users.id });
+
+  console.log(`  ✓  Created user: ${email} (${created!.id})`);
+  return created!.id;
 }
 
 // ── Seed ─────────────────────────────────────────────────────────────────────
 async function seed() {
   console.log('\n🌱 Seeding BUKZ database...\n');
 
-  // ── 1. Auth users ──────────────────────────────────────────────────────
-  console.log('👤 Creating users in Supabase Auth...');
+  // ── 1. Users ─────────────────────────────────────────────────────────────
+  console.log('👤 Creating users...');
 
-  const adminId = await createAuthUser('admin@bukz.com', 'Admin1234!', 'Platform Admin', 'admin');
-  const employerId = await createAuthUser('employer@acmecorp.com', 'Test1234!', 'ACME Corp', 'employer');
-  const instructorId = await createAuthUser('instructor@bukz.com', 'Test1234!', 'James Richardson', 'instructor');
-  const candidateId = await createAuthUser('candidate@example.com', 'Test1234!', 'Sarah Johnson', 'candidate');
+  const adminId = await upsertUser('admin@bukz.com', 'Admin1234!', 'Platform Admin', 'admin');
+  const employerId = await upsertUser('employer@acmecorp.com', 'Test1234!', 'ACME Corp', 'employer');
+  const instructorId = await upsertUser('instructor@bukz.com', 'Test1234!', 'James Richardson', 'instructor');
+  const candidateId = await upsertUser('candidate@example.com', 'Test1234!', 'Sarah Johnson', 'candidate');
 
-  // ── 2. Users table ─────────────────────────────────────────────────────
-  console.log('\n🗄️  Inserting users into DB...');
-
-  await db.insert(schema.users).values([
-    { id: adminId, email: 'admin@bukz.com', name: 'Platform Admin', role: 'admin' },
-    { id: employerId, email: 'employer@acmecorp.com', name: 'ACME Corp', role: 'employer' },
-    { id: instructorId, email: 'instructor@bukz.com', name: 'James Richardson', role: 'instructor' },
-    { id: candidateId, email: 'candidate@example.com', name: 'Sarah Johnson', role: 'candidate' },
-  ]).onConflictDoNothing();
+  // ── 2. Profiles ─────────────────────────────────────────────────────────
+  console.log('\n🗄️  Inserting profiles into DB...');
 
   await db.insert(schema.profiles).values([
     { userId: adminId, bio: 'Platform administrator', location: 'London, UK' },

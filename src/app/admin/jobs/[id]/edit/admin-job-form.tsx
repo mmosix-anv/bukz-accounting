@@ -22,7 +22,7 @@ interface JobData {
   expiresAt: string | null;
 }
 
-export function AdminJobForm({ job, token }: { job: JobData; token: string | undefined }) {
+export function AdminJobForm({ job }: { job: JobData }) {
   const router = useRouter();
   const [form, setForm] = useState({
     title: job.title,
@@ -48,7 +48,6 @@ export function AdminJobForm({ job, token }: { job: JobData; token: string | und
     setSaving(true);
     await apiFetch(`/admin/jobs/${job.id}`, {
       method: 'PATCH',
-      token,
       body: JSON.stringify({
         title: form.title,
         description: form.description,
@@ -70,7 +69,7 @@ export function AdminJobForm({ job, token }: { job: JobData; token: string | und
   async function handleDelete() {
     if (!confirm('Permanently delete this job listing?')) return;
     setDeleting(true);
-    await apiFetch(`/admin/jobs/${job.id}`, { method: 'DELETE', token }).catch(() => null);
+    await apiFetch(`/admin/jobs/${job.id}`, { method: 'DELETE' }).catch(() => null);
     setDeleting(false);
     router.push('/admin/jobs');
   }

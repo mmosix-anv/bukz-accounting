@@ -4,7 +4,7 @@ import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export function DeleteJobButton({ jobId, token }: { jobId: string; token?: string }) {
+export function DeleteJobButton({ jobId }: { jobId: string }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
 
@@ -12,10 +12,7 @@ export function DeleteJobButton({ jobId, token }: { jobId: string; token?: strin
     if (!confirm('Permanently delete this job listing?')) return;
     setPending(true);
     try {
-      await fetch(`/api/v1/admin/jobs/${jobId}`, {
-        method: 'DELETE',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      await fetch(`/api/v1/admin/jobs/${jobId}`, { method: 'DELETE' });
       router.refresh();
     } finally {
       setPending(false);

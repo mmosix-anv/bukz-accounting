@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Alert, Button, Group, Modal, Stack, Text, Textarea } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { createClient } from '@/lib/supabase/client';
 import { apiFetch } from '@/lib/api';
 
 const schema = z.object({
@@ -31,15 +30,9 @@ export function ApplyModal({ jobId, jobTitle }: Props) {
 
   async function onSubmit(values: FormValues) {
     setServerError(null);
-    const supabase = createClient();
-    const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
-    if (!token) { setServerError('Please log in again'); return; }
-
     try {
       await apiFetch('/jobs/applications', {
         method: 'POST',
-        token,
         body: JSON.stringify({ jobId, coverLetter: values.coverLetter }),
       });
       setSuccess(true);

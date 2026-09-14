@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { Card } from '@bukz/ui';
 import { Eye, Calendar } from 'lucide-react';
 import { getAdminArticles, getAdminArticlesCount } from '@/lib/services/admin.service';
+import { DeleteArticleButton } from './delete-article-button';
 
 export const metadata: Metadata = { title: 'Admin - Articles' };
 
@@ -17,10 +18,10 @@ export default async function AdminArticlesPage({
 }: {
   searchParams: Promise<{ status?: string; page?: string }>;
 }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
@@ -113,6 +114,7 @@ export default async function AdminArticlesPage({
                       <a href={`/admin/articles/${article.id}/edit`} className="text-sm font-medium text-slate-500 hover:text-primary">
                         Edit
                       </a>
+                      <DeleteArticleButton articleId={article.id} />
                     </div>
                   </td>
                 </tr>

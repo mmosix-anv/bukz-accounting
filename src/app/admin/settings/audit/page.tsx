@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { settingsAuditLog } from '@bukz/db';
@@ -23,10 +23,10 @@ export default async function AdminSettingsAuditPage({
 }: {
   searchParams: Record<string, string | undefined>;
 }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 

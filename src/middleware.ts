@@ -1,5 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import NextAuth from 'next-auth';
+import { NextResponse, type NextRequest, type NextMiddleware } from 'next/server';
+import { authConfig } from '@/auth.config';
 
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const WINDOW_MS = 60 * 1000;
@@ -23,43 +24,22 @@ function applyRateLimit(request: NextRequest) {
   return true;
 }
 
-export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith('/api/')) {
+const { auth } = NextAuth(authConfig);
+
+const middleware: NextMiddleware = auth((request) => {
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname.startsWith('/api/')) {
     if (!applyRateLimit(request)) {
       return NextResponse.json({ message: 'Too Many Requests' }, { status: 429 });
     }
   }
 
-  let response = NextResponse.next({ request });
-
-  const supabase = createServerClient(
-    process.env['NEXT_PUBLIC_SUPABASE_URL']!,
-    process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options),
-          );
-        },
-      },
-    },
-  );
-
-  const { data: { user } } = await supabase.auth.getUser();
-  const pathname = request.nextUrl.pathname;
-
+  const session = request.auth;
   const protectedPrefixes = ['/dashboard', '/employers', '/onboarding'];
   const adminPrefix = '/admin';
 
-  if (!user && protectedPrefixes.some((p) => pathname.startsWith(p))) {
+  if (!session?.user && protectedPrefixes.some((p) => pathname.startsWith(p))) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = '/auth/login';
     redirectUrl.searchParams.set('redirectTo', pathname);
@@ -67,20 +47,21 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith(adminPrefix)) {
-    if (!user) {
+    if (!session?.user) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = '/auth/login';
       redirectUrl.searchParams.set('redirectTo', pathname);
       return NextResponse.redirect(redirectUrl);
     }
-    const role = user.user_metadata?.['role'];
-    if (role !== 'admin') {
+    if (session.user.role !== 'admin') {
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
   }
 
-  return response;
-}
+  return NextResponse.next();
+}) as unknown as NextMiddleware;
+
+export default middleware;
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|api/webhooks).*)'],

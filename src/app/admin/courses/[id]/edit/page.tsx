@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect, notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { CourseForm } from '../../course-form';
 import { findCourseById, getCourseCategories, updateCourse } from '@/lib/services/courses.service';
 import { db } from '@/lib/db';
@@ -15,10 +15,10 @@ interface EditCoursePageProps {
 
 export default async function EditCoursePage({ params }: EditCoursePageProps) {
   const { id } = await params;
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
@@ -33,10 +33,10 @@ export default async function EditCoursePage({ params }: EditCoursePageProps) {
 
     async function handleSubmit(formData: unknown) {
       'use server';
-      
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user || user.user_metadata?.['role'] !== 'admin') {
+
+      const session = await auth();
+      const user = session?.user;
+      if (!user || user.role !== 'admin') {
         return { error: 'Unauthorized' };
       }
 

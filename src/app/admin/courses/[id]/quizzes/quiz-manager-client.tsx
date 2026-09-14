@@ -29,17 +29,18 @@ const emptyQForm = () => ({
   options: [{ optionText: '', isCorrect: false }, { optionText: '', isCorrect: false }],
 });
 
-export function QuizManagerClient({ courseId, quizzes, token }: { courseId: string; quizzes: Quiz[]; token: string | undefined }) {
+export function QuizManagerClient({ courseId, quizzes }: { courseId: string; quizzes: Quiz[] }) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [addingTo, setAddingTo] = useState<string | null>(null);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
   const [qForm, setQForm] = useState(emptyQForm());
 
   async function createQuiz() {
     if (!newTitle.trim()) return;
     setCreating(true);
-    await apiFetch(`/learn/courses/${courseId}/quizzes`, { method: 'POST', token, body: JSON.stringify({ title: newTitle }) }).catch(() => null);
+    await apiFetch(`/learn/courses/${courseId}/quizzes`, { method: 'POST', body: JSON.stringify({ title: newTitle }) }).catch(() => null);
     setCreating(false);
     setNewTitle('');
     router.refresh();
@@ -47,39 +48,62 @@ export function QuizManagerClient({ courseId, quizzes, token }: { courseId: stri
 
   async function togglePublish(quiz: Quiz) {
     if (!quiz.isPublished) {
-      await apiFetch(`/learn/quizzes/${quiz.id}/publish`, { method: 'POST', token }).catch(() => null);
+      await apiFetch(`/learn/quizzes/${quiz.id}/publish`, { method: 'POST' }).catch(() => null);
     } else {
-      await apiFetch(`/learn/quizzes/${quiz.id}`, { method: 'PATCH', token, body: JSON.stringify({ isPublished: false }) }).catch(() => null);
+      await apiFetch(`/learn/quizzes/${quiz.id}`, { method: 'PATCH', body: JSON.stringify({ isPublished: false }) }).catch(() => null);
     }
     router.refresh();
   }
 
   async function deleteQuiz(quizId: string) {
     if (!confirm('Delete this quiz and all its questions?')) return;
-    await apiFetch(`/learn/quizzes/${quizId}`, { method: 'DELETE', token }).catch(() => null);
+    await apiFetch(`/learn/quizzes/${quizId}`, { method: 'DELETE' }).catch(() => null);
     router.refresh();
   }
 
   async function deleteQuestion(questionId: string) {
-    await apiFetch(`/learn/quizzes/_/questions/${questionId}`, { method: 'DELETE', token }).catch(() => null);
+    await apiFetch(`/learn/quizzes/_/questions/${questionId}`, { method: 'DELETE' }).catch(() => null);
     router.refresh();
   }
 
   async function submitQuestion(quizId: string) {
     if (!qForm.questionText.trim()) return;
-    await apiFetch(`/learn/quizzes/${quizId}/questions`, {
-      method: 'POST', token,
-      body: JSON.stringify({
-        questionText: qForm.questionText,
-        questionType: qForm.questionType,
-        points: qForm.points,
-        explanation: qForm.explanation || undefined,
-        options: qForm.options.filter((o) => o.optionText.trim()),
-      }),
-    }).catch(() => null);
+    const body = JSON.stringify({
+      questionText: qForm.questionText,
+      questionType: qForm.questionType,
+      points: qForm.points,
+      explanation: qForm.explanation || undefined,
+      options: qForm.options.filter((o) => o.optionText.trim()),
+    });
+    if (editingQuestionId) {
+      await apiFetch(`/learn/quizzes/${quizId}/questions/${editingQuestionId}`, { method: 'PATCH', body }).catch(() => null);
+    } else {
+      await apiFetch(`/learn/quizzes/${quizId}/questions`, { method: 'POST', body }).catch(() => null);
+    }
     setAddingTo(null);
+    setEditingQuestionId(null);
     setQForm(emptyQForm());
     router.refresh();
+  }
+
+  function startEditQuestion(quizId: string, question: Question) {
+    setQForm({
+      questionText: question.questionText,
+      questionType: question.questionType,
+      points: question.points,
+      explanation: question.explanation ?? '',
+      options: question.options.length > 0
+        ? question.options.map((o) => ({ optionText: o.optionText, isCorrect: o.isCorrect }))
+        : [{ optionText: '', isCorrect: false }, { optionText: '', isCorrect: false }],
+    });
+    setEditingQuestionId(question.id);
+    setAddingTo(quizId);
+  }
+
+  function cancelQuestionForm() {
+    setAddingTo(null);
+    setEditingQuestionId(null);
+    setQForm(emptyQForm());
   }
 
   function updateOption(idx: number, field: 'optionText' | 'isCorrect', value: string | boolean) {
@@ -140,6 +164,7 @@ export function QuizManagerClient({ courseId, quizzes, token }: { courseId: stri
                       ))}
                       {q.explanation && <Text size="xs" c="dimmed" mt="xs">Explanation: {q.explanation}</Text>}
                       <Group justify="flex-end">
+                        <Button size="xs" variant="subtle" onClick={() => startEditQuestion(quiz.id, q)}>Edit</Button>
                         <Button size="xs" color="red" variant="subtle" onClick={() => void deleteQuestion(q.id)}>Delete</Button>
                       </Group>
                     </Stack>
@@ -152,6 +177,7 @@ export function QuizManagerClient({ courseId, quizzes, token }: { courseId: stri
           {addingTo === quiz.id ? (
             <Card withBorder radius="md" p="md" bg="slate.0">
               <Stack gap="sm">
+                <Text size="sm" fw={600}>{editingQuestionId ? 'Edit question' : 'New question'}</Text>
                 <Textarea label="Question" value={qForm.questionText} onChange={(e) => setQForm((p) => ({ ...p, questionText: e.currentTarget.value }))} required autosize minRows={2} />
                 <Group grow>
                   <Select label="Type" value={qForm.questionType} onChange={(v) => setQForm((p) => ({ ...p, questionType: v ?? 'multiple_choice' }))} data={[{ value: 'multiple_choice', label: 'Multiple Choice' }, { value: 'true_false', label: 'True / False' }, { value: 'multi_select', label: 'Multi Select' }]} />
@@ -172,8 +198,8 @@ export function QuizManagerClient({ courseId, quizzes, token }: { courseId: stri
                   Add option
                 </Button>
                 <Group justify="flex-end">
-                  <Button variant="default" size="sm" onClick={() => { setAddingTo(null); setQForm(emptyQForm()); }}>Cancel</Button>
-                  <Button size="sm" onClick={() => void submitQuestion(quiz.id)}>Save Question</Button>
+                  <Button variant="default" size="sm" onClick={cancelQuestionForm}>Cancel</Button>
+                  <Button size="sm" onClick={() => void submitQuestion(quiz.id)}>{editingQuestionId ? 'Save changes' : 'Save Question'}</Button>
                 </Group>
               </Stack>
             </Card>

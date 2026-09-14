@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { getCourseCategories } from '@/lib/services/courses.service';
 import { db } from '@/lib/db';
 import { courseCategories } from '@bukz/db';
 import { eq } from 'drizzle-orm';
+import { ConfirmDeleteButton } from '@/app/admin/confirm-delete-button';
 import { Button, Paper, Stack, Title, Text, Group } from '@mantine/core';
 import { Plus, Trash2, ArrowLeft } from 'lucide-react';
 
@@ -14,9 +15,9 @@ export const metadata: Metadata = { title: 'Course Categories | Admin' };
 async function createCategoryAction(formData: FormData) {
   'use server';
   
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
     throw new Error('Unauthorized');
   }
 
@@ -31,12 +32,32 @@ async function createCategoryAction(formData: FormData) {
   redirect('/admin/courses/categories');
 }
 
+async function updateCategoryAction(id: string, formData: FormData) {
+  'use server';
+
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  const name = formData.get('name') as string;
+  const slug = formData.get('slug') as string;
+
+  await db.update(courseCategories).set({
+    name,
+    slug: slug.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+  }).where(eq(courseCategories.id, id));
+
+  redirect('/admin/courses/categories');
+}
+
 async function deleteCategoryAction(id: string) {
   'use server';
-  
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
     throw new Error('Unauthorized');
   }
 
@@ -45,10 +66,10 @@ async function deleteCategoryAction(id: string) {
 }
 
 export default async function CourseCategoriesPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
@@ -132,22 +153,47 @@ export default async function CourseCategoriesPage() {
                       </Text>
                     </div>
                   </Group>
-                  <form action={deleteCategoryAction.bind(null, category.id)}>
-                    <Button
-                      type="submit"
-                      variant="subtle"
-                      color="red"
-                      size="xs"
-                      leftSection={<Trash2 size={14} />}
-                      onClick={(e) => {
-                        if (!confirm('Delete this category?')) {
-                          e.preventDefault();
-                        }
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </form>
+                  <Group gap="sm">
+                    <details>
+                      <summary className="cursor-pointer text-xs font-medium text-[#2cd7f2] hover:underline">
+                        Edit
+                      </summary>
+                      <form action={updateCategoryAction.bind(null, category.id)} className="mt-3">
+                        <Group gap="xs" align="flex-end">
+                          <div className="flex-1">
+                            <label className="mb-1 block text-xs font-medium text-slate-700">
+                              Category Name
+                            </label>
+                            <input
+                              type="text"
+                              name="name"
+                              defaultValue={category.name}
+                              required
+                              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2cd7f2] focus:outline-none"
+                            />
+                          </div>
+                          <div className="w-40">
+                            <label className="mb-1 block text-xs font-medium text-slate-700">
+                              Slug
+                            </label>
+                            <input
+                              type="text"
+                              name="slug"
+                              defaultValue={category.slug}
+                              required
+                              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2cd7f2] focus:outline-none"
+                            />
+                          </div>
+                          <Button type="submit" size="sm">
+                            Save
+                          </Button>
+                        </Group>
+                      </form>
+                    </details>
+                    <form action={deleteCategoryAction.bind(null, category.id)}>
+                      <ConfirmDeleteButton confirmMessage="Delete this category?" />
+                    </form>
+                  </Group>
                 </Group>
               </Paper>
             ))}

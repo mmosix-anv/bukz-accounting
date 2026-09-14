@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@supabase/supabase-js';
 import {
   getEmployerSubscriptionSettingKey,
   getJobPostingPackageSettingKey,
@@ -14,6 +13,10 @@ import {
   enrollments,
   courses,
   payments as paymentsTable,
+  users,
+  employerSubscriptions,
+  notifications,
+  platformSettings,
 } from '@bukz/db';
 import { db } from '@/lib/db';
 import { eq, and, sql } from 'drizzle-orm';
@@ -24,134 +27,81 @@ function getStripeClient() {
   return new Stripe(key);
 }
 
-function getSupabaseClient() {
-  return createClient(
-    process.env['NEXT_PUBLIC_SUPABASE_URL'] ?? '',
-    process.env['SUPABASE_SERVICE_ROLE_KEY'] ?? '',
-  );
+async function getUserByCustomerId(customerId: string) {
+  const [user] = await db.select({ id: users.id }).from(users).where(eq(users.stripeCustomerId, customerId)).limit(1);
+  return user ?? null;
 }
 
-async function getUserByCustomerId(supabase: ReturnType<typeof getSupabaseClient>, customerId: string) {
-  const { data } = await supabase.from('users').select('id').eq('stripe_customer_id', customerId).limit(1);
-  return data?.[0] ?? null;
-}
+async function getPlatformSetting<K extends PlatformSettingKey>(key: K) {
+  const [row] = await db.select({ value: platformSettings.value }).from(platformSettings).where(eq(platformSettings.key, key)).limit(1);
 
-async function getPlatformSetting<K extends PlatformSettingKey>(
-  supabase: ReturnType<typeof getSupabaseClient>,
-  key: K,
-) {
-  const { data } = await supabase
-    .from('platform_settings')
-    .select('value')
-    .eq('key', key)
-    .limit(1);
-
-  const rawValue = data?.[0]?.value;
-  if (rawValue === undefined) {
+  if (row === undefined) {
     return getPlatformSettingDefault(key);
   }
 
   try {
-    return parsePlatformSettingValue(key, rawValue);
+    return parsePlatformSettingValue(key, row.value);
   } catch {
     return getPlatformSettingDefault(key);
   }
 }
 
-async function getEmployerTierConfig(
-  supabase: ReturnType<typeof getSupabaseClient>,
-  tier: EmployerSubscriptionTierId,
-): Promise<EmployerSubscriptionTierSetting> {
-  return await getPlatformSetting(
-    supabase,
-    getEmployerSubscriptionSettingKey(tier),
-  ) as EmployerSubscriptionTierSetting;
+async function getEmployerTierConfig(tier: EmployerSubscriptionTierId): Promise<EmployerSubscriptionTierSetting> {
+  return await getPlatformSetting(getEmployerSubscriptionSettingKey(tier)) as EmployerSubscriptionTierSetting;
 }
 
-async function getJobPackageConfig(
-  supabase: ReturnType<typeof getSupabaseClient>,
-  packageType: JobPostingPackageId,
-): Promise<JobPostingPackageSetting> {
-  return await getPlatformSetting(
-    supabase,
-    getJobPostingPackageSettingKey(packageType),
-  ) as JobPostingPackageSetting;
+async function getJobPackageConfig(packageType: JobPostingPackageId): Promise<JobPostingPackageSetting> {
+  return await getPlatformSetting(getJobPostingPackageSettingKey(packageType)) as JobPostingPackageSetting;
 }
 
-async function persistStripeCustomerId(
-  supabase: ReturnType<typeof getSupabaseClient>,
-  userId: string,
-  customerId: string,
-) {
-  await supabase
-    .from('users')
-    .update({ stripe_customer_id: customerId })
-    .eq('id', userId);
+async function persistStripeCustomerId(userId: string, customerId: string) {
+  await db.update(users).set({ stripeCustomerId: customerId }).where(eq(users.id, userId));
 }
 
-async function getExistingEmployerSubscription(
-  supabase: ReturnType<typeof getSupabaseClient>,
-  userId: string,
-) {
-  const { data } = await supabase
-    .from('employer_subscriptions')
-    .select('tier')
-    .eq('user_id', userId)
-    .limit(1);
-
-  return data?.[0] ?? null;
+async function getExistingEmployerSubscription(userId: string) {
+  const [row] = await db.select({ id: employerSubscriptions.id, tier: employerSubscriptions.tier, activeListingsLimit: employerSubscriptions.activeListingsLimit })
+    .from(employerSubscriptions).where(eq(employerSubscriptions.userId, userId)).limit(1);
+  return row ?? null;
 }
 
 async function upsertEmployerSubscription(
-  supabase: ReturnType<typeof getSupabaseClient>,
   userId: string,
   tier: EmployerSubscriptionTierId,
   subscriptionId: string,
   currentPeriodEnd: Date,
   status: string,
 ) {
-  const tierConfig = await getEmployerTierConfig(supabase, tier);
-  const { data: existing } = await supabase
-    .from('employer_subscriptions')
-    .select('id')
-    .eq('user_id', userId)
-    .limit(1);
+  const tierConfig = await getEmployerTierConfig(tier);
+  const existing = await getExistingEmployerSubscription(userId);
 
-  if (existing?.[0]) {
-    await supabase
-      .from('employer_subscriptions')
-      .update({
-        tier,
-        stripe_subscription_id: subscriptionId,
-        current_period_end: currentPeriodEnd.toISOString(),
-        status,
-        active_listings_limit: tierConfig.listings,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('user_id', userId);
-  } else {
-    await supabase.from('employer_subscriptions').insert({
-      user_id: userId,
+  if (existing) {
+    await db.update(employerSubscriptions).set({
       tier,
-      stripe_subscription_id: subscriptionId,
-      current_period_end: currentPeriodEnd.toISOString(),
+      stripeSubscriptionId: subscriptionId,
+      currentPeriodEnd,
       status,
-      active_listings_limit: tierConfig.listings,
+      activeListingsLimit: tierConfig.listings,
+      updatedAt: new Date(),
+    }).where(eq(employerSubscriptions.userId, userId));
+  } else {
+    await db.insert(employerSubscriptions).values({
+      userId,
+      tier,
+      stripeSubscriptionId: subscriptionId,
+      currentPeriodEnd,
+      status,
+      activeListingsLimit: tierConfig.listings,
     });
   }
 }
 
-async function resolveSubscriptionTier(
-  supabase: ReturnType<typeof getSupabaseClient>,
-  userId: string,
-  subscription: Stripe.Subscription,
-): Promise<EmployerSubscriptionTierId> {
+async function resolveSubscriptionTier(userId: string, subscription: Stripe.Subscription): Promise<EmployerSubscriptionTierId> {
   const metadataTier = subscription.metadata?.['tier'];
   if (metadataTier === 'free' || metadataTier === 'starter' || metadataTier === 'pro' || metadataTier === 'enterprise') {
     return metadataTier;
   }
 
-  const existing = await getExistingEmployerSubscription(supabase, userId);
+  const existing = await getExistingEmployerSubscription(userId);
   const existingTier = existing?.tier;
   if (existingTier === 'free' || existingTier === 'starter' || existingTier === 'pro' || existingTier === 'enterprise') {
     return existingTier;
@@ -169,7 +119,6 @@ export async function POST(request: Request) {
   }
 
   const stripe = getStripeClient();
-  const supabase = getSupabaseClient();
 
   let event: Stripe.Event;
   try {
@@ -186,7 +135,7 @@ export async function POST(request: Request) {
       if (session.customer && typeof session.customer === 'string') {
         const ownerId = metadata?.['userId'] ?? metadata?.['employerId'];
         if (ownerId) {
-          await persistStripeCustomerId(supabase, ownerId, session.customer);
+          await persistStripeCustomerId(ownerId, session.customer);
         }
       }
 
@@ -235,15 +184,14 @@ export async function POST(request: Request) {
         if (subscriptionId && userId) {
           const sub = await stripe.subscriptions.retrieve(subscriptionId);
           await upsertEmployerSubscription(
-            supabase,
             userId,
             tier,
             subscriptionId,
             new Date(sub.current_period_end * 1000),
             'active',
           );
-          await supabase.from('notifications').insert({
-            user_id: userId,
+          await db.insert(notifications).values({
+            userId,
             type: 'subscription_activated',
             title: 'Subscription activated',
             body: `Your ${tier.charAt(0).toUpperCase() + tier.slice(1)} plan is now active. You can post jobs immediately.`,
@@ -257,42 +205,32 @@ export async function POST(request: Request) {
         const employerId = metadata['employerId'];
         const packageType = metadata['packageType'] as JobPostingPackageId;
         const paymentIntentId = session.payment_intent as string;
-        const { data: existingPayment } = await supabase
-          .from('payments')
-          .select('id')
-          .eq('stripe_payment_intent_id', paymentIntentId)
-          .limit(1);
+        const [existingPayment] = await db.select({ id: paymentsTable.id }).from(paymentsTable)
+          .where(eq(paymentsTable.stripePaymentIntentId, paymentIntentId)).limit(1);
 
-        if (!existingPayment?.[0]) {
-          const packageConfig = await getJobPackageConfig(supabase, packageType);
-          const { data: subscriptionRows } = await supabase
-            .from('employer_subscriptions')
-            .select('id, active_listings_limit')
-            .eq('user_id', employerId)
-            .limit(1);
+        if (!existingPayment) {
+          const packageConfig = await getJobPackageConfig(packageType);
+          const existingSubscription = await getExistingEmployerSubscription(employerId);
 
-          if (subscriptionRows?.[0]) {
-            await supabase
-              .from('employer_subscriptions')
-              .update({
-                active_listings_limit: (subscriptionRows[0].active_listings_limit ?? 0) + packageConfig.listingCount,
-                updated_at: new Date().toISOString(),
-              })
-              .eq('user_id', employerId);
+          if (existingSubscription) {
+            await db.update(employerSubscriptions).set({
+              activeListingsLimit: (existingSubscription.activeListingsLimit ?? 0) + packageConfig.listingCount,
+              updatedAt: new Date(),
+            }).where(eq(employerSubscriptions.userId, employerId));
           } else {
-            const freeTier = await getEmployerTierConfig(supabase, 'free');
-            await supabase.from('employer_subscriptions').insert({
-              user_id: employerId,
+            const freeTier = await getEmployerTierConfig('free');
+            await db.insert(employerSubscriptions).values({
+              userId: employerId,
               tier: 'free',
               status: 'active',
-              active_listings_limit: freeTier.listings + packageConfig.listingCount,
+              activeListingsLimit: freeTier.listings + packageConfig.listingCount,
             });
           }
 
-          await supabase.from('payments').insert({
-            user_id: employerId,
-            stripe_payment_intent_id: paymentIntentId,
-            amount_pence: session.amount_total ?? 0,
+          await db.insert(paymentsTable).values({
+            userId: employerId,
+            stripePaymentIntentId: paymentIntentId,
+            amountPence: session.amount_total ?? 0,
             currency: session.currency ?? 'gbp',
             status: 'completed',
             description: `Job posting package: ${packageConfig.label} (${packageConfig.listingCount} listing${packageConfig.listingCount > 1 ? 's' : ''})`,
@@ -307,12 +245,11 @@ export async function POST(request: Request) {
     case 'customer.subscription.updated': {
       const subscription = event.data.object as Stripe.Subscription;
       const customerId = subscription.customer as string;
-      const user = await getUserByCustomerId(supabase, customerId);
+      const user = await getUserByCustomerId(customerId);
 
       if (user) {
-        const tier = await resolveSubscriptionTier(supabase, user.id, subscription);
+        const tier = await resolveSubscriptionTier(user.id, subscription);
         await upsertEmployerSubscription(
-          supabase,
           user.id,
           tier,
           subscription.id,
@@ -327,20 +264,17 @@ export async function POST(request: Request) {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
         const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-        const user = await getUserByCustomerId(supabase, subscription.customer as string);
+        const user = await getUserByCustomerId(subscription.customer as string);
 
         if (user) {
-          const { data: existingPayment } = await supabase
-            .from('payments')
-            .select('id')
-            .eq('stripe_payment_intent_id', invoice.id)
-            .limit(1);
+          const [existingPayment] = await db.select({ id: paymentsTable.id }).from(paymentsTable)
+            .where(eq(paymentsTable.stripePaymentIntentId, invoice.id)).limit(1);
 
-          if (!existingPayment?.[0]) {
-            await supabase.from('payments').insert({
-              user_id: user.id,
-              stripe_payment_intent_id: invoice.id,
-              amount_pence: invoice.amount_paid,
+          if (!existingPayment) {
+            await db.insert(paymentsTable).values({
+              userId: user.id,
+              stripePaymentIntentId: invoice.id,
+              amountPence: invoice.amount_paid,
               currency: invoice.currency,
               status: 'completed',
               description: 'Subscription renewal',
@@ -348,9 +282,8 @@ export async function POST(request: Request) {
             });
           }
 
-          const tier = await resolveSubscriptionTier(supabase, user.id, subscription);
+          const tier = await resolveSubscriptionTier(user.id, subscription);
           await upsertEmployerSubscription(
-            supabase,
             user.id,
             tier,
             subscription.id,
@@ -366,11 +299,11 @@ export async function POST(request: Request) {
       const invoice = event.data.object as Stripe.Invoice;
       if (invoice.subscription) {
         const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
-        const user = await getUserByCustomerId(supabase, subscription.customer as string);
+        const user = await getUserByCustomerId(subscription.customer as string);
 
         if (user) {
-          await supabase.from('notifications').insert({
-            user_id: user.id,
+          await db.insert(notifications).values({
+            userId: user.id,
             type: 'payment_failed',
             title: 'Payment failed',
             body: 'Your subscription payment failed. Please update your payment method to avoid losing access.',
@@ -384,22 +317,19 @@ export async function POST(request: Request) {
 
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
-      const user = await getUserByCustomerId(supabase, subscription.customer as string);
+      const user = await getUserByCustomerId(subscription.customer as string);
 
       if (user) {
-        const freeTier = await getEmployerTierConfig(supabase, 'free');
-        await supabase
-          .from('employer_subscriptions')
-          .update({
-            tier: 'free',
-            status: 'cancelled',
-            active_listings_limit: freeTier.listings,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('user_id', user.id);
+        const freeTier = await getEmployerTierConfig('free');
+        await db.update(employerSubscriptions).set({
+          tier: 'free',
+          status: 'cancelled',
+          activeListingsLimit: freeTier.listings,
+          updatedAt: new Date(),
+        }).where(eq(employerSubscriptions.userId, user.id));
 
-        await supabase.from('notifications').insert({
-          user_id: user.id,
+        await db.insert(notifications).values({
+          userId: user.id,
           type: 'subscription_cancelled',
           title: 'Subscription cancelled',
           body: 'Your subscription has been cancelled. You have been moved to the free tier (1 active listing).',

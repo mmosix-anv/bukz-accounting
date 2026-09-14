@@ -1,4 +1,4 @@
-import { pgTable, pgEnum, uuid, text, timestamp, boolean, integer } from 'drizzle-orm/pg-core';
+import { pgTable, pgEnum, uuid, text, timestamp, boolean, integer, primaryKey } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const userRoleEnum = pgEnum('user_role', [
@@ -13,10 +13,28 @@ export const users = pgTable('users', {
   email: text('email').notNull().unique(),
   name: text('name').notNull(),
   avatarUrl: text('avatar_url'),
+  passwordHash: text('password_hash'),
+  emailVerified: timestamp('email_verified'),
   role: userRoleEnum('role').notNull().default('candidate'),
   stripeCustomerId: text('stripe_customer_id'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const verificationTokenPurposeEnum = pgEnum('verification_token_purpose', [
+  'email_verify',
+  'password_reset',
+]);
+
+export const verificationTokens = pgTable(
+  'verification_tokens',
+  {
+    identifier: text('identifier').notNull(),
+    token: text('token').notNull(),
+    purpose: verificationTokenPurposeEnum('purpose').notNull(),
+    expires: timestamp('expires').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.identifier, table.token] })],
+);
 
 export const profiles = pgTable('profiles', {
   userId: uuid('user_id')

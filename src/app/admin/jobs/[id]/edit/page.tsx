@@ -1,19 +1,16 @@
 import type { Metadata } from 'next';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { getAdminJobListingById } from '@/lib/services/admin.service';
 import { AdminJobForm } from './admin-job-form';
 
 export const metadata: Metadata = { title: 'Edit Job | Admin' };
 
 export default async function AdminJobEditPage({ params }: { params: Promise<{ id: string }> }) {
-  const supabase = createClient();
-  const [{ data: { user } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
-  if (!user || user.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') redirect('/dashboard');
 
   const { id } = await params;
   const listing = await getAdminJobListingById(id).catch(() => null);
@@ -46,7 +43,7 @@ export default async function AdminJobEditPage({ params }: { params: Promise<{ i
         <p className="mt-0.5 text-sm text-slate-500">/{listing.slug}</p>
       </div>
       <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-soft">
-        <AdminJobForm job={job} token={session?.access_token} />
+        <AdminJobForm job={job} />
       </div>
     </div>
   );

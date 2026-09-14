@@ -5,6 +5,6 @@ import { getAdminStats } from '@/lib/services/admin.service';
 export async function GET(req: NextRequest) {
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
-  if (user.user_metadata?.['role'] !== 'admin') return forbidden();
+  if (user.role !== 'admin') return forbidden();
   return ok(await getAdminStats());
 }

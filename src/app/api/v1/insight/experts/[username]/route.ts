@@ -12,7 +12,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { username: 
   if (!user) return err('Unauthorized', 401);
   try {
     const body = await req.json() as Parameters<typeof updateExpert>[1];
-    const isAdmin = user.user_metadata?.['role'] === 'admin';
+    const isAdmin = user.role === 'admin';
     const expert = await findExpertByUsername(params.username);
     return ok(await updateExpert(expert.id, body, user.id, isAdmin));
   } catch (e) { return err((e as Error).message); }

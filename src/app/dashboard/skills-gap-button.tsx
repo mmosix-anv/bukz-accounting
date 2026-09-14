@@ -19,32 +19,23 @@ interface SkillsGapResult {
   topRecommendation: string;
 }
 
-interface Props {
-  token?: string;
-}
-
 const SEVERITY_COLOUR: Record<SkillGap['gapSeverity'], string> = {
   high: 'red',
   medium: 'yellow',
   low: 'green',
 };
 
-export function SkillsGapButton({ token }: Props) {
+export function SkillsGapButton() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<SkillsGapResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function runAnalysis() {
-    if (!token) {
-      setError('Please log in to run the analysis.');
-      return;
-    }
     setLoading(true);
     setError(null);
     try {
       const data = await apiFetch<SkillsGapResult>('/ai/skills-gap', {
         method: 'POST',
-        token,
       });
       setResult(data);
     } catch {

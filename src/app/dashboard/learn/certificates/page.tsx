@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { findCertificatesByUser } from '@/lib/services/certificates.service';
@@ -17,11 +17,9 @@ interface Certificate {
   certificateUrl: string | null;
 }
 
-const API_URL = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-
 export default async function CertificatesPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login?redirectTo=/dashboard/learn/certificates');
 
   const rawCerts = await findCertificatesByUser(user.id).catch(() => []);
@@ -75,14 +73,14 @@ export default async function CertificatesPage() {
               <Group grow>
                 <Button
                   component="a"
-                  href={`${API_URL}/api/v1/learn/certificates/${cert.id}/download`}
+                  href={`/api/v1/learn/certificates/${cert.id}/pdf`}
                   target="_blank" rel="noopener noreferrer"
                 >
                   Download PDF
                 </Button>
                 <Button
                   component="a"
-                  href={`${API_URL}/api/v1/learn/certificates/${cert.id}/verify`}
+                  href={`/api/v1/learn/certificates/${cert.id}/verify`}
                   target="_blank" rel="noopener noreferrer"
                   variant="default"
                 >

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
+import { apiFetchServer } from '@/lib/api-server';
 import { Anchor, Card, Container, Group, Progress, SimpleGrid, Stack, Table, Text, Title } from '@mantine/core';
 
 export const metadata: Metadata = { title: 'CPD Log | BUKZ Learn' };
@@ -25,14 +25,13 @@ interface CpdSummary {
 }
 
 export default async function CpdPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login?redirectTo=/dashboard/learn/cpd');
 
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
   const [entries, summary] = await Promise.all([
-    apiFetch<CpdEntry[]>('/learn/cpd/my', { token }).catch(() => [] as CpdEntry[]),
-    apiFetch<CpdSummary>('/learn/cpd/my/summary', { token }).catch(() => null),
+    apiFetchServer<CpdEntry[]>('/learn/cpd/my').catch(() => [] as CpdEntry[]),
+    apiFetchServer<CpdSummary>('/learn/cpd/my/summary').catch(() => null),
   ]);
 
   return (

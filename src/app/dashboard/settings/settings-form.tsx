@@ -1,7 +1,7 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { apiFetch } from '@/lib/api';
 import { Alert, Anchor, Button, Card, PasswordInput, Stack, Text, TextInput, Title } from '@mantine/core';
 
 interface Props {
@@ -20,24 +20,30 @@ export function SettingsForm({ user }: Props) {
   async function saveProfile(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true); setError(null); setSaved(false);
-    const supabase = createClient();
-    const { error: err } = await supabase.auth.updateUser({ data: { name } });
-    if (err) setError(err.message);
-    else setSaved(true);
+    try {
+      await apiFetch('/auth/me', { method: 'PATCH', body: JSON.stringify({ name }) });
+      setSaved(true);
+    } catch (err) {
+      setError((err as Error).message);
+    }
     setSaving(false);
   }
 
   async function changePassword(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    const currentPassword = fd.get('currentPassword') as string;
     const pw = fd.get('password') as string;
     const confirm = fd.get('confirm') as string;
     if (pw !== confirm) { setPwError('Passwords do not match.'); return; }
     setPwSaving(true); setPwError(null); setPwSaved(false);
-    const supabase = createClient();
-    const { error: err } = await supabase.auth.updateUser({ password: pw });
-    if (err) setPwError(err.message);
-    else { setPwSaved(true); (e.target as HTMLFormElement).reset(); }
+    try {
+      await apiFetch('/auth/password', { method: 'PATCH', body: JSON.stringify({ currentPassword, newPassword: pw }) });
+      setPwSaved(true);
+      (e.target as HTMLFormElement).reset();
+    } catch (err) {
+      setPwError((err as Error).message);
+    }
     setPwSaving(false);
   }
 
@@ -64,8 +70,9 @@ export function SettingsForm({ user }: Props) {
           <Stack gap="md">
           {pwError && <Alert color="red" variant="light">{pwError}</Alert>}
           {pwSaved && <Alert color="green" variant="light">Password updated.</Alert>}
-          <PasswordInput id="password" name="password" label="New password" required minLength={8} />
-          <PasswordInput id="confirm" name="confirm" label="Confirm password" required minLength={8} />
+          <PasswordInput id="currentPassword" name="currentPassword" label="Current password" required autoComplete="current-password" />
+          <PasswordInput id="password" name="password" label="New password" required minLength={8} autoComplete="new-password" />
+          <PasswordInput id="confirm" name="confirm" label="Confirm password" required minLength={8} autoComplete="new-password" />
           <Button type="submit" loading={pwSaving}>
             Update password
           </Button>

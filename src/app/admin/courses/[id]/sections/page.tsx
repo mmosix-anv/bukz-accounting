@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { findCourseById, findSectionsByCourse, deleteSection } from '@/lib/services/courses.service';
 import { db } from '@/lib/db';
 import { courseSections } from '@bukz/db';
 import { eq, desc } from 'drizzle-orm';
 import { AdminTable, AdminTr, AdminTd } from '../../../admin-table';
+import { ConfirmDeleteButton } from '@/app/admin/confirm-delete-button';
 import { Button, Paper, Stack, Title, Text, Group } from '@mantine/core';
 import { Plus, ArrowLeft, Trash2, GripVertical } from 'lucide-react';
 
@@ -19,9 +20,9 @@ interface SectionsPageProps {
 async function createSectionAction(courseId: string, formData: FormData) {
   'use server';
   
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
     throw new Error('Unauthorized');
   }
 
@@ -46,12 +47,28 @@ async function createSectionAction(courseId: string, formData: FormData) {
   redirect(`/admin/courses/${courseId}/sections`);
 }
 
+async function updateSectionAction(courseId: string, sectionId: string, formData: FormData) {
+  'use server';
+
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  const title = formData.get('title') as string;
+
+  await db.update(courseSections).set({ title }).where(eq(courseSections.id, sectionId));
+
+  redirect(`/admin/courses/${courseId}/sections`);
+}
+
 export default async function CourseSectionsPage({ params }: SectionsPageProps) {
   const { id } = await params;
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
@@ -139,23 +156,30 @@ export default async function CourseSectionsPage({ params }: SectionsPageProps) 
                         }}
                         className="inline"
                       >
-                        <Button
-                          type="submit"
-                          variant="subtle"
-                          color="red"
-                          size="xs"
-                          leftSection={<Trash2 size={14} />}
-                          onClick={(e) => {
-                            if (!confirm('Delete this section and all its lessons?')) {
-                              e.preventDefault();
-                            }
-                          }}
-                        >
-                          Delete
-                        </Button>
+                        <ConfirmDeleteButton confirmMessage="Delete this section and all its lessons?" />
                       </form>
                     </Group>
                   </Group>
+
+                  <details className="mt-3">
+                    <summary className="cursor-pointer text-xs font-medium text-[#2cd7f2] hover:underline">
+                      Rename section
+                    </summary>
+                    <form action={updateSectionAction.bind(null, id, section.id)} className="mt-3">
+                      <Group gap="xs">
+                        <TextInput
+                          name="title"
+                          placeholder="Section title"
+                          defaultValue={section.title}
+                          required
+                          size="sm"
+                        />
+                        <Button type="submit" size="sm">
+                          Save
+                        </Button>
+                      </Group>
+                    </form>
+                  </details>
                 </Paper>
               ))}
             </Stack>
@@ -169,13 +193,14 @@ export default async function CourseSectionsPage({ params }: SectionsPageProps) 
 }
 
 // Simple text input component for the form
-function TextInput({ name, placeholder, required, size }: { name: string; placeholder: string; required?: boolean; size?: string }) {
+function TextInput({ name, placeholder, required, size, defaultValue }: { name: string; placeholder: string; required?: boolean; size?: string; defaultValue?: string }) {
   return (
     <input
       type="text"
       name={name}
       placeholder={placeholder}
       required={required}
+      defaultValue={defaultValue}
       className="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-[#2cd7f2] focus:outline-none"
     />
   );

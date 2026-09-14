@@ -6,6 +6,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Alert, Button, Card, NumberInput, Select, SimpleGrid, Stack, Textarea, TextInput } from '@mantine/core';
+import { apiFetch } from '@/lib/api';
 
 const schema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -18,7 +19,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export function NewCourseForm({ token }: { token?: string }) {
+export function NewCourseForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
@@ -29,15 +30,15 @@ export function NewCourseForm({ token }: { token?: string }) {
 
   async function onSubmit(values: FormValues) {
     setError(null);
-    const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-    const res = await fetch(`${apiUrl}/api/v1/learn/courses`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
-      body: JSON.stringify(values),
-    });
-    if (!res.ok) { setError('Failed to create course. Please try again.'); return; }
-    const course = await res.json() as { id: string };
-    router.push(`/instructors/courses/${course.id}/edit`);
+    try {
+      const course = await apiFetch<{ id: string }>('/learn/courses', {
+        method: 'POST',
+        body: JSON.stringify(values),
+      });
+      router.push(`/instructors/courses/${course.id}/edit`);
+    } catch {
+      setError('Failed to create course. Please try again.');
+    }
   }
 
   return (

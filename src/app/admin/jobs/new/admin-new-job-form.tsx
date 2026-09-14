@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button, Group, Select, Stack, Switch, TextInput, Textarea, NumberInput } from '@mantine/core';
 import { apiFetch } from '@/lib/api';
 
-export function AdminNewJobForm({ token }: { token: string | undefined }) {
+export function AdminNewJobForm() {
   const router = useRouter();
   const [form, setForm] = useState({
     title: '',
@@ -37,7 +37,6 @@ export function AdminNewJobForm({ token }: { token: string | undefined }) {
     try {
       await apiFetch('/admin/jobs', {
         method: 'POST',
-        token,
         body: JSON.stringify({
           title: form.title,
           description: form.description,

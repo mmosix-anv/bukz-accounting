@@ -1,22 +1,19 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect, notFound } from 'next/navigation';
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { experts } from '@bukz/db';
 import { ExpertForm } from '../../expert-form';
 
 export const metadata: Metadata = { title: 'Edit Expert | Admin' };
 
 export default async function EditExpertPage({ params }: { params: { id: string } }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') redirect('/dashboard');
 
-  const { data: expert } = await supabase
-    .from('experts')
-    .select('*')
-    .eq('id', params.id)
-    .single();
-
+  const [expert] = await db.select().from(experts).where(eq(experts.id, params.id)).limit(1);
   if (!expert) notFound();
 
   return (
@@ -25,17 +22,17 @@ export default async function EditExpertPage({ params }: { params: { id: string 
         <a href="/admin/experts" className="text-sm text-slate-400 hover:text-primary">← Back to experts</a>
         <h1 className="mt-2 text-2xl font-bold text-primary">Edit expert</h1>
       </div>
-      <ExpertForm token={token} expert={{
+      <ExpertForm expert={{
         id: expert.id,
         name: expert.name,
         title: expert.title,
         bio: expert.bio,
-        specialisations: expert.specialisations ?? [],
-        qualifications: expert.qualifications ?? [],
-        hourlyRateGbp: expert.hourly_rate_gbp,
-        calUsername: expert.cal_username,
-        isVerified: expert.is_verified,
-        isActive: expert.is_active,
+        specialisations: expert.specialisations,
+        qualifications: expert.qualifications,
+        hourlyRateGbp: expert.hourlyRateGbp ?? undefined,
+        calUsername: expert.calUsername ?? undefined,
+        isVerified: expert.isVerified,
+        isActive: expert.isActive,
       }} />
     </div>
   );

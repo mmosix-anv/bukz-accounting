@@ -15,6 +15,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
+import { apiFetch } from '@/lib/api';
 
 interface ExpertData {
   id?: string;
@@ -29,7 +30,7 @@ interface ExpertData {
   isActive?: boolean;
 }
 
-export function ExpertForm({ token, expert }: { token?: string; expert?: ExpertData }) {
+export function ExpertForm({ expert }: { expert?: ExpertData }) {
   const router = useRouter();
   const isEdit = !!expert?.id;
   const [form, setForm] = useState({
@@ -46,15 +47,10 @@ export function ExpertForm({ token, expert }: { token?: string; expert?: ExpertD
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-
   async function save(event: FormEvent) {
     event.preventDefault();
     setSaving(true);
     setError(null);
-    const url = isEdit
-      ? `${apiUrl}/api/v1/insight/experts/${expert!.id}`
-      : `${apiUrl}/api/v1/insight/experts`;
 
     const body = {
       name: form.name,
@@ -68,17 +64,18 @@ export function ExpertForm({ token, expert }: { token?: string; expert?: ExpertD
       isActive: form.isActive,
     };
 
-    const res = await fetch(url, {
-      method: isEdit ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
-      body: JSON.stringify(body),
-    });
-    setSaving(false);
-    if (!res.ok) {
+    try {
+      if (isEdit) {
+        await apiFetch(`/admin/experts/${expert!.id}`, { method: 'PATCH', body: JSON.stringify(body) });
+      } else {
+        await apiFetch('/insight/experts', { method: 'POST', body: JSON.stringify(body) });
+      }
+      router.push('/admin/experts');
+    } catch {
       setError('Failed to save expert.');
-      return;
+    } finally {
+      setSaving(false);
     }
-    router.push('/admin/experts');
   }
 
   return (

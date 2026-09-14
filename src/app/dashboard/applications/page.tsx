@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { findApplicationsByCandidate } from '@/lib/services/job-applications.service';
@@ -38,8 +38,8 @@ function fmt(min: string | null, max: string | null, currency: string | null) {
 }
 
 export default async function ApplicationsPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login?redirectTo=/dashboard/applications');
 
   const rawApps = await findApplicationsByCandidate(user.id).catch(() => []);

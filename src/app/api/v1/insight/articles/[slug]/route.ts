@@ -12,7 +12,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { slug: stri
   if (!user) return err('Unauthorized', 401);
   try {
     const body = await req.json() as Record<string, unknown>;
-    const isAdmin = user.user_metadata?.['role'] === 'admin';
+    const isAdmin = user.role === 'admin';
     if (body['publish'] === true) return ok(await publishArticle(params.slug, user.id, isAdmin));
     return ok(await updateArticle(params.slug, body, user.id, isAdmin));
   } catch (e) { return err((e as Error).message); }

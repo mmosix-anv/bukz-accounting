@@ -1,42 +1,48 @@
-import { createClient } from '@supabase/supabase-js';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { eq } from 'drizzle-orm';
+import * as schema from '../packages/db/src/schema/index';
 
-const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'];
-const serviceRoleKey = process.env['SUPABASE_SERVICE_ROLE_KEY'];
-
-if (!supabaseUrl || !serviceRoleKey) {
-  console.error('Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in environment');
-  process.exit(1);
+function loadEnv(...paths: string[]) {
+  for (const filePath of paths) {
+    try {
+      const content = readFileSync(filePath, 'utf8');
+      for (const rawLine of content.split(/\r?\n/)) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('#')) continue;
+        const idx = line.indexOf('=');
+        if (idx <= 0) continue;
+        const key = line.slice(0, idx).trim();
+        let value = line.slice(idx + 1).trim();
+        if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+          value = value.slice(1, -1);
+        }
+        if (process.env[key] === undefined) process.env[key] = value;
+      }
+    } catch { /* file not found, skip */ }
+  }
 }
 
-const supabase = createClient(supabaseUrl, serviceRoleKey, {
-  auth: { autoRefreshToken: false, persistSession: false },
-});
+loadEnv(resolve(__dirname, '..', '.env.local'), resolve(__dirname, '..', '.env'));
 
 const EMAIL = 'admin@bukzaccounting.co.uk';
 
 async function run() {
-  const { data: { users }, error: listError } = await supabase.auth.admin.listUsers();
-  if (listError) {
-    console.error('Failed to list users:', listError.message);
-    process.exit(1);
-  }
+  const client = postgres(process.env['DATABASE_URL']!);
+  const db = drizzle(client, { schema });
 
-  const target = users.find((u) => u.email === EMAIL);
-  if (!target) {
+  const [user] = await db.select({ id: schema.users.id }).from(schema.users).where(eq(schema.users.email, EMAIL)).limit(1);
+  if (!user) {
     console.error(`No user found with email: ${EMAIL}`);
+    await client.end();
     process.exit(1);
   }
 
-  const { error } = await supabase.auth.admin.updateUserById(target.id, {
-    user_metadata: { ...target.user_metadata, role: 'admin' },
-  });
-
-  if (error) {
-    console.error('Failed to update user_metadata:', error.message);
-    process.exit(1);
-  }
-
-  console.log(`✓ Set role=admin in user_metadata for ${EMAIL} (id: ${target.id})`);
+  await db.update(schema.users).set({ role: 'admin' }).where(eq(schema.users.id, user.id));
+  console.log(`✓ Set role=admin for ${EMAIL} (${user.id})`);
+  await client.end();
 }
 
 void run();

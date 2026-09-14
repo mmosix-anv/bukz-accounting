@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { Star, Users, Plus, BookOpen } from 'lucide-react';
@@ -26,9 +26,9 @@ const LEVEL_COLOURS: Record<string, string> = {
 const PAGE_SIZE = 20;
 
 export default async function AdminCoursesPage({ searchParams }: { searchParams: Promise<{ status?: string; page?: string }> }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') redirect('/dashboard');
 
   const params = await searchParams;
   const statusFilter = params.status ?? '';
@@ -43,7 +43,6 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
     ...c, createdAt: c.createdAt.toISOString(),
   }));
   const totalPages = Math.ceil(count / PAGE_SIZE);
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   return (
     <div className="space-y-6">
@@ -133,7 +132,7 @@ export default async function AdminCoursesPage({ searchParams }: { searchParams:
                 <a href={`/admin/courses/${course.id}/quizzes`} className="text-xs font-medium text-violet-600 hover:text-violet-800 flex items-center gap-1">
                   Quizzes
                 </a>
-                <DeleteCourseButton courseId={course.id} token={token} />
+                <DeleteCourseButton courseId={course.id} />
               </div>
             </AdminTd>
           </AdminTr>

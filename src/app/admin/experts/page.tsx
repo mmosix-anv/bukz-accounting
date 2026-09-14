@@ -1,23 +1,32 @@
 import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import { db } from '@/lib/db';
+import { experts as expertsTable } from '@bukz/db';
 import { Card } from '@bukz/ui';
 import { CheckCircle, XCircle, DollarSign } from 'lucide-react';
+import { DeleteExpertButton } from './delete-expert-button';
 
 export const metadata: Metadata = { title: 'Admin - Experts' };
 
 export default async function AdminExpertsPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
 
-  if (!user || user.user_metadata?.['role'] !== 'admin') {
+  if (!user || user.role !== 'admin') {
     redirect('/dashboard');
   }
 
-  const { data: experts } = await supabase
-    .from('experts')
-    .select('id, name, title, specialisations, is_verified, is_active, hourly_rate_gbp, cal_username')
-    .order('created_at', { ascending: false });
+  const experts = await db.select({
+    id: expertsTable.id,
+    name: expertsTable.name,
+    title: expertsTable.title,
+    specialisations: expertsTable.specialisations,
+    is_verified: expertsTable.isVerified,
+    is_active: expertsTable.isActive,
+    hourly_rate_gbp: expertsTable.hourlyRateGbp,
+    cal_username: expertsTable.calUsername,
+  }).from(expertsTable);
 
   return (
     <div>
@@ -97,6 +106,7 @@ export default async function AdminExpertsPage() {
                       <a href={`/admin/experts/${expert.id}/edit`} className="text-sm font-medium text-slate-500 hover:text-primary">
                         Edit
                       </a>
+                      <DeleteExpertButton expertId={expert.id} />
                     </div>
                   </td>
                 </tr>

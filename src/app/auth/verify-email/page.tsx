@@ -4,8 +4,9 @@ import { Anchor, Button, Container, Paper, Stack, Text, Title } from '@mantine/c
 
 export const metadata: Metadata = { title: 'Verify your email | BUKZ' };
 
-export default function VerifyEmailPage({ searchParams }: { searchParams: { email?: string } }) {
+export default function VerifyEmailPage({ searchParams }: { searchParams: { email?: string; error?: string } }) {
   const email = searchParams.email;
+  const invalidToken = searchParams.error === 'invalid_token';
 
   return (
     <Container size="xs" py={80}>
@@ -15,7 +16,9 @@ export default function VerifyEmailPage({ searchParams }: { searchParams: { emai
             Verify your email
           </Title>
           <Text c="dimmed">
-            We sent a verification link{email ? ` to ${email}` : ''}. Open it to finish setting up your account.
+            {invalidToken
+              ? 'This verification link is invalid or has expired. Please register again or contact support.'
+              : `We sent a verification link${email ? ` to ${email}` : ''}. Open it to finish setting up your account.`}
           </Text>
           <Button component={Link} href="/auth/login" fullWidth>
             Back to login

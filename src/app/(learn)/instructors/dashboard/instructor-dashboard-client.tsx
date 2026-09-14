@@ -29,7 +29,6 @@ interface Analytics {
 
 interface Props {
   courses: Course[];
-  token: string | undefined;
 }
 
 const STATUS_BADGES: Record<string, string> = {
@@ -53,7 +52,7 @@ function generateEnrollmentChartData(courses: Course[]) {
   return days;
 }
 
-export function InstructorDashboardClient({ courses, token }: Props) {
+export function InstructorDashboardClient({ courses }: Props) {
   const [tab, setTab] = useState<'courses' | 'create' | 'analytics'>('courses');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -67,13 +66,13 @@ export function InstructorDashboardClient({ courses, token }: Props) {
   async function loadAnalytics(course: Course) {
     setSelectedCourse(course);
     setTab('analytics');
-    const data = await apiFetch<Analytics>(`/learn/courses/${course.id}/analytics`, { token });
+    const data = await apiFetch<Analytics>(`/learn/courses/${course.id}/analytics`);
     setAnalytics(data);
   }
 
   async function togglePublish(course: Course) {
     const action = course.status === 'published' ? 'unpublish' : 'publish';
-    await apiFetch(`/learn/courses/${course.id}/${action}`, { method: 'POST', token });
+    await apiFetch(`/learn/courses/${course.id}/${action}`, { method: 'POST' });
     setConfirmToggle(null);
     window.location.reload();
   }
@@ -84,7 +83,6 @@ export function InstructorDashboardClient({ courses, token }: Props) {
     try {
       const course = await apiFetch<{ slug: string }>('/learn/courses', {
         method: 'POST',
-        token,
         body: JSON.stringify({
           title: newCourseTitle,
           description: '',

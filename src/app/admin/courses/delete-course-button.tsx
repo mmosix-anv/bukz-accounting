@@ -4,7 +4,7 @@ import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export function DeleteCourseButton({ courseId, token }: { courseId: string; token?: string }) {
+export function DeleteCourseButton({ courseId }: { courseId: string }) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
 
@@ -12,10 +12,7 @@ export function DeleteCourseButton({ courseId, token }: { courseId: string; toke
     if (!confirm('Delete this course?')) return;
     setPending(true);
     try {
-      const res = await fetch(`/api/v1/learn/courses/${courseId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token ?? ''}` },
-      });
+      const res = await fetch(`/api/v1/learn/courses/${courseId}`, { method: 'DELETE' });
       if (!res.ok) {
         const body = await res.json().catch(() => ({ message: res.statusText }));
         alert(body.message ?? 'Failed to delete course');

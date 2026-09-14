@@ -1,18 +1,15 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { AdminNewJobForm } from './admin-new-job-form';
 
 export const metadata: Metadata = { title: 'New Job | Admin' };
 
 export default async function AdminNewJobPage() {
-  const supabase = createClient();
-  const [{ data: { user } }, { data: { session } }] = await Promise.all([
-    supabase.auth.getUser(),
-    supabase.auth.getSession(),
-  ]);
-  if (!user || user.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') redirect('/dashboard');
 
   return (
     <div className="space-y-6">
@@ -24,7 +21,7 @@ export default async function AdminNewJobPage() {
         <p className="mt-0.5 text-sm text-slate-500">Add a new job listing to the platform</p>
       </div>
       <div className="rounded-2xl border border-slate-200/80 bg-white p-8 shadow-soft">
-        <AdminNewJobForm token={session?.access_token} />
+        <AdminNewJobForm />
       </div>
     </div>
   );

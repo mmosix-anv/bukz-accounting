@@ -4,7 +4,12 @@ import { useState } from 'react';
 import { resetPasswordAction } from '@/lib/auth-actions';
 import { Alert, Button, Paper, PasswordInput, Stack } from '@mantine/core';
 
-export function ResetPasswordForm() {
+interface Props {
+  token: string;
+  email: string;
+}
+
+export function ResetPasswordForm({ token, email }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,6 +34,8 @@ export function ResetPasswordForm() {
           {error}
         </Alert>
       )}
+        <input type="hidden" name="token" value={token} />
+        <input type="hidden" name="email" value={email} />
         <PasswordInput
           id="password" name="password" type="password" required minLength={8}
           label="New password"

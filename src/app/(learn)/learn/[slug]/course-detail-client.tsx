@@ -23,7 +23,6 @@ import {
 import Link from 'next/link';
 import { Check, Lock, Play, UserRound } from 'lucide-react';
 import { apiFetch } from '@/lib/api';
-import { createClient } from '@/lib/supabase/client';
 
 interface Lesson {
   id: string;
@@ -74,12 +73,8 @@ function WriteReviewForm({ courseId }: { courseId: string }) {
     event.preventDefault();
     if (rating === 0) return;
     setSaving(true);
-    const supabase = createClient();
-    const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
     await apiFetch('/learn/reviews', {
       method: 'POST',
-      token,
       body: JSON.stringify({ courseId, rating, body: body || null }),
     }).catch(() => null);
     setSubmitted(true);
@@ -156,18 +151,14 @@ export function CourseDetailClient({ course, userId, isEnrolled }: Props) {
     queryKey: ['course-progress', course.id],
     queryFn: async () => {
       if (!userId || !isEnrolled) return { completedLessons: [] };
-      const supabase = createClient();
-      const { data } = await supabase.auth.getSession();
-      const token = data.session?.access_token;
-      if (!token) return { completedLessons: [] };
-      return apiFetch<{ completedLessons: string[] }>(`/learn/progress/${course.id}`, { token });
+      return apiFetch<{ completedLessons: string[] }>(`/learn/progress/${course.id}`);
     },
     enabled: !!userId && isEnrolled,
   });
 
   const { data: reviews = [] } = useQuery({
     queryKey: ['course-reviews', course.id],
-    queryFn: () => apiFetch<Review[]>(`/learn/reviews/course/${course.id}`),
+    queryFn: () => apiFetch<Review[]>(`/learn/reviews?courseId=${course.id}`),
   });
 
   const completedIds = progress?.completedLessons ?? [];

@@ -1,7 +1,7 @@
 ﻿'use client';
 
 import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
+import type { Session } from 'next-auth';
 import { Avatar, Box, Group, Menu, Text, UnstyledButton } from '@mantine/core';
 import { ChevronDown, LayoutDashboard, LogOut, Settings } from 'lucide-react';
 import { logoutAction } from '@/lib/auth-actions';
@@ -9,12 +9,12 @@ import { NotificationBell } from '@/components/notifications/notification-bell';
 import { MobileMenu } from './mobile-menu';
 
 interface Props {
-  user: User;
+  user: NonNullable<Session['user']>;
 }
 
 export function AuthedHeader({ user }: Props) {
-  const role = (user.user_metadata?.['role'] as string) ?? 'candidate';
-  const name = (user.user_metadata?.['name'] as string) ?? user.email ?? '';
+  const role = user.role;
+  const name = user.name ?? user.email ?? '';
   const initials = name
     .split(' ')
     .map((n) => n[0])
@@ -29,7 +29,7 @@ export function AuthedHeader({ user }: Props) {
     admin: { label: 'Admin Panel', href: '/admin' },
   };
 
-  const roleLink = roleLinks[role as keyof typeof roleLinks] ?? roleLinks.candidate;
+  const roleLink = roleLinks[role] ?? roleLinks.candidate;
 
   return (
     <Group gap="sm" wrap="nowrap">

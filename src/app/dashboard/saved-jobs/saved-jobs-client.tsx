@@ -35,12 +35,12 @@ const TYPE_LABELS: Record<string, string> = {
   graduate: 'Graduate',
 };
 
-export function SavedJobsClient({ jobs: initial, token }: { jobs: SavedJob[]; token: string | undefined }) {
+export function SavedJobsClient({ jobs: initial }: { jobs: SavedJob[] }) {
   const [jobs, setJobs] = useState(initial);
 
   async function handleUnsave(jobId: string) {
     setJobs((prev) => prev.filter((j) => j.jobId !== jobId));
-    await apiFetch(`/jobs/saved/${jobId}`, { method: 'DELETE', token }).catch(() => null);
+    await apiFetch(`/jobs/saved/${jobId}`, { method: 'DELETE' }).catch(() => null);
   }
 
   if (jobs.length === 0) {

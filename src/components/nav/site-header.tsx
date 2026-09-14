@@ -1,6 +1,6 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 import Image from 'next/image';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { AuthedHeader } from './authed-header';
 import { GuestHeader } from './guest-header';
 
@@ -13,10 +13,7 @@ const navLinks = [
 ];
 
 export async function SiteHeader() {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const session = await auth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/95 backdrop-blur-md">
@@ -55,7 +52,7 @@ export async function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2">
-          {user ? <AuthedHeader user={user} /> : <GuestHeader />}
+          {session?.user ? <AuthedHeader user={session.user} /> : <GuestHeader />}
         </div>
       </div>
     </header>

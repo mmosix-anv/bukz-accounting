@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { apiFetch } from '@/lib/api';
+import { auth } from '@/auth';
+import { apiFetchServer } from '@/lib/api-server';
 import { InstructorDashboardClient } from './instructor-dashboard-client';
 
 export const metadata: Metadata = { title: 'Instructor Dashboard | BUKZ Learn' };
@@ -21,16 +21,14 @@ interface Course {
 }
 
 export default async function InstructorDashboardPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login?redirectTo=/instructors/dashboard');
 
-  const role = user.user_metadata?.['role'];
+  const role = user.role;
   if (role !== 'instructor' && role !== 'admin') redirect('/dashboard');
 
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-
-  const courses = await apiFetch<Course[]>('/learn/courses/instructor/my', { token }).catch(() => []);
+  const courses = await apiFetchServer<Course[]>('/learn/courses/instructor/my').catch(() => []);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -40,7 +38,7 @@ export default async function InstructorDashboardPage() {
           <p className="mt-1 text-slate-500">Build and manage your CPD courses</p>
         </div>
       </div>
-      <InstructorDashboardClient courses={courses} token={token} />
+      <InstructorDashboardClient courses={courses} />
     </div>
   );
 }

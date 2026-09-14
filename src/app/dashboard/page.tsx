@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { findApplicationsByCandidate } from '@/lib/services/job-applications.service';
@@ -40,9 +40,10 @@ const STATUS_COLOURS: Record<string, string> = {
 };
 
 export default async function DashboardPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const session = await auth();
+  const user = session?.user;
   if (!user) redirect('/auth/login');
+  if (user.role === 'admin') redirect('/admin');
 
   const [rawApps, rawEnrolls] = await Promise.all([
     findApplicationsByCandidate(user.id).catch(() => []),
@@ -61,7 +62,7 @@ export default async function DashboardPage() {
     courseTitle: e.courseTitle, courseSlug: e.courseSlug, thumbnailUrl: e.thumbnailUrl,
   }));
 
-  const displayName = user.user_metadata?.['name'] ?? user.email?.split('@')[0] ?? 'there';
+  const displayName = user.name ?? user.email?.split('@')[0] ?? 'there';
   const inProgress = enrollments.filter((e) => !e.completedAt);
   const completed = enrollments.filter((e) => !!e.completedAt);
 

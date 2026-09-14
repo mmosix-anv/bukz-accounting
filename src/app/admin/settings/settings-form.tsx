@@ -10,13 +10,11 @@ import { apiFetch } from '@/lib/api';
 interface Props {
   initialEmployerSubscriptionTiers: EmployerSubscriptionTierSetting[];
   initialJobPostingPackages: JobPostingPackageSetting[];
-  token: string;
 }
 
 export function SettingsForm({
   initialEmployerSubscriptionTiers,
   initialJobPostingPackages,
-  token,
 }: Props) {
   const [employerSubscriptionTiers, setEmployerSubscriptionTiers] = useState(initialEmployerSubscriptionTiers);
   const [jobPostingPackages, setJobPostingPackages] = useState(initialJobPostingPackages);
@@ -55,7 +53,6 @@ export function SettingsForm({
         jobPostingPackages: JobPostingPackageSetting[];
       }>('/admin/settings', {
         method: 'PATCH',
-        token,
         body: JSON.stringify({
           employerSubscriptionTiers,
           jobPostingPackages,

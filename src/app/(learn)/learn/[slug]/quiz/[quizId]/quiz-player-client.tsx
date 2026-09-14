@@ -57,11 +57,10 @@ interface AttemptResult {
 interface Props {
   quiz: Quiz;
   courseSlug: string;
-  token: string | undefined;
   previousAttempts: AttemptResult[];
 }
 
-export function QuizPlayerClient({ quiz, courseSlug, token, previousAttempts }: Props) {
+export function QuizPlayerClient({ quiz, courseSlug, previousAttempts }: Props) {
   const [state, setState] = useState<'intro' | 'taking' | 'results'>('intro');
   const [attemptId, setAttemptId] = useState<string | null>(null);
   const [currentQ, setCurrentQ] = useState(0);
@@ -73,7 +72,7 @@ export function QuizPlayerClient({ quiz, courseSlug, token, previousAttempts }: 
 
   const handleStart = useCallback(async () => {
     setLoading(true);
-    const attempt = await apiFetch<{ id: string }>(`/learn/quizzes/${quiz.id}/attempt`, { method: 'POST', token }).catch(() => null);
+    const attempt = await apiFetch<{ id: string }>(`/learn/quizzes/${quiz.id}/attempt`, { method: 'POST' }).catch(() => null);
     setLoading(false);
     if (attempt) {
       setAttemptId(attempt.id);
@@ -81,7 +80,7 @@ export function QuizPlayerClient({ quiz, courseSlug, token, previousAttempts }: 
       setCurrentQ(0);
       setState('taking');
     }
-  }, [quiz.id, token]);
+  }, [quiz.id]);
 
   const selectOption = useCallback((questionId: string, optionId: string, questionType: string) => {
     setAnswers((prev) => {
@@ -99,7 +98,6 @@ export function QuizPlayerClient({ quiz, courseSlug, token, previousAttempts }: 
     const formatted = quiz.questions.map((q) => ({ questionId: q.id, selectedOptionIds: answers[q.id] ?? [] }));
     const res = await apiFetch<AttemptResult>(`/learn/quizzes/${quiz.id}/attempt/${attemptId}/submit`, {
       method: 'POST',
-      token,
       body: JSON.stringify({ answers: formatted }),
     }).catch(() => null);
     setLoading(false);
@@ -107,7 +105,7 @@ export function QuizPlayerClient({ quiz, courseSlug, token, previousAttempts }: 
       setResult(res);
       setState('results');
     }
-  }, [attemptId, quiz, answers, token]);
+  }, [attemptId, quiz, answers]);
 
   if (state === 'intro') {
     const bestAttempt = previousAttempts.filter((a) => a.passed).sort((a, b) => (b.score ?? 0) - (a.score ?? 0))[0];

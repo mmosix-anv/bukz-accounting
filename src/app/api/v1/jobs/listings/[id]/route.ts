@@ -15,7 +15,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   if (!user) return unauthorized();
   try {
     const body = await req.json() as Record<string, unknown>;
-    const isAdmin = user.user_metadata?.['role'] === 'admin';
+    const isAdmin = user.role === 'admin';
     return ok(await updateJobListing(params.id, user.id, body, isAdmin));
   } catch (e) { return err((e as Error).message); }
 }
@@ -24,7 +24,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
   try {
-    const isAdmin = user.user_metadata?.['role'] === 'admin';
+    const isAdmin = user.role === 'admin';
     return ok(await softDeleteJobListing(params.id, user.id, isAdmin));
   } catch (e) { return err((e as Error).message); }
 }

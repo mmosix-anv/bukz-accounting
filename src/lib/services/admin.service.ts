@@ -84,6 +84,12 @@ export async function adminVerifyExpert(id: string) {
   return expert;
 }
 
+export async function adminDeleteExpert(id: string) {
+  const [expert] = await db.delete(experts).where(eq(experts.id, id)).returning();
+  if (!expert) throw new Error('Expert not found');
+  return { deleted: true };
+}
+
 export async function getAdminJobListings(status?: string, limit = 20, offset = 0) {
   const validStatuses = ['draft', 'active', 'expired', 'filled'] as const;
   const s = validStatuses.find((v) => v === status);

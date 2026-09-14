@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const user = await getAuthUser(req);
   if (!user) return unauthorized();
-  if (user.user_metadata?.['role'] !== 'admin') return forbidden();
+  if (user.role !== 'admin') return forbidden();
   try {
     const body = await req.json() as Parameters<typeof createArticle>[0];
     return ok(await createArticle({ ...body, authorId: user.id }), 201);

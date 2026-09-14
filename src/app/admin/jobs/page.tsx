@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from 'next';
-import { createClient } from '@/lib/supabase/server';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { MapPin, Eye, Users, Plus } from 'lucide-react';
@@ -27,9 +27,9 @@ function fmtSalary(min?: string | null, max?: string | null) {
 const PAGE_SIZE = 20;
 
 export default async function AdminJobsPage({ searchParams }: { searchParams: Promise<{ status?: string; page?: string }> }) {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user || user.user_metadata?.['role'] !== 'admin') redirect('/dashboard');
+  const session = await auth();
+  const user = session?.user;
+  if (!user || user.role !== 'admin') redirect('/dashboard');
 
   const params = await searchParams;
   const statusFilter = params.status ?? '';
@@ -47,7 +47,6 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
     expiresAt: j.expiresAt?.toISOString() ?? null,
   }));
   const totalPages = Math.ceil(count / PAGE_SIZE);
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   return (
     <div className="space-y-6">
@@ -125,7 +124,7 @@ export default async function AdminJobsPage({ searchParams }: { searchParams: Pr
               <div className="flex items-center justify-end gap-3">
                 <a href={`/jobs/${job.id}`} className="text-xs text-slate-500 hover:text-[#0f2a2e] dark:hover:text-slate-200">View</a>
                 <a href={`/admin/jobs/${job.id}/edit`} className="text-xs font-medium text-[#2cd7f2] hover:text-[#B8943A]">Edit</a>
-                <DeleteJobButton jobId={job.id} token={token} />
+                <DeleteJobButton jobId={job.id} />
               </div>
             </AdminTd>
           </AdminTr>

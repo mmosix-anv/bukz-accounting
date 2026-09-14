@@ -52,4 +52,17 @@ export const email = {
 <p>You have completed <strong>${courseTitle}</strong> and earned ${Number(cpdHours).toFixed(1)} CPD hours.</p>
 <p><a href="${downloadUrl}">Download your certificate (PDF)</a></p>
 <p>— The BUKZ Team</p>`),
+
+  sendVerification: (to: string, name: string, url: string) =>
+    send(to, 'Verify your BUKZ account', `<h2>Hi ${name},</h2>
+<p>Confirm your email address to finish setting up your account.</p>
+<p><a href="${url}">Verify email</a></p>
+<p>— The BUKZ Team</p>`),
+
+  sendPasswordReset: (to: string, name: string, url: string) =>
+    send(to, 'Reset your BUKZ password', `<h2>Hi ${name},</h2>
+<p>Click below to set a new password. This link expires in 1 hour.</p>
+<p><a href="${url}">Reset password</a></p>
+<p>If you didn't request this, you can safely ignore this email.</p>
+<p>— The BUKZ Team</p>`),
 };

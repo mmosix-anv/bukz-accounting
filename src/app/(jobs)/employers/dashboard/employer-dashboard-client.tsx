@@ -46,7 +46,6 @@ interface Application {
 interface Props {
   stats: Stats;
   listings: Listing[];
-  token: string | undefined;
 }
 
 const STATUS_COLOURS: Record<string, string> = {
@@ -80,7 +79,7 @@ function generateChartData(listings: Listing[]) {
   return days;
 }
 
-export function EmployerDashboardClient({ stats, listings, token }: Props) {
+export function EmployerDashboardClient({ stats, listings }: Props) {
   const [tab, setTab] = useState<'listings' | 'applications'>('listings');
   const [applications, setApplications] = useState<Application[]>([]);
   const [loadingApps, setLoadingApps] = useState(false);
@@ -98,7 +97,7 @@ export function EmployerDashboardClient({ stats, listings, token }: Props) {
     if (applications.length > 0) { setTab('applications'); return; }
     setLoadingApps(true);
     try {
-      const data = await apiFetch<Application[]>('/jobs/applications/received', { token });
+      const data = await apiFetch<Application[]>('/jobs/employer-applications');
       setApplications(data);
     } finally {
       setLoadingApps(false);
@@ -108,8 +107,8 @@ export function EmployerDashboardClient({ stats, listings, token }: Props) {
 
   async function updateAppStatus(id: string, status: string) {
     setAppStatuses((prev) => ({ ...prev, [id]: status }));
-    await apiFetch(`/jobs/applications/${id}/status`, {
-      method: 'PATCH', token, body: JSON.stringify({ status }),
+    await apiFetch(`/jobs/applications/${id}`, {
+      method: 'PATCH', body: JSON.stringify({ status }),
     });
   }
 

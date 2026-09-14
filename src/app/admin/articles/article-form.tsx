@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Alert, Button, Card, Group, NumberInput, Select, SimpleGrid, Stack, Textarea, TextInput } from '@mantine/core';
+import { apiFetch } from '@/lib/api';
 
 interface ArticleData {
   id?: string;
@@ -20,7 +21,7 @@ function slugify(str: string) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-export function ArticleForm({ token, article }: { token?: string; article?: ArticleData }) {
+export function ArticleForm({ article }: { article?: ArticleData }) {
   const router = useRouter();
   const isEdit = !!article?.id;
   const [form, setForm] = useState({
@@ -42,40 +43,26 @@ export function ArticleForm({ token, article }: { token?: string; article?: Arti
     });
   }
 
-  const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-
   async function save(publish = false) {
     if (publish) setPublishing(true);
     else setSaving(true);
     setError(null);
 
-    const url = isEdit
-      ? `${apiUrl}/api/v1/insight/articles/${article!.id}`
-      : `${apiUrl}/api/v1/insight/articles`;
+    try {
+      const saved = isEdit
+        ? await apiFetch<{ id: string }>(`/insight/articles/${article!.id}`, { method: 'PATCH', body: JSON.stringify(form) })
+        : await apiFetch<{ id: string }>('/insight/articles', { method: 'POST', body: JSON.stringify(form) });
 
-    const res = await fetch(url, {
-      method: isEdit ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
-      body: JSON.stringify(form),
-    });
+      if (publish) {
+        await apiFetch(`/insight/articles/${saved.id}`, { method: 'PATCH', body: JSON.stringify({ publish: true }) });
+      }
 
-    if (!res.ok) {
+      router.push('/admin/articles');
+    } catch {
       setError('Failed to save article.');
       setSaving(false);
       setPublishing(false);
-      return;
     }
-
-    const saved = (await res.json()) as { id: string };
-
-    if (publish) {
-      await fetch(`${apiUrl}/api/v1/insight/articles/${saved.id}/publish`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token ?? ''}` },
-      });
-    }
-
-    router.push('/admin/articles');
   }
 
   return (
