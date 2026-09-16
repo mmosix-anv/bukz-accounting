@@ -56,6 +56,25 @@ export async function registerAction(formData: FormData) {
   redirect(`/auth/verify-email?email=${encodeURIComponent(email)}`);
 }
 
+export async function resendVerificationAction(email: string) {
+  const [user] = await db.select({ id: users.id, name: users.name, emailVerified: users.emailVerified })
+    .from(users).where(eq(users.email, email)).limit(1);
+
+  if (user && !user.emailVerified) {
+    const token = randomUUID();
+    await db.insert(verificationTokens).values({
+      identifier: email,
+      token,
+      purpose: 'email_verify',
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
+    await mailer.sendVerification(email, user.name, `${APP_URL}/auth/verify-email/confirm?token=${token}&email=${encodeURIComponent(email)}`);
+  }
+
+  // Always report success, even if the account doesn't exist or is already verified, to avoid leaking account state.
+  redirect(`/auth/verify-email?email=${encodeURIComponent(email)}&resent=1`);
+}
+
 export async function logoutAction() {
   await signOut({ redirect: false });
   redirect('/');

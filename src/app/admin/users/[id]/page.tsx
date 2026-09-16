@@ -19,6 +19,7 @@ export default async function AdminUserEditPage({ params }: { params: Promise<{ 
   const serialised = {
     ...userData,
     createdAt: userData.createdAt.toISOString(),
+    emailVerified: userData.emailVerified?.toISOString() ?? null,
     enrollments: userData.enrollments.map((e) => ({
       ...e,
       completedAt: e.completedAt?.toISOString() ?? null,

@@ -11,6 +11,7 @@ interface UserData {
   name: string;
   role: string;
   avatarUrl: string | null;
+  emailVerified: string | null;
   createdAt: string;
   profile: {
     bio: string | null;
@@ -43,6 +44,7 @@ export function UserEditForm({ user }: { user: UserData }) {
   const router = useRouter();
   const [role, setRole] = useState(user.role);
   const [saving, setSaving] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   async function handleRoleChange() {
     if (role === user.role) return;
@@ -52,6 +54,16 @@ export function UserEditForm({ user }: { user: UserData }) {
       body: JSON.stringify({ role }),
     }).catch(() => null);
     setSaving(false);
+    router.refresh();
+  }
+
+  async function handleVerifyEmail() {
+    setVerifying(true);
+    await apiFetch(`/admin/users/${user.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ verifyEmail: true }),
+    }).catch(() => null);
+    setVerifying(false);
     router.refresh();
   }
 
@@ -100,6 +112,24 @@ export function UserEditForm({ user }: { user: UserData }) {
           <Button onClick={() => void handleRoleChange()} loading={saving} disabled={role === user.role}>
             Update Role
           </Button>
+        </Group>
+      </Card>
+
+      <Card withBorder radius="xl" p="lg" className="shadow-soft">
+        <Title order={3} size="h4" mb="md">Email Verification</Title>
+        <Group justify="space-between">
+          {user.emailVerified ? (
+            <Badge color="green" variant="light">
+              Verified {new Date(user.emailVerified).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+            </Badge>
+          ) : (
+            <>
+              <Badge color="red" variant="light">Not verified</Badge>
+              <Button size="sm" onClick={() => void handleVerifyEmail()} loading={verifying}>
+                Verify manually
+              </Button>
+            </>
+          )}
         </Group>
       </Card>
 

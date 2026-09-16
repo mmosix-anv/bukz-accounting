@@ -15,13 +15,16 @@ interface ArticleData {
   status?: string;
 }
 
-const CATEGORIES = ['Tax & HMRC', 'VAT', 'Payroll', 'MTD', 'Career Advice', 'Software', 'Regulation'];
+interface Category {
+  id: string;
+  name: string;
+}
 
 function slugify(str: string) {
   return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-export function ArticleForm({ article }: { article?: ArticleData }) {
+export function ArticleForm({ article, categories }: { article?: ArticleData; categories: Category[] }) {
   const router = useRouter();
   const isEdit = !!article?.id;
   const [form, setForm] = useState({
@@ -49,9 +52,10 @@ export function ArticleForm({ article }: { article?: ArticleData }) {
     setError(null);
 
     try {
+      const body = { ...form, categoryId: form.categoryId || null };
       const saved = isEdit
-        ? await apiFetch<{ id: string }>(`/insight/articles/${article!.id}`, { method: 'PATCH', body: JSON.stringify(form) })
-        : await apiFetch<{ id: string }>('/insight/articles', { method: 'POST', body: JSON.stringify(form) });
+        ? await apiFetch<{ id: string }>(`/insight/articles/${article!.id}`, { method: 'PATCH', body: JSON.stringify(body) })
+        : await apiFetch<{ id: string }>('/insight/articles', { method: 'POST', body: JSON.stringify(body) });
 
       if (publish) {
         await apiFetch(`/insight/articles/${saved.id}`, { method: 'PATCH', body: JSON.stringify({ publish: true }) });
@@ -93,7 +97,7 @@ export function ArticleForm({ article }: { article?: ArticleData }) {
             value={form.categoryId || null}
             onChange={(value) => update('categoryId', value ?? '')}
             placeholder="Select category"
-            data={CATEGORIES}
+            data={categories.map((c) => ({ value: c.id, label: c.name }))}
           />
         </SimpleGrid>
 

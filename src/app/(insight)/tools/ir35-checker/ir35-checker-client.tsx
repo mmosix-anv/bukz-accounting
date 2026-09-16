@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { apiFetch } from '@/lib/api';
 
 const QUESTIONS = [
   { key: 'substitution', label: 'Can you send a substitute to do the work in your place?' },
@@ -52,14 +53,10 @@ export function Ir35CheckerClient() {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-      const res = await fetch(`${apiUrl}/api/v1/insight/tools/ir35-checker`, {
+      const data = await apiFetch<Ir35Result>('/insight/tools/ir35', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ answers }),
       });
-      if (!res.ok) throw new Error('Check failed');
-      const data = await res.json() as Ir35Result;
       setResult(data);
       setTimeout(() => {
         document.getElementById('ir35-result')?.scrollIntoView({ behavior: 'smooth', block: 'start' });

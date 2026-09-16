@@ -43,7 +43,17 @@ export async function getAdminUsers(role?: string, limit = 20, offset = 0) {
 }
 
 export async function updateUserRole(userId: string, role: string) {
-  const [updated] = await db.update(users).set({ role: role as 'candidate' | 'employer' | 'instructor' | 'admin' }).where(eq(users.id, userId)).returning();
+  const [updated] = await db.update(users).set({ role: role as 'candidate' | 'employer' | 'instructor' | 'admin' })
+    .where(eq(users.id, userId))
+    .returning({ id: users.id, email: users.email, name: users.name, role: users.role });
+  return updated;
+}
+
+export async function adminVerifyUserEmail(userId: string) {
+  const [updated] = await db.update(users).set({ emailVerified: new Date() })
+    .where(eq(users.id, userId))
+    .returning({ id: users.id, email: users.email, emailVerified: users.emailVerified });
+  if (!updated) throw new Error('User not found');
   return updated;
 }
 
@@ -110,7 +120,11 @@ export async function adminDeleteJobListing(id: string) {
 }
 
 export async function getAdminUserById(userId: string) {
-  const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  const [user] = await db.select({
+    id: users.id, email: users.email, name: users.name, avatarUrl: users.avatarUrl,
+    emailVerified: users.emailVerified, role: users.role, stripeCustomerId: users.stripeCustomerId,
+    createdAt: users.createdAt,
+  }).from(users).where(eq(users.id, userId)).limit(1);
   if (!user) throw new Error('User not found');
 
   const [profile] = await db.select().from(profiles).where(eq(profiles.userId, userId)).limit(1);

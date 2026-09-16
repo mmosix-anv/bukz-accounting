@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { apiFetch } from '@/lib/api';
 
 const schema = z.object({
   annualIncome: z.coerce.number().min(1, 'Enter your annual income').max(10_000_000, 'Income too large'),
@@ -49,17 +50,13 @@ export function TaxCalculatorClient() {
     setLoading(true);
     setError(null);
     try {
-      const apiUrl = process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001';
-      const res = await fetch(`${apiUrl}/api/v1/insight/tools/tax-calculator`, {
+      const data = await apiFetch<TaxResult>('/insight/tools/tax-calc', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           annualIncome: values.annualIncome,
           pensionContribution: values.pensionContribution ?? 0,
         }),
       });
-      if (!res.ok) throw new Error('Calculation failed');
-      const data = await res.json() as TaxResult;
       setResult(data);
     } catch {
       setError('Could not calculate — please try again.');

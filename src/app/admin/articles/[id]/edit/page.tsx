@@ -4,6 +4,7 @@ import { redirect, notFound } from 'next/navigation';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
 import { articles } from '@bukz/db';
+import { findAllArticleCategories } from '@/lib/services/articles.service';
 import { ArticleForm } from '../../article-form';
 
 export const metadata: Metadata = { title: 'Edit Article | Admin' };
@@ -13,7 +14,10 @@ export default async function EditArticlePage({ params }: { params: { id: string
   const user = session?.user;
   if (!user || user.role !== 'admin') redirect('/dashboard');
 
-  const [article] = await db.select().from(articles).where(eq(articles.id, params.id)).limit(1);
+  const [article, categories] = await Promise.all([
+    db.select().from(articles).where(eq(articles.id, params.id)).limit(1).then((rows) => rows[0]),
+    findAllArticleCategories(),
+  ]);
   if (!article) notFound();
 
   return (
@@ -22,11 +26,14 @@ export default async function EditArticlePage({ params }: { params: { id: string
         <a href="/admin/articles" className="text-sm text-slate-400 hover:text-primary">← Back to articles</a>
         <h1 className="mt-2 text-2xl font-bold text-primary">Edit article</h1>
       </div>
-      <ArticleForm article={{
-        id: article.id, title: article.title, slug: article.slug,
-        excerpt: article.excerpt, content: article.content, categoryId: article.categoryId ?? undefined,
-        status: article.status,
-      }} />
+      <ArticleForm
+        categories={categories}
+        article={{
+          id: article.id, title: article.title, slug: article.slug,
+          excerpt: article.excerpt, content: article.content, categoryId: article.categoryId ?? undefined,
+          status: article.status,
+        }}
+      />
     </div>
   );
 }
